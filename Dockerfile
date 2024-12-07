@@ -13,18 +13,18 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
-# Copiar o código do projeto para o contêiner
-COPY . /var/www
-
 # Definir o diretório de trabalho
-WORKDIR /var/www
+WORKDIR /var/www/html
+
+# Copiar o código do projeto para o contêiner
+COPY . .
 
 # Instalar dependências do Laravel (inclusive as de desenvolvimento)
 RUN composer install --optimize-autoloader
 
 # Configurar permissões
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expor a porta do PHP-FPM
 EXPOSE 9000
