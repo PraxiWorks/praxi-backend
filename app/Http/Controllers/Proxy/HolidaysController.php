@@ -4,20 +4,20 @@ namespace App\Http\Controllers\Proxy;
 
 
 use App\Application\Proxy\DTO\HolidayInputDTO;
-use App\Application\Proxy\HolidaysList;
+use App\Application\Proxy\ListHolidays;
 use App\Http\Controllers\Controller;
 use Exception;
 
 class HolidaysController extends Controller
 {
-    private HolidaysList $useCase;
+    private ListHolidays $useCase;
 
-    public function __construct(HolidaysList $useCase)
+    public function __construct(ListHolidays $useCase)
     {
         $this->useCase = $useCase;
     }
 
-    public function __invoke(int $month, int $year)
+    public function index(int $month, int $year)
     {
         try {
             $input = new HolidayInputDTO($month, $year);
