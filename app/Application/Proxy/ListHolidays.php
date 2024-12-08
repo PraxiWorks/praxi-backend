@@ -6,7 +6,7 @@ use App\Application\Proxy\DTO\HolidayInputDTO;
 use App\Domain\Exceptions\Proxy\HolidaysException;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 
-class HolidaysList
+class ListHolidays
 {
     private HolidaysServiceInterface $holidaysServiceInterface;
 
