@@ -17,3 +17,34 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Logs
+*.log
+
+# Composer
+composer.lock
+
+# PHP Cache
+*.cache
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+/.idea/*
+/.vscode/*
+
+# PHPUnit
+.phpunit.result.cache
+
+# Laravel
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Symfony
+/var/cache/*
+/var/logs/*
+/var/sessions/*
