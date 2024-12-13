@@ -2,7 +2,7 @@
 
 namespace App\Application\Scheduling\ScheduleSettings\DTO;
 
-class ScheduleSettingsUpdateInputDTO
+class UpdateScheduleSettingsRequestDTO
 {
     private int $id;
     private string $dayOfWeek;

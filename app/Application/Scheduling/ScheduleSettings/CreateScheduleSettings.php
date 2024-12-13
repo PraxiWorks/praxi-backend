@@ -2,7 +2,7 @@
 
 namespace App\Application\Scheduling\ScheduleSettings;
 
-use App\Application\Scheduling\ScheduleSettings\DTO\ScheduleSettingsInputDTO;
+use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
 use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
@@ -22,7 +22,7 @@ class CreateScheduleSettings
         $this->scheduleSettingsRepositoryInterface = $scheduleSettingsRepositoryInterface;
     }
 
-    public function execute(ScheduleSettingsInputDTO $input): bool
+    public function execute(CreateScheduleSettingsRequestDTO $input): bool
     {
 
         $company = $this->companyRepositoryInterface->getCompanyById($input->getCompanyId());

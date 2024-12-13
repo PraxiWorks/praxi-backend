@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Scheduling;
 
 use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
-use App\Application\Scheduling\ScheduleSettings\DTO\ScheduleSettingsInputDTO;
-use App\Application\Scheduling\ScheduleSettings\DTO\ScheduleSettingsUpdateInputDTO;
+use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
+use App\Application\Scheduling\ScheduleSettings\DTO\UpdateScheduleSettingsRequestDTO;
 use App\Application\Scheduling\ScheduleSettings\ListScheduleSettings;
 use App\Application\Scheduling\ScheduleSettings\UpdateScheduleSettings;
 use App\Http\Controllers\Controller;
@@ -43,7 +43,7 @@ class ScheduleSettingsController extends Controller
         $days = $request->days ?? [];
 
         try {
-            $input = new ScheduleSettingsInputDTO($companyId, $days);
+            $input = new CreateScheduleSettingsRequestDTO($companyId, $days);
             $output = $this->createScheduleSettingsUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
@@ -60,7 +60,7 @@ class ScheduleSettingsController extends Controller
         $isWorkingDay = $request->is_working_day ?? false;
 
         try {
-            $input = new ScheduleSettingsUpdateInputDTO($id, $dayOfWeek, $startTime, $endTime, $isWorkingDay);
+            $input = new UpdateScheduleSettingsRequestDTO($id, $dayOfWeek, $startTime, $endTime, $isWorkingDay);
             $output = $this->updateScheduleSettingsUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

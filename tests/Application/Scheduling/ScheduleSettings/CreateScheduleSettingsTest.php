@@ -3,7 +3,7 @@
 namespace Tests\Application\Scheduling\ScheduleSettings;
 
 use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
-use App\Application\Scheduling\ScheduleSettings\DTO\ScheduleSettingsInputDTO;
+use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
 use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
@@ -36,7 +36,7 @@ class CreateScheduleSettingsTest extends TestCase
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Empresa não encontrada.');
 
-        $input = new ScheduleSettingsInputDTO(1, []);
+        $input = new CreateScheduleSettingsRequestDTO(1, []);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn(null);
 
         $this->useCase->execute($input);
@@ -52,7 +52,7 @@ class CreateScheduleSettingsTest extends TestCase
 
         $scheduleSettingsMock = $this->createMock(ScheduleSettings::class);
 
-        $input = new ScheduleSettingsInputDTO(1, []);
+        $input = new CreateScheduleSettingsRequestDTO(1, []);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn($company);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('getScheduleSettingsByCompanyId')->willReturn($scheduleSettingsMock);
 
@@ -67,7 +67,7 @@ class CreateScheduleSettingsTest extends TestCase
         $company = new Company();
         $company->id = 1;
 
-        $input = new ScheduleSettingsInputDTO(1, []);
+        $input = new CreateScheduleSettingsRequestDTO(1, []);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn($company);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('getScheduleSettingsByCompanyId')->willReturn(null);
 
@@ -82,7 +82,7 @@ class CreateScheduleSettingsTest extends TestCase
         $company = new Company();
         $company->id = 1;
 
-        $input = new ScheduleSettingsInputDTO(1, [['day' => 'invalid', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateScheduleSettingsRequestDTO(1, [['day' => 'invalid', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn($company);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('getScheduleSettingsByCompanyId')->willReturn(null);
 
@@ -97,7 +97,7 @@ class CreateScheduleSettingsTest extends TestCase
         $company = new Company();
         $company->id = 1;
 
-        $input = new ScheduleSettingsInputDTO(1, [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateScheduleSettingsRequestDTO(1, [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn($company);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('getScheduleSettingsByCompanyId')->willReturn(null);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
@@ -110,7 +110,7 @@ class CreateScheduleSettingsTest extends TestCase
         $company = new Company();
         $company->id = 1;
 
-        $input = new ScheduleSettingsInputDTO(1, [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateScheduleSettingsRequestDTO(1, [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getCompanyById')->willReturn($company);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('getScheduleSettingsByCompanyId')->willReturn(null);
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
