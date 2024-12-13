@@ -2,7 +2,7 @@
 
 namespace App\Application\Scheduling\ScheduleSettings;
 
-use App\Application\Scheduling\ScheduleSettings\DTO\ScheduleSettingsUpdateInputDTO;
+use App\Application\Scheduling\ScheduleSettings\DTO\UpdateScheduleSettingsRequestDTO;
 use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 
@@ -15,7 +15,7 @@ class UpdateScheduleSettings
         $this->scheduleSettingsRepositoryInterface = $scheduleSettingsRepositoryInterface;
     }
 
-    public function execute(ScheduleSettingsUpdateInputDTO $input): void
+    public function execute(UpdateScheduleSettingsRequestDTO $input): void
     {
         $this->validateInput($input);
 
@@ -35,7 +35,7 @@ class UpdateScheduleSettings
         }
     }
 
-    private function validateInput(ScheduleSettingsUpdateInputDTO $input): void
+    private function validateInput(UpdateScheduleSettingsRequestDTO $input): void
     {
         $errors = [];
 

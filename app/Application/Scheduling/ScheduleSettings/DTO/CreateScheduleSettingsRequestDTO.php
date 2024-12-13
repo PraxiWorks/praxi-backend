@@ -2,7 +2,7 @@
 
 namespace App\Application\Scheduling\ScheduleSettings\DTO;
 
-class ScheduleSettingsInputDTO
+class CreateScheduleSettingsRequestDTO
 {
     private int $companyId;
     private array $workSchedule;
