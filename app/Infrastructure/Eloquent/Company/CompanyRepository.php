@@ -12,7 +12,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $entity->save();
     }
 
-    public function getCompanyById(int $id): ?Company
+    public function getById(int $id): ?Company
     {
         return Company::find($id);
     }
