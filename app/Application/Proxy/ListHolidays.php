@@ -2,7 +2,7 @@
 
 namespace App\Application\Proxy;
 
-use App\Application\Proxy\DTO\HolidayInputDTO;
+use App\Application\Proxy\DTO\HolidayRequestDTO;
 use App\Domain\Exceptions\Proxy\HolidaysException;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 
@@ -15,7 +15,7 @@ class ListHolidays
         $this->holidaysServiceInterface = $holidaysServiceInterface;
     }
 
-    public function execute(HolidayInputDTO $input)
+    public function execute(HolidayRequestDTO $input)
     {
         if(empty($input->getMonth())) {
             throw new HolidaysException('Mês não informado');

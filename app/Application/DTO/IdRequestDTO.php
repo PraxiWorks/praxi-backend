@@ -2,7 +2,7 @@
 
 namespace App\Application\DTO;
 
-class IdInputDTO
+class IdRequestDTO
 {
     private int $id;
 
