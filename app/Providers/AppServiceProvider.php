@@ -4,10 +4,16 @@ namespace App\Providers;
 
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
+use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
+use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserTypeRepositoryInterface;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 use App\Infrastructure\Eloquent\Company\CompanyRepository;
 use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
+use App\Infrastructure\Eloquent\User\UserRepository;
+use App\Infrastructure\Eloquent\User\UserTypeRepository;
 use App\Infrastructure\Service\Proxy\HolidaysService;
+use App\Infrastructure\Storage\LocalStorageRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //Company
+        // Company
         $this->app->bind(CompanyRepositoryInterface::class, CompanyRepository::class);
 
         // Proxy
@@ -25,6 +31,13 @@ class AppServiceProvider extends ServiceProvider
         
         // Schedule
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
+
+        // User
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(UserTypeRepositoryInterface::class, UserTypeRepository::class);
+
+        // Storage
+        $this->app->bind(LocalStorageRepositoryInterface::class, LocalStorageRepository::class);
     }
 
     /**
