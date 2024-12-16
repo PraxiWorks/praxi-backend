@@ -2,7 +2,7 @@
 
 namespace App\Application\Proxy\DTO;
 
-class HolidayInputDTO
+class HolidayRequestDTO
 {
     private int $month;
     private int $year;
