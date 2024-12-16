@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Scheduling\ScheduleSettingsController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,15 @@ Route::prefix('proxy')->group(function () {
     Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
 });
 
+// Route::prefix('register')->group(function () {
+//     Route::post('', [signupController::class, 'store']);
+// });
+
 Route::prefix('{companyId}')->group(function () {
+
+    // Route::prefix('login')->group(function () {
+    //     Route::post('', [signupController::class, 'store']);
+    // });
 
     //Configurações Agenda
     Route::prefix('schedule-settings')->group(function () {
@@ -34,7 +43,7 @@ Route::prefix('{companyId}')->group(function () {
     //     Route::get('/', [EventController::class, 'index']);   // Listar eventos
     //     Route::get('/{eventoId}', [EventController::class, 'show']);  // Mostrar evento
     //     Route::put('/{eventoId}', [EventController::class, 'update']);  // Atualizar evento
-    //     Route::delete('/{eventoId}', [EventController::class, 'destroy']);  // Deletar evento
+    //     Route::delete('/{eventoId}', [EventController::class, 'delete']);  // Deletar evento
     // });
 
     // // Estoque
@@ -43,17 +52,17 @@ Route::prefix('{companyId}')->group(function () {
     //     Route::get('/', [ItemController::class, 'index']);
     //     Route::get('/{itemId}', [ItemController::class, 'show']);
     //     Route::put('/{itemId}', [ItemController::class, 'update']);
-    //     Route::delete('/{itemId}', [ItemController::class, 'destroy']);
+    //     Route::delete('/{itemId}', [ItemController::class, 'delete']);
     // });
 
-    // // Usuários
-    // Route::prefix('usuarios')->group(function () {
-    //     Route::post('/', [UserController::class, 'store']);
-    //     Route::get('/', [UserController::class, 'index']);
-    //     Route::get('/{userId}', [UserController::class, 'show']);
-    //     Route::put('/{userId}', [UserController::class, 'update']);
-    //     Route::delete('/{userId}', [UserController::class, 'destroy']);
-    // });
+    // Usuários
+    Route::prefix('usuarios')->group(function () {
+        Route::post('/', [UserController::class, 'store']);
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/{userId}', [UserController::class, 'show']);
+        Route::put('/{userId}', [UserController::class, 'update']);
+        Route::delete('/{userId}', [UserController::class, 'delete']);
+    });
 
     // // Clientes
     // Route::prefix('clientes')->group(function () {
@@ -61,6 +70,6 @@ Route::prefix('{companyId}')->group(function () {
     //     Route::get('/', [ClientController::class, 'index']);
     //     Route::get('/{clientId}', [ClientController::class, 'show']);
     //     Route::put('/{clientId}', [ClientController::class, 'update']);
-    //     Route::delete('/{clientId}', [ClientController::class, 'destroy']);
+    //     Route::delete('/{clientId}', [ClientController::class, 'delete']);
     // });
-});
+})->middleware('validateCompany');
