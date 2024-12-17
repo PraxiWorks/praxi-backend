@@ -15,22 +15,13 @@ use App\Models\User\User;
 
 class CreateUser
 {
-    private CompanyRepositoryInterface $companyRepositoryInterface;
-    private UserRepositoryInterface $userRepositoryInterface;
-    private UserTypeRepositoryInterface $userTypeRepositoryInterface;
-    private LocalStorageRepositoryInterface $localStorageRepository;
-
+    
     public function __construct(
-        CompanyRepositoryInterface $companyRepositoryInterface,
-        UserRepositoryInterface $userRepositoryInterface,
-        UserTypeRepositoryInterface $userTypeRepositoryInterface,
-        LocalStorageRepositoryInterface $localStorageRepository
-    ) {
-        $this->companyRepositoryInterface = $companyRepositoryInterface;
-        $this->userRepositoryInterface = $userRepositoryInterface;
-        $this->userTypeRepositoryInterface = $userTypeRepositoryInterface;
-        $this->localStorageRepository = $localStorageRepository;
-    }
+        private CompanyRepositoryInterface $companyRepositoryInterface,
+        private UserRepositoryInterface $userRepositoryInterface,
+        private UserTypeRepositoryInterface $userTypeRepositoryInterface,
+        private LocalStorageRepositoryInterface $localStorageRepository,
+    ) {}
 
     public function execute(CreateUserRequestDTO $input): bool
     {

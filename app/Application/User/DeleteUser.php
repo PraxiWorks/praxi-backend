@@ -9,17 +9,14 @@ use app\Domain\Interfaces\User\UserRepositoryInterface;
 
 class DeleteUser
 {
-    private UserRepositoryInterface $userRepositoryInterface;
 
     public function __construct(
-        UserRepositoryInterface $userRepositoryInterface
-    ) {
-        $this->userRepositoryInterface = $userRepositoryInterface;
-    }
+        private UserRepositoryInterface $userRepositoryInterface
+    ) {}
 
     public function execute(IdRequestDTO $input): bool
     {
-        
+
         $user = $this->userRepositoryInterface->getById($input->getId());
         if (empty($user)) {
             throw new UserNotFoundException('Usuário não encontrado', 400);

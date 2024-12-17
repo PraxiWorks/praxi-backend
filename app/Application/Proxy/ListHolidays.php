@@ -8,20 +8,15 @@ use App\Domain\Service\Proxy\HolidaysServiceInterface;
 
 class ListHolidays
 {
-    private HolidaysServiceInterface $holidaysServiceInterface;
-
-    public function __construct(HolidaysServiceInterface $holidaysServiceInterface)
-    {
-        $this->holidaysServiceInterface = $holidaysServiceInterface;
-    }
+    public function __construct(private HolidaysServiceInterface $holidaysServiceInterface) {}
 
     public function execute(HolidayRequestDTO $input)
     {
-        if(empty($input->getMonth())) {
+        if (empty($input->getMonth())) {
             throw new HolidaysException('Mês não informado');
         }
 
-        if(empty($input->getYear())) {
+        if (empty($input->getYear())) {
             throw new HolidaysException('Ano não informado');
         }
 

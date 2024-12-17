@@ -9,13 +9,9 @@ use App\Models\Scheduling\ScheduleSettings;
 
 class CreateScheduleSettings
 {
-    private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface;
-
     public function __construct(
-        ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface
-    ) {
-        $this->scheduleSettingsRepositoryInterface = $scheduleSettingsRepositoryInterface;
-    }
+        private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface
+    ) {}
 
     public function execute(CreateScheduleSettingsRequestDTO $input): bool
     {
