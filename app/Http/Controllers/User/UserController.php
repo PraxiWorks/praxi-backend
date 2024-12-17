@@ -79,8 +79,9 @@ class UserController extends Controller
         }
     }
 
-    public function show(int $id)
+    public function show(Request $request)
     {
+        $id = $request->userId ?? 0;
         try {
             $input = new IdRequestDTO($id);
             $output = $this->showUserUseCase->execute($input);
