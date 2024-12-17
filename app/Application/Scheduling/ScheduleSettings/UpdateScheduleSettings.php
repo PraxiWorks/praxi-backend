@@ -8,12 +8,8 @@ use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 
 class UpdateScheduleSettings
 {
-    private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface;
 
-    public function __construct(ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface)
-    {
-        $this->scheduleSettingsRepositoryInterface = $scheduleSettingsRepositoryInterface;
-    }
+    public function __construct(private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface) {}
 
     public function execute(UpdateScheduleSettingsRequestDTO $input): void
     {

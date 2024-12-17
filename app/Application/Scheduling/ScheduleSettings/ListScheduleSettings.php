@@ -6,14 +6,10 @@ use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 
 class ListScheduleSettings
 {
-    private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface;
 
-    public function __construct(ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface)
-    {
-        $this->scheduleSettingsRepositoryInterface = $scheduleSettingsRepositoryInterface;
-    }
+    public function __construct(private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface) {}
 
-    public function execute() : array
+    public function execute(): array
     {
         $response = $this->scheduleSettingsRepositoryInterface->list();
 
