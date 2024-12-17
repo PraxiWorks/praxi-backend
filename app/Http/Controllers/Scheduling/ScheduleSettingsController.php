@@ -13,19 +13,11 @@ use Illuminate\Http\Request;
 
 class ScheduleSettingsController extends Controller
 {
-    private CreateScheduleSettings $createScheduleSettingsUseCase;
-    private ListScheduleSettings $listScheduleSettingsUseCase;
-    private UpdateScheduleSettings $updateScheduleSettingsUseCase;
-
     public function __construct(
-        CreateScheduleSettings $createScheduleSettingsUseCase,
-        ListScheduleSettings $listScheduleSettingsUseCase,
-        UpdateScheduleSettings $updateScheduleSettingsUseCase
-    ) {
-        $this->createScheduleSettingsUseCase = $createScheduleSettingsUseCase;
-        $this->listScheduleSettingsUseCase = $listScheduleSettingsUseCase;
-        $this->updateScheduleSettingsUseCase = $updateScheduleSettingsUseCase;
-    }
+        private CreateScheduleSettings $createScheduleSettingsUseCase,
+        private ListScheduleSettings $listScheduleSettingsUseCase,
+        private UpdateScheduleSettings $updateScheduleSettingsUseCase,
+    ) {}
 
     public function index()
     {
