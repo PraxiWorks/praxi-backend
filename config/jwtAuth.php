@@ -3,5 +3,5 @@
 return [
     'secret' => env('JWT_SECRET'),
     'domain' => env('APP_URL', 'localhost'),
-    'timeLimit' => 8,
+    'expirationTime' => env('JWT_EXPIRATION_TIME', 4),
 ];

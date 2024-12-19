@@ -214,7 +214,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
     public function testErrorConfigJwt()
     {
         $this->expectException(CreateCompanyAndAdminUserException::class);
-        $this->expectExceptionMessage('Configuração JWT inválida: verifique se "secret", "domain" e "timeLimit" estão definidos.');
+        $this->expectExceptionMessage('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.');
 
         $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
@@ -234,7 +234,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         Config::set('jwtAuth.secret', null);
         Config::set('jwtAuth.domain', null);
-        Config::set('jwtAuth.timeLimit', null);
+        Config::set('jwtAuth.expirationTime', null);
 
         $this->useCase->execute($input);
     }

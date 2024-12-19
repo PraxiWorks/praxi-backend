@@ -35,11 +35,11 @@ class CreateCompanyAndAdminUser
             $user = $this->createUser($input, $company);
             $this->createScheduleSettings($company, $input->getWorkSchedule());
 
-            if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain') || empty(config('jwtAuth.timeLimit')))) {
-                throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "timeLimit" estão definidos.', 500);
+            if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain') || empty(config('jwtAuth.expirationTime')))) {
+                throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
             }
 
-            $jwtToken = $this->jwtAuth->encode($user->id, config('jwtAuth.timeLimit'));
+            $jwtToken = $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
 
             DB::commit();
 
