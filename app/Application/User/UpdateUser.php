@@ -5,7 +5,7 @@ namespace App\Application\User;
 use App\Application\User\DTO\UpdateUserRequestDTO;
 use App\Domain\Exceptions\User\UserException;
 use App\Domain\Exceptions\User\UserNotFoundException;
-use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserRepositoryInterface;
 
 class UpdateUser
 {
@@ -26,6 +26,7 @@ class UpdateUser
 
         // Atualize os atributos do usuário com os dados do DTO
         $user->company_id = $input->getCompanyId();
+        $user->username = $input->getUsername();
         $user->name = $input->getName();
         $user->email = $input->getEmail();
         $user->phone_number = $input->getPhoneNumber();
@@ -49,6 +50,10 @@ class UpdateUser
 
     private function validateInput(UpdateUserRequestDTO $input): void
     {
+        if(empty($input->getUsername())){
+            throw new UserException('Nome de usuário não informado', 400);
+        }
+
         if (empty($input->getName())) {
             throw new UserException('Nome não informado', 400);
         }

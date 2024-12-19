@@ -11,6 +11,7 @@ class CreateUserRequestDTOTest extends TestCase
     {
         $input = new CreateUserRequestDTO(
             1,
+            'username',
             'name',
             'email',
             'phoneNumber',
@@ -27,6 +28,7 @@ class CreateUserRequestDTOTest extends TestCase
             true
         );
         $this->assertEquals(1, $input->getCompanyId());
+        $this->assertEquals('username', $input->getUsername());
         $this->assertEquals('name', $input->getName());
         $this->assertEquals('email', $input->getEmail());
         $this->assertEquals('phoneNumber', $input->getPhoneNumber());

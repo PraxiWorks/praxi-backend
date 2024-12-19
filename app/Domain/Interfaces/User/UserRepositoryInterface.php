@@ -11,5 +11,6 @@ interface UserRepositoryInterface
     public function list(): array;
     public function update(User $entity): bool;
     public function delete(User $entity): bool;
-    public function getByEmail(string $email): ?User;
+    public function getByEmailAndCompanyId(string $email, int $companyId): ?User;
+    public function getByUsername(string $username): ?User;
 }

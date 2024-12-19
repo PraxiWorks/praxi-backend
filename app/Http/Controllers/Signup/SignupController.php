@@ -16,6 +16,7 @@ class SignupController extends Controller
     public function store(Request $request)
     {
         $fantasyName = $request->input('fantasy_name');
+        $username = $request->input('username');
         $name = $request->input('name');
         $email = $request->input('email');
         $phoneNumber = $request->input('phone_number');
@@ -25,6 +26,7 @@ class SignupController extends Controller
         try {
             $input = new CreateCompanyAndAdminUserRequestDTO(
                 $fantasyName,
+                $username,
                 $name,
                 $email,
                 $phoneNumber,

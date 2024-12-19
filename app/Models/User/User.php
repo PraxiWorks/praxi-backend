@@ -13,6 +13,7 @@ class User extends Model
 
     protected $fillable = [
         'company_id',
+        'username',
         'name',
         'email',
         'phone_number',
@@ -31,6 +32,7 @@ class User extends Model
 
     public static function new(
         int $companyId,
+        string $username,
         string $name,
         string $email,
         ?string $phoneNumber,
@@ -49,6 +51,7 @@ class User extends Model
         return new self(
             [
                 'company_id' => $companyId,
+                'username' => $username,
                 'name' => $name,
                 'email' => $email,
                 'phone_number' => $phoneNumber,

@@ -11,6 +11,7 @@ class CreateCompanyAndAdminUserRequestDTOTest extends TestCase
     {
         $input = new CreateCompanyAndAdminUserRequestDTO(
             'Fantasy Name',
+            'Username',
             'Name',
             'Email',
             'Phone Number',
@@ -18,6 +19,7 @@ class CreateCompanyAndAdminUserRequestDTOTest extends TestCase
             [1, 2, 3, 4]
         );
         $this->assertEquals('Fantasy Name', $input->getFantasyName());
+        $this->assertEquals('Username', $input->getUsername());
         $this->assertEquals('Name', $input->getName());
         $this->assertEquals('Email', $input->getEmail());
         $this->assertEquals('Phone Number', $input->getPhoneNumber());

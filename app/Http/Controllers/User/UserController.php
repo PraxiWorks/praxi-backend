@@ -39,6 +39,7 @@ class UserController extends Controller
     {
 
         $companyId = $request->companyId ?? 0;
+        $username = $request->username ?? null;
         $name = $request->name ?? null;
         $email = $request->email ?? null;
         $phoneNumber = $request->phone_number ?? null;
@@ -57,6 +58,7 @@ class UserController extends Controller
         try {
             $input = new CreateUserRequestDTO(
                 $companyId,
+                $username,
                 $name,
                 $email,
                 $phoneNumber,
@@ -96,6 +98,7 @@ class UserController extends Controller
     {
         $id = $request->userId ?? 0;
         $companyId = $request->companyId ?? 0;
+        $username = $request->username ?? null;
         $name = $request->name ?? null;
         $email = $request->email ?? null;
         $phoneNumber = $request->phone_number ?? null;
@@ -114,6 +117,7 @@ class UserController extends Controller
             $input = new UpdateUserRequestDTO(
                 $id,
                 $companyId,
+                $username,
                 $name,
                 $email,
                 $phoneNumber,
