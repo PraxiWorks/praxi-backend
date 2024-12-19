@@ -8,7 +8,7 @@ use App\Domain\Exceptions\User\UserException;
 use App\Domain\Exceptions\User\UserTypeNotFoundException;
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
-use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserRepositoryInterface;
 use App\Domain\Interfaces\User\UserTypeRepositoryInterface;
 use App\Domain\ValueObjects\ImageValueObject;
 use App\Models\User\User;
@@ -34,7 +34,7 @@ class CreateUser
             throw new CompanyException('Empresa não encontrada', 400);
         }
 
-        $user = $this->userRepositoryInterface->getByEmail($input->getEmail());
+        $user = $this->userRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id);
         if (!empty($user)) {
             throw new UserException('Email já cadastrado', 400);
         }
@@ -50,6 +50,7 @@ class CreateUser
 
         $user = User::new(
             $input->getCompanyId(),
+            $input->getUsername(),
             $input->getName(),
             $input->getEmail(),
             $input->getPhoneNumber(),
@@ -75,6 +76,10 @@ class CreateUser
 
     private function validateInput(CreateUserRequestDTO $input): void
     {
+        if(empty($input->getUsername())) {
+            throw new UserException('Nome de usuário não informado', 400);
+        }
+
         if (empty($input->getName())) {
             throw new UserException('Nome não informado', 400);
         }

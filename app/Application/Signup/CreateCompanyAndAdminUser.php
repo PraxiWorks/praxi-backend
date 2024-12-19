@@ -60,6 +60,10 @@ class CreateCompanyAndAdminUser
             throw new CompanyException('Nome fantasia é obrigatório', 400);
         }
 
+        if (empty($input->getUsername())) {
+            throw new UserException('Nome de usuário é obrigatório', 400);
+        }
+
         if (empty($input->getName())) {
             throw new UserException('Nome é obrigatório', 400);
         }
@@ -100,7 +104,7 @@ class CreateCompanyAndAdminUser
 
     private function createUser(CreateCompanyAndAdminUserRequestDTO $input, Company $company): User
     {
-        $existingUser = $this->userRepositoryInterface->getByEmail($input->getEmail());
+        $existingUser = $this->userRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id);
         if (!empty($existingUser)) {
             throw new UserException('Email já cadastrado', 400);
         }
@@ -109,6 +113,7 @@ class CreateCompanyAndAdminUser
 
         $newUser = User::new(
             $company->id,
+            $input->getUsername(),
             $input->getName(),
             $input->getEmail(),
             $input->getPhoneNumber(),
@@ -129,7 +134,7 @@ class CreateCompanyAndAdminUser
             throw new UserException('Erro ao criar o usuário', 500);
         }
 
-        $user = $this->userRepositoryInterface->getByEmail($input->getEmail());
+        $user = $this->userRepositoryInterface->getByUsername($input->getUsername());
         
         return $user;
     }

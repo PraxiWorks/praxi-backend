@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
+            $table->string('username')->unique();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone_number')->nullable();
             $table->foreignId('user_type_id')->constrained('user_types');
             $table->date('date_of_birth')->nullable();

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Interfaces\Scheduling;
 
-use app\Models\Scheduling\ScheduleSettings;
+use App\Models\Scheduling\ScheduleSettings;
 
 interface ScheduleSettingsRepositoryInterface
 {

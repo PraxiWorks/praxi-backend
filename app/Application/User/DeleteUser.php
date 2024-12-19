@@ -5,7 +5,7 @@ namespace App\Application\User;
 use App\Application\DTO\IdRequestDTO;
 use App\Domain\Exceptions\User\UserException;
 use App\Domain\Exceptions\User\UserNotFoundException;
-use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserRepositoryInterface;
 
 class DeleteUser
 {
