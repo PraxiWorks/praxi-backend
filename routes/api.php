@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Scheduling\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
@@ -22,7 +23,7 @@ Route::prefix('proxy')->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    // Route::post('login', [LoginController::class, 'login']);
+    Route::post('login', [LoginController::class, 'login']);
     Route::post('signup', [SignupController::class, 'store']);
 });
 
