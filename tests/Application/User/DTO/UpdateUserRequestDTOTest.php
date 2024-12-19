@@ -12,6 +12,7 @@ class UpdateUserRequestDTOTest extends TestCase
         $input = new UpdateUserRequestDTO(
             1,
             1,
+            'username',
             'name',
             'email',
             'phoneNumber',
@@ -28,6 +29,7 @@ class UpdateUserRequestDTOTest extends TestCase
         );
         $this->assertEquals(1, $input->getId());
         $this->assertEquals(1, $input->getCompanyId());
+        $this->assertEquals('username', $input->getUsername());
         $this->assertEquals('name', $input->getName());
         $this->assertEquals('email', $input->getEmail());
         $this->assertEquals('phoneNumber', $input->getPhoneNumber());

@@ -6,6 +6,7 @@ class UpdateUserRequestDTO
 {
     private int $id;
     private int $companyId;
+    private string $username;
     private string $name;
     private string $email;
     private ?string $phoneNumber;
@@ -23,6 +24,7 @@ class UpdateUserRequestDTO
     public function __construct(
         int $id,
         int $companyId,
+        string $username,
         string $name,
         string $email,
         ?string $phoneNumber,
@@ -39,6 +41,7 @@ class UpdateUserRequestDTO
     ) {
         $this->id = $id;
         $this->companyId = $companyId;
+        $this->username = $username;
         $this->name = $name;
         $this->email = $email;
         $this->phoneNumber = $phoneNumber;
@@ -62,6 +65,11 @@ class UpdateUserRequestDTO
     public function getCompanyId(): int
     {
         return $this->companyId;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 
     public function getName(): string

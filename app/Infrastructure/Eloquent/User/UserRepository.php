@@ -32,8 +32,15 @@ class UserRepository implements UserRepositoryInterface
         return $entity->delete();
     }
 
-    public function getByEmail(string $email): ?User
+    public function getByEmailAndCompanyId(string $email, int $companyId): ?User
     {
-        return User::where('email', $email)->first();
+        return User::where('email', $email)
+            ->where('company_id', $companyId)
+            ->first();
+    }
+
+    public function getByUsername(string $userName): ?User
+    {
+        return User::where('username', $userName)->first();
     }
 }

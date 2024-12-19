@@ -2,11 +2,10 @@
 
 namespace App\Application\User;
 
-use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserRepositoryInterface;
 
 class ListUsers
 {
-
     public function __construct(
         private UserRepositoryInterface $userRepositoryInterface
     ) {}

@@ -45,13 +45,21 @@ class CreateCompanyAndAdminUserTest extends TestCase
         );
     }
 
-
     public function testValidateInputThrowsExceptionForEmptyFantasyName()
     {
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Nome fantasia é obrigatório');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $this->useCase->execute($input);
+    }
+
+    public function testValidateInputThrowsExceptionForEmptyUsername()
+    {
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('Nome de usuário é obrigatório');
+
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', '', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->useCase->execute($input);
     }
 
@@ -60,7 +68,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Nome é obrigatório');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', '', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', '', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->useCase->execute($input);
     }
 
@@ -69,7 +77,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Email é obrigatório');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', '', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', '', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->useCase->execute($input);
     }
 
@@ -78,7 +86,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Telefone é obrigatório');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', '', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', '', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->useCase->execute($input);
     }
 
@@ -87,7 +95,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Senha é obrigatória');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', '', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', '', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->useCase->execute($input);
     }
 
@@ -96,7 +104,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(ScheduleSettingsException::class);
         $this->expectExceptionMessage('Horário de trabalho é obrigatório');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', []);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', []);
         $this->useCase->execute($input);
     }
 
@@ -108,7 +116,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $company = new Company();
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn($company);
 
         $this->useCase->execute($input);
@@ -119,7 +127,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Erro ao criar a empresa');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
@@ -131,7 +139,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Email já cadastrado');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -141,7 +149,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $user = new User();;
 
-        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmail')->willReturn($user);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn($user);
 
         $this->useCase->execute($input);
     }
@@ -151,7 +159,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Erro ao criar o usuário');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -159,7 +167,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyRepositoryInterfaceMock->expects($this->exactly(2))->method('getByName')->willReturn(null, $company);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmail')->willReturn(null);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
         $this->useCase->execute($input);
@@ -170,7 +178,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Dia de trabalho inválido.');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'cru', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'cru', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -181,8 +189,9 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $user = new User();
         $user->id = 1;
 
-        $this->userRepositoryInterfaceMock->expects($this->exactly(2))->method('getByEmail')->willReturn(null, $user);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $this->useCase->execute($input);
     }
@@ -192,7 +201,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Erro ao salvar configuração de agenda.');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -203,8 +212,9 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $user = new User();
         $user->id = 1;
 
-        $this->userRepositoryInterfaceMock->expects($this->exactly(2))->method('getByEmail')->willReturn(null, $user);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
@@ -216,7 +226,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->expectException(CreateCompanyAndAdminUserException::class);
         $this->expectExceptionMessage('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.');
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -227,8 +237,9 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $user = new User();
         $user->id = 1;
 
-        $this->userRepositoryInterfaceMock->expects($this->exactly(2))->method('getByEmail')->willReturn(null, $user);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
@@ -242,7 +253,7 @@ class CreateCompanyAndAdminUserTest extends TestCase
     public function testSuccess()
     {
 
-        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
+        $input = new CreateCompanyAndAdminUserRequestDTO('Fantasy Name', 'username', 'name', 'email', 'phoneNumber', 'password', [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]);
 
         $company = new Company();
         $company->id = 1;
@@ -253,8 +264,9 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $user = new User();
         $user->id = 1;
 
-        $this->userRepositoryInterfaceMock->expects($this->exactly(2))->method('getByEmail')->willReturn(null, $user);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
