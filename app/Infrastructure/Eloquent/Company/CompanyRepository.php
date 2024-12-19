@@ -26,4 +26,9 @@ class CompanyRepository implements CompanyRepositoryInterface
     {
         return $entity->update();
     }
+
+    public function getByName(string $name): ?Company
+    {
+        return Company::whereRaw("LOWER(unaccent(name)) = LOWER(unaccent(?))", [$name])->first();
+    }
 }
