@@ -5,14 +5,14 @@ namespace App\Providers;
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
-use app\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\User\UserRepositoryInterface;
 use App\Domain\Interfaces\User\UserTypeRepositoryInterface;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 use App\Infrastructure\Eloquent\Company\CompanyRepository;
 use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
 use App\Infrastructure\Eloquent\User\UserRepository;
 use App\Infrastructure\Eloquent\User\UserTypeRepository;
-use App\Infrastructure\Service\Proxy\HolidaysService;
+use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
 use Illuminate\Support\ServiceProvider;
 

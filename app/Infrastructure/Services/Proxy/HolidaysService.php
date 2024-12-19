@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Service\Proxy;
+namespace App\Infrastructure\Services\Proxy;
 
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 

@@ -7,10 +7,12 @@ use Exception;
 class ScheduleSettingsException extends Exception
 {
 
-    public function __construct($message = '', $code = 0, $previous = null)
+    const DEFAULT_MESSAGE = 'Erro ao processar os horários de trabalho.';
+    const DEFAULT_CODE = 400;
+
+    public function __construct(string $message = self::DEFAULT_MESSAGE, int $code = self::DEFAULT_CODE, ?Exception $previous = null)
     {
-        $this->message = !empty($message) ? $message : 'Erro ao processar os horários de trabalho.';
-        $this->code = $code ? $code : 400;
-        parent::__construct($this->message, $this->code, $previous);
+        parent::__construct($message, $code, $previous);
     }
 }
+
