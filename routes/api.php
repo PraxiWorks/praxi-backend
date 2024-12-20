@@ -27,7 +27,7 @@ Route::prefix('auth')->group(function () {
     Route::post('signup', [SignupController::class, 'store']);
 });
 
-// Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::prefix('{companyId}')->group(function () {
 
@@ -78,4 +78,4 @@ Route::prefix('auth')->group(function () {
         //     Route::delete('/{clientId}', [ClientController::class, 'delete']);
         // });
     })->middleware('validateCompany');
-// });
+});

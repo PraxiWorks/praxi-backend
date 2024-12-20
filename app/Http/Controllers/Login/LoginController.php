@@ -13,16 +13,15 @@ class LoginController extends Controller
 
     public function __construct(private Login $useCase) {}
 
-    public function store(Request $request)
+    public function login(Request $request)
     {
-        $empresaId = $request->input('empresaId');
-        $email = $request->input('email');
+        $username = $request->input('username');
         $password = $request->input('password');
 
         try {
-            $input = new LoginRequestDTO($empresaId, $email, $password);
+            $input = new LoginRequestDTO($username, $password);
             $output = $this->useCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
