@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Scheduling;
+namespace App\Http\Controllers\Scheduling\ScheduleSettings;
 
 use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
 use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
