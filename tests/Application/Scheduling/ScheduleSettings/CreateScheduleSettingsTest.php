@@ -4,11 +4,8 @@ namespace Tests\Application\Scheduling\ScheduleSettings;
 
 use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
 use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
-use App\Models\Company\Company;
 use App\Models\Scheduling\ScheduleSettings;
 use Tests\TestCase;
 

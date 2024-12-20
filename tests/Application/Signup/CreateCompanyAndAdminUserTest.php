@@ -2,8 +2,6 @@
 
 namespace Tests\Application\Scheduling\ScheduleSettings;
 
-use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
-use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
 use App\Application\Signup\CreateCompanyAndAdminUser;
 use App\Application\Signup\DTO\CreateCompanyAndAdminUserRequestDTO;
 use App\Domain\Exceptions\Company\CompanyException;
@@ -15,7 +13,6 @@ use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\User\UserRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
 use App\Models\Company\Company;
-use App\Models\Scheduling\ScheduleSettings;
 use App\Models\User\User;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
