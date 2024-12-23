@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Scheduling\ScheduleSettings;
+namespace Tests\Application\Signup;
 
 use App\Application\Signup\CreateCompanyAndAdminUser;
 use App\Application\Signup\DTO\CreateCompanyAndAdminUserRequestDTO;

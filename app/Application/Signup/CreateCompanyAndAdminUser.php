@@ -125,7 +125,7 @@ class CreateCompanyAndAdminUser
             false,
             false,
             false,
-            config('user.image.default_user_image'),
+            config('image.users.default_image'),
             $hashPassword,
             true
         );
