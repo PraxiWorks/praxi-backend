@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Stock\ProductController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
@@ -37,7 +38,7 @@ Route::middleware('auth')->group(function () {
 
         //Configurações Agenda
         Route::prefix('schedule-settings')->group(function () {
-            Route::post('', [ScheduleSettingsController::class, 'store']);
+            Route::post('/', [ScheduleSettingsController::class, 'store']);
             Route::get('', [ScheduleSettingsController::class, 'index']);
             Route::put('/{configId}', [ScheduleSettingsController::class, 'update']);
         });
@@ -52,16 +53,18 @@ Route::middleware('auth')->group(function () {
         // });
 
         // // Estoque
-        // Route::prefix('estoque')->group(function () {
-        //     Route::post('/', [ItemController::class, 'store']);
-        //     Route::get('/', [ItemController::class, 'index']);
-        //     Route::get('/{itemId}', [ItemController::class, 'show']);
-        //     Route::put('/{itemId}', [ItemController::class, 'update']);
-        //     Route::delete('/{itemId}', [ItemController::class, 'delete']);
-        // });
+        Route::prefix('stock')->group(function () {
+            Route::prefix('products')->group(function () {
+                Route::post('/', [ProductController::class, 'store']);
+                Route::get('', [ProductController::class, 'index']);
+                Route::get('/{productId}', [ProductController::class, 'show']);
+                Route::put('/{productId}', [ProductController::class, 'update']);
+                Route::delete('/{productId}', [ProductController::class, 'delete']);
+            });
+        });
 
         // Usuários
-        Route::prefix('usuarios')->group(function () {
+        Route::prefix('users')->group(function () {
             Route::post('/', [UserController::class, 'store']);
             Route::get('/', [UserController::class, 'index']);
             Route::get('/{userId}', [UserController::class, 'show']);
