@@ -17,9 +17,9 @@ class UserRepository implements UserRepositoryInterface
         return User::find($id);
     }
 
-    public function list(): array
+    public function list(int $companyId): array
     {
-        return User::orderBy('id')->get()->toArray();
+        return User::where('company_id', $companyId)->get()->toArray();
     }
 
     public function update(User $entity): bool

@@ -7,11 +7,10 @@ use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\User\UserException;
 use App\Domain\Exceptions\User\UserTypeNotFoundException;
 use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
-use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
 use App\Domain\Interfaces\User\UserRepositoryInterface;
 use App\Domain\Interfaces\User\UserTypeRepositoryInterface;
-use App\Domain\ValueObjects\ImageValueObject;
 use App\Models\User\User;
+use App\Services\Image\ProcessImage;
 
 class CreateUser
 {
@@ -20,7 +19,7 @@ class CreateUser
         private CompanyRepositoryInterface $companyRepositoryInterface,
         private UserRepositoryInterface $userRepositoryInterface,
         private UserTypeRepositoryInterface $userTypeRepositoryInterface,
-        private LocalStorageRepositoryInterface $localStorageRepository,
+        private ProcessImage $processImage,
     ) {}
 
     public function execute(CreateUserRequestDTO $input): bool
@@ -44,7 +43,7 @@ class CreateUser
             throw new UserTypeNotFoundException('Tipo de usuário não encontrado', 400);
         }
 
-        $pathImage = $this->processImage($input, $company->name);
+        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name);
 
         $hashedPassword = password_hash($input->getPassword(), PASSWORD_DEFAULT);
 
@@ -91,18 +90,5 @@ class CreateUser
         if (empty($input->getUserTypeId())) {
             throw new UserException('Tipo de usuário não informado', 400);
         }
-    }
-
-    private function processImage(CreateUserRequestDTO $input, string $companyName): string
-    {
-        if (!empty($input->getImageBase64())) {
-            $imageMaxSize = config('user.image.image_user_max_size');
-            $imageValueObject = new ImageValueObject($input->getImageBase64(), $imageMaxSize);
-            $mime = $imageValueObject->getMimeType();
-            $path = 'images/usuarios/' . $companyName . $input->getEmail() . $mime;
-            return $this->localStorageRepository->saveImage($input->getImageBase64(), $path);
-        }
-
-        return config('user.image.default_user_image');
     }
 }

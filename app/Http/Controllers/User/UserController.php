@@ -25,10 +25,12 @@ class UserController extends Controller
         private DeleteUser $deleteUserUseCase
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $output = $this->listUserUseCase->execute();
+            $companyId = $request->route('companyId') ?? 0;
+            $input = new IdRequestDTO($companyId);
+            $output = $this->listUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
@@ -92,7 +94,6 @@ class UserController extends Controller
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }
-
 
     public function update(Request $request)
     {

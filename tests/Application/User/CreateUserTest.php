@@ -14,6 +14,7 @@ use App\Domain\Interfaces\User\UserTypeRepositoryInterface;
 use App\Models\Company\Company;
 use App\Models\User\User;
 use App\Models\User\UserType;
+use App\Services\Image\ProcessImage;
 use Tests\TestCase;
 
 class CreateUserTest extends TestCase
@@ -21,7 +22,7 @@ class CreateUserTest extends TestCase
     private CompanyRepositoryInterface $companyRepositoryInterfaceMock;
     private UserRepositoryInterface $userRepositoryInterfaceMock;
     private UserTypeRepositoryInterface $userTypeRepositoryInterfaceMock;
-    private LocalStorageRepositoryInterface $localStorageRepositoryMock;
+    private ProcessImage $processImageMock;
 
     private CreateUser $useCase;
 
@@ -31,17 +32,17 @@ class CreateUserTest extends TestCase
         $this->companyRepositoryInterfaceMock = $this->createMock(CompanyRepositoryInterface::class);
         $this->userRepositoryInterfaceMock = $this->createMock(UserRepositoryInterface::class);
         $this->userTypeRepositoryInterfaceMock = $this->createMock(UserTypeRepositoryInterface::class);
-        $this->localStorageRepositoryMock = $this->createMock(LocalStorageRepositoryInterface::class);
+        $this->processImageMock = $this->createMock(ProcessImage::class);
 
         $this->useCase = new CreateUser(
             $this->companyRepositoryInterfaceMock,
             $this->userRepositoryInterfaceMock,
             $this->userTypeRepositoryInterfaceMock,
-            $this->localStorageRepositoryMock
+            $this->processImageMock
         );
     }
 
-    public function testValidateInputThrowsExceptionForUsername()
+    public function testValidateInputThrowsExceptionForEmptyUsername()
     {
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Nome de usuário não informado');
@@ -135,6 +136,7 @@ class CreateUserTest extends TestCase
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userTypeRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($userType);
+        $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
         $this->useCase->execute($input);
@@ -152,6 +154,7 @@ class CreateUserTest extends TestCase
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->userTypeRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($userType);
+        $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
         $this->userRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->useCase->execute($input);

@@ -6,13 +6,18 @@ use App\Application\User\DTO\UpdateUserRequestDTO;
 use App\Application\User\UpdateUser;
 use App\Domain\Exceptions\User\UserException;
 use App\Domain\Exceptions\User\UserNotFoundException;
+use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Models\Company\Company;
 use App\Models\User\User;
+use App\Services\Image\ProcessImage;
 use Tests\TestCase;
 
 class UpdateUserTest extends TestCase
 {
     private UserRepositoryInterface $userRepositoryInterfaceMock;
+    private CompanyRepositoryInterface $companyRepositoryInterfaceMock;
+    private ProcessImage $processImageMock;
 
     private UpdateUser $useCase;
 
@@ -20,9 +25,13 @@ class UpdateUserTest extends TestCase
     {
         parent::setUp();
         $this->userRepositoryInterfaceMock = $this->createMock(UserRepositoryInterface::class);
+        $this->companyRepositoryInterfaceMock = $this->createMock(CompanyRepositoryInterface::class);
+        $this->processImageMock = $this->createMock(ProcessImage::class);
 
         $this->useCase = new UpdateUser(
-            $this->userRepositoryInterfaceMock
+            $this->userRepositoryInterfaceMock,
+            $this->companyRepositoryInterfaceMock,
+            $this->processImageMock
         );
     }
 
@@ -73,15 +82,21 @@ class UpdateUserTest extends TestCase
         $this->useCase->execute($input);
     }
 
-    public function testErrorSavingUser()
+    public function testErrorUpdatingUser()
     {
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Erro ao atualizar usuário');
 
-        $user = new User();
-
         $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 1, 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, true);
+
+        $user = new User();
+        $company = new Company();
+        $company->id = 1;
+        $company->name = 'company';
+
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($user);
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
+        $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
         $this->userRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(false);
 
         $this->useCase->execute($input);
@@ -90,9 +105,14 @@ class UpdateUserTest extends TestCase
     public function testSuccess()
     {
         $user = new User();
+        $company = new Company();
+        $company->id = 1;
+        $company->name = 'company';
 
         $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 1, 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, true);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($user);
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
+        $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
         $this->userRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(true);
 
         $this->useCase->execute($input);
