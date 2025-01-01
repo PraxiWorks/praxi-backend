@@ -6,12 +6,12 @@ use App\Application\Login\DTO\LoginRequestDTO;
 use App\Application\Login\DTO\LoginResponseDTO;
 use App\Application\Login\Login;
 use App\Domain\Exceptions\Login\LoginException;
-use App\Domain\Exceptions\User\UserException;
-use App\Domain\Exceptions\User\UserNotFoundException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
-use App\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Exceptions\Register\User\UserException;
+use App\Domain\Exceptions\Register\User\UserNotFoundException;
+use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
-use App\Models\User\User;
+use App\Models\Register\User\User;
 use Tests\TestCase;
 
 class LoginTest extends TestCase

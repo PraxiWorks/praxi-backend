@@ -6,22 +6,45 @@ use App\Application\Signup\DTO\CreateCompanyAndAdminUserRequestDTO;
 use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
 use App\Domain\Exceptions\Signup\CreateCompanyAndAdminUserException;
-use App\Domain\Exceptions\User\UserException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
+use App\Domain\Exceptions\Register\User\UserException;
+use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Core\Module\ModuleRepositoryInterface;
+use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
+use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
+use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
+use App\Domain\Interfaces\Register\Group\GroupPermissionRepositoryInterface;
+use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
-use App\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
+use App\Domain\Interfaces\Settings\Company\CompanyModuleRepositoryInterface;
+use App\Domain\Interfaces\Settings\Company\CompanyPlanRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
-use App\Models\Company\Company;
+use App\Models\Core\Company\Company;
+use App\Models\Core\Permission\GroupPermission;
+use App\Models\Core\Plan\Plan;
+use App\Models\Register\Group\Group;
 use App\Models\Scheduling\ScheduleSettings;
-use App\Models\User\User;
+use App\Models\Register\User\User;
+use App\Models\Settings\Company\CompanyModule;
+use App\Models\Settings\Company\CompanyPlan;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class CreateCompanyAndAdminUser
 {
     public function __construct(
+        private PlanRepositoryInterface $planRepositoryInterface,
+        private PlanModuleRepositoryInterface $planModuleRepositoryInterface,
+        private ModuleRepositoryInterface $moduleRepositoryInterface,
         private CompanyRepositoryInterface $companyRepositoryInterface,
+        private CompanyPlanRepositoryInterface $companyPlanRepositoryInterface,
+        private CompanyModuleRepositoryInterface $companyModuleRepositoryInterface,
+        private GroupRepositoryInterface $groupRepositoryInterface,
+        private ModulePermissionRepositoryInterface $modulePermissionRepositoryInterface,
+        private GroupPermissionRepositoryInterface $groupPermissionRepositoryInterface,
         private UserRepositoryInterface $userRepositoryInterface,
-        private ScheduleSettingsRepositoryInterface  $scheduleSettingsRepositoryInterface,
+        private ScheduleSettingsRepositoryInterface $scheduleSettingsRepositoryInterface,
         private JwtAuth $jwtAuth
     ) {}
 
@@ -31,15 +54,13 @@ class CreateCompanyAndAdminUser
 
         DB::beginTransaction();
         try {
-            $company = $this->createCompany($input);
-            $user = $this->createUser($input, $company);
+            $plan = !empty($input->getPlanId()) ? $this->getPlan($input->getPlanId()) : null;
+            $moduleIds = $this->getModuleIds($input, $plan);
+            $company = $this->createCompany($input, $plan, $moduleIds);
+            $group = $this->createGroup($company, $moduleIds);
+            $user = $this->createUser($input, $company, $group);
             $this->createScheduleSettings($company, $input->getWorkSchedule());
-
-            if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain') || empty(config('jwtAuth.expirationTime')))) {
-                throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
-            }
-
-            $jwtToken = $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
+            $jwtToken = $this->generateJwtToken($user);
 
             DB::commit();
 
@@ -48,76 +69,164 @@ class CreateCompanyAndAdminUser
                 'token' => $jwtToken,
                 'user' => $user
             ];
-        } catch (UserException | CompanyException | ScheduleSettingsException $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw new CreateCompanyAndAdminUserException($e->getMessage(), $e->getCode());
         }
     }
 
+
     private function validateInput(CreateCompanyAndAdminUserRequestDTO $input): void
     {
-        if (empty($input->getFantasyName())) {
-            throw new CompanyException('Nome fantasia é obrigatório', 400);
+        $requiredFields = [
+            'Nome fantasia' => $input->getFantasyName(),
+            'Username' => $input->getUsername(),
+            'Nome' => $input->getName(),
+            'Email' => $input->getEmail(),
+            'Telefone' => $input->getPhoneNumber(),
+            'Senha' => $input->getPassword(),
+            'Horário de trabalho' => $input->getWorkSchedule(),
+        ];
+
+        foreach ($requiredFields as $field => $value) {
+            if (empty($value)) {
+                throw new CreateCompanyAndAdminUserException("{$field} é obrigatório", 400);
+            }
         }
 
-        if (empty($input->getUsername())) {
-            throw new UserException('Nome de usuário é obrigatório', 400);
-        }
-
-        if (empty($input->getName())) {
-            throw new UserException('Nome é obrigatório', 400);
-        }
-
-        if (empty($input->getEmail())) {
-            throw new UserException('Email é obrigatório', 400);
-        }
-
-        if (empty($input->getPhoneNumber())) {
-            throw new UserException('Telefone é obrigatório', 400);
-        }
-
-        if (empty($input->getPassword())) {
-            throw new UserException('Senha é obrigatória', 400);
-        }
-
-        if (empty($input->getWorkSchedule())) {
-            throw new ScheduleSettingsException('Horário de trabalho é obrigatório', 400);
+        // Validação específica para plano e módulos
+        if (empty($input->getPlanId()) && empty($input->getModules())) {
+            throw new CreateCompanyAndAdminUserException('É necessário informar pelo menos um plano ou módulo.', 400);
         }
     }
 
-    private function createCompany(CreateCompanyAndAdminUserRequestDTO $input): Company
+
+    private function getPlan(int $planId): Plan
+    {
+        $plan = $this->planRepositoryInterface->getById($planId);
+        if (empty($plan)) {
+            throw new CreateCompanyAndAdminUserException('Plano não encontrado', 404);
+        }
+        return $plan;
+    }
+
+    private function getModuleIds(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan): array
+    {
+        $moduleIds = [];
+        if (!empty($plan)) {
+            $planModules = $this->planModuleRepositoryInterface->getByPlanId($plan->id);
+            foreach ($planModules as $planModule) {
+                $moduleIds[] = $planModule->module_id;
+            }
+        }
+
+        if (!empty($input->getModules())) {
+            foreach ($input->getModules() as $moduleId) {
+                $module = $this->moduleRepositoryInterface->getById($moduleId);
+                if (empty($module)) {
+                    throw new CreateCompanyAndAdminUserException('Módulo não encontrado', 404);
+                }
+                $moduleIds[] = $module->id;
+            }
+        }
+
+        return array_unique($moduleIds);
+    }
+
+
+    private function createCompany(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan, array $moduleIds): Company
     {
         $existingCompany = $this->companyRepositoryInterface->getByName($input->getFantasyName());
         if (!empty($existingCompany)) {
             throw new CompanyException('Uma empresa com este nome já existe', 400);
         }
 
-        $newCompany = Company::new($input->getFantasyName());
-        if (!$this->companyRepositoryInterface->save($newCompany)) {
+        $start_trial = null;
+        $end_trial = null;
+
+        if (!empty($plan)) {
+            if ($plan->name === 'Plano Gratuito') {
+                $start_trial = date('Y-m-d H:i:s');
+                $end_trial = date('Y-m-d H:i:s', strtotime('+' . $plan->duration_days . ' days'));
+            }
+        }
+
+        $company = Company::new(
+            $input->getFantasyName(),
+            $start_trial,
+            $end_trial
+        );
+
+        if (!$this->companyRepositoryInterface->save($company)) {
             throw new CompanyException('Erro ao criar a empresa', 500);
         }
 
-        $company = $this->companyRepositoryInterface->getByName($input->getFantasyName());
+        if (!empty($plan)) {
+            $companyPlan = CompanyPlan::new($company->id, $plan->id);
+            if (!$this->companyPlanRepositoryInterface->save($companyPlan)) {
+                throw new CreateCompanyAndAdminUserException('Erro ao salvar o plano na empresa', 500);
+            };
+        }
+
+        if (!empty($moduleIds)) {
+            foreach ($moduleIds as $moduleId) {
+                $companyModule = CompanyModule::new($company->id, $moduleId);
+                if (!$this->companyModuleRepositoryInterface->save($companyModule)) {
+                    throw new CreateCompanyAndAdminUserException('Erro ao salvar o módulo na empresa', 500);
+                }
+            }
+        }
 
         return $company;
     }
 
-    private function createUser(CreateCompanyAndAdminUserRequestDTO $input, Company $company): User
+    private function createGroup(Company $company, array $moduleIds): Group
     {
-        $existingUser = $this->userRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id);
-        if (!empty($existingUser)) {
+        $group = Group::new(
+            $company->id,
+            'Administrador',
+            true
+        );
+
+        if (!$this->groupRepositoryInterface->save($group)) {
+            throw new CreateCompanyAndAdminUserException('Erro ao criar o grupo', 500);
+        };
+
+        $permissions = $this->modulePermissionRepositoryInterface->getPermissionsByList($moduleIds);
+
+        foreach ($permissions as $permission) {
+            $groupPermission = GroupPermission::new(
+                $group->id,
+                $permission->id,
+                false
+            );
+
+            $this->groupPermissionRepositoryInterface->save($groupPermission);
+        }
+
+        return $group;
+    }
+
+    private function createUser(CreateCompanyAndAdminUserRequestDTO $input, Company $company, Group $group): User
+    {
+        $existingEmail = $this->userRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id);
+        if (!empty($existingEmail)) {
             throw new UserException('Email já cadastrado', 400);
         }
 
-        $hashPassword = password_hash($input->getPassword(), PASSWORD_DEFAULT);
+        $existingUsername = $this->userRepositoryInterface->getByUsername($input->getUsername());
+        if (!empty($existingUsername)) {
+            throw new UserException('Nome de usuário já cadastrado', 400);
+        }
 
-        $newUser = User::new(
+        $hashPassword = Hash::make($input->getPassword());
+
+        $user = User::new(
             $company->id,
             $input->getUsername(),
             $input->getName(),
             $input->getEmail(),
             $input->getPhoneNumber(),
-            1,
             null,
             null,
             null,
@@ -127,15 +236,15 @@ class CreateCompanyAndAdminUser
             false,
             config('image.users.default_image'),
             $hashPassword,
+            false,
+            $group->id,
             true
         );
 
-        if (!$this->userRepositoryInterface->save($newUser)) {
+        if (!$this->userRepositoryInterface->save($user)) {
             throw new UserException('Erro ao criar o usuário', 500);
         }
 
-        $user = $this->userRepositoryInterface->getByUsername($input->getUsername());
-        
         return $user;
     }
 
@@ -160,5 +269,13 @@ class CreateCompanyAndAdminUser
                 throw new ScheduleSettingsException('Erro ao salvar configuração de agenda.', 500);
             }
         }
+    }
+
+    private function generateJwtToken(User $user): string
+    {
+        if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain')) || empty(config('jwtAuth.expirationTime'))) {
+            throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
+        }
+        return $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
     }
 }

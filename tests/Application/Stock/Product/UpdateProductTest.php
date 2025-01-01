@@ -2,16 +2,13 @@
 
 namespace Tests\Application\User;
 
-use App\Application\Stock\Product\CreateProduct;
-use App\Application\Stock\Product\DTO\CreateProductRequestDTO;
 use App\Application\Stock\Product\DTO\UpdateProductRequestDTO;
 use App\Application\Stock\Product\UpdateProduct;
-use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Stock\Product\ProductException;
 use App\Domain\Exceptions\Stock\Product\ProductNotFoundException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
-use App\Models\Company\Company;
+use App\Models\Core\Company\Company;
 use App\Models\Stock\Product;
 use App\Services\Image\ProcessImage;
 use Tests\TestCase;

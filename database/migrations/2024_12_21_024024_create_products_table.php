@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
-            $table->foreignId('category_id')->nullable()->constrained('product_categories');
+            $table->foreignId('category_id')->constrained('product_categories');
             $table->string('sku_code');
             $table->float('price')->nullable();
             $table->string('path_image')->nullable();
             $table->boolean('status');
-            $table->string('current_stock')->nullable();
-            $table->string('minimum_stock_level')->nullable();
-            $table->string('maximum_stock_level')->nullable();
+            $table->integer('current_stock')->nullable();
+            $table->integer('minimum_stock_level')->nullable();
+            $table->integer('maximum_stock_level')->nullable();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
             $table->timestamps();
         });
     }

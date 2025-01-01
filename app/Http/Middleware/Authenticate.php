@@ -3,13 +3,15 @@
 namespace App\Http\Middleware;
 
 use App\Infrastructure\Services\Jwt\JwtAuth;
+use App\Models\Register\User\User;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
     /**
-     * Get the path the user should be redirected to when they are not authenticated.
+     * Handle an incoming request.
      */
     public function handle($request, \Closure $next, ...$guards)
     {
@@ -21,6 +23,27 @@ class Authenticate extends Middleware
                 'message' => 'Usuário não autenticado'
             ], 401));
         }
+
+        // Obter o ID do usuário a partir do token JWT
+        $userId = $jwtAuth->getUserIdFromToken($token);
+
+        if (empty($userId)) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Usuário inválido'
+            ], 401));
+        }
+
+        // Buscar o usuário no banco
+        $user = User::find($userId);
+
+        if (empty($user)) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Usuário não encontrado'
+            ], 404));
+        }
+
+        // Definir o usuário no Auth
+        Auth::setUser($user);
 
         return $next($request);
     }

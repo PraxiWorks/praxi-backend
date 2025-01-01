@@ -5,7 +5,7 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Register\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,8 +24,8 @@ Route::prefix('proxy')->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::post('login', [LoginController::class, 'login']);
     Route::post('signup', [SignupController::class, 'store']);
+    Route::post('login', [LoginController::class, 'login']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -38,9 +38,9 @@ Route::middleware('auth')->group(function () {
 
         //Configurações Agenda
         Route::prefix('schedule-settings')->group(function () {
-            Route::post('/', [ScheduleSettingsController::class, 'store']);
-            Route::get('', [ScheduleSettingsController::class, 'index']);
-            Route::put('/{configId}', [ScheduleSettingsController::class, 'update']);
+            Route::post('/', [ScheduleSettingsController::class, 'store'])->middleware('permission:scheduling.scheduleSettings.store');
+            Route::get('', [ScheduleSettingsController::class, 'index'])->middleware('permission:scheduling.scheduleSettings.list');
+            Route::put('/{configId}', [ScheduleSettingsController::class, 'update'])->middleware('permission:scheduling.scheduleSettings.update');
         });
 
         // Eventos
@@ -55,21 +55,28 @@ Route::middleware('auth')->group(function () {
         // // Estoque
         Route::prefix('stock')->group(function () {
             Route::prefix('products')->group(function () {
-                Route::post('/', [ProductController::class, 'store']);
-                Route::get('', [ProductController::class, 'index']);
-                Route::get('/{productId}', [ProductController::class, 'show']);
-                Route::put('/{productId}', [ProductController::class, 'update']);
-                Route::delete('/{productId}', [ProductController::class, 'delete']);
+                Route::post('/', [ProductController::class, 'store'])->middleware('permission:stock.product.store');
+                Route::get('', [ProductController::class, 'index'])->middleware('permission:stock.product.list');
+                Route::get('/{productId}', [ProductController::class, 'show'])->middleware('permission:stock.product.show');
+                Route::put('/{productId}', [ProductController::class, 'update'])->middleware('permission:stock.product.update');
+                Route::delete('/{productId}', [ProductController::class, 'delete'])->middleware('permission:stock.product.delete');
             });
+
+            // Route::prefix('categories')->group(function () {
+            //     Route::post('/', [CategoryController::class, 'store']);
+            //     Route::get('/', [CategoryController::class, 'index']);
+            //     Route::get('/{categoryId}', [CategoryController::class, 'show']);
+            //     Route::put('/{categoryId}', [CategoryController::class, 'update']);
+            //     Route::delete('/{categoryId}', [CategoryController::class, 'delete']);
         });
 
         // Usuários
         Route::prefix('users')->group(function () {
-            Route::post('/', [UserController::class, 'store']);
-            Route::get('/', [UserController::class, 'index']);
-            Route::get('/{userId}', [UserController::class, 'show']);
-            Route::put('/{userId}', [UserController::class, 'update']);
-            Route::delete('/{userId}', [UserController::class, 'delete']);
+            Route::post('/', [UserController::class, 'store'])->middleware('permission:system.user.store');
+            Route::get('/', [UserController::class, 'index'])->middleware('permission:system.user.list');
+            Route::get('/{userId}', [UserController::class, 'show'])->middleware('permission:system.user.show');
+            Route::put('/{userId}', [UserController::class, 'update'])->middleware('permission:system.user.update');
+            Route::delete('/{userId}', [UserController::class, 'delete'])->middleware('permission:system.user.delete');
         });
 
         // // Clientes

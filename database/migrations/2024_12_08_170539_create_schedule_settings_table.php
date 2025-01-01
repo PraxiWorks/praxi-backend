@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('schedule_settings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id'); 
+            $table->foreignId('company_id')->constrained('companies');
             $table->string('day_of_week');
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->boolean('is_working_day')->default(true);
             $table->timestamps();
-
-            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 
