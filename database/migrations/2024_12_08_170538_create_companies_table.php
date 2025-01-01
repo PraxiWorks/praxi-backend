@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id(); 
             $table->string('name');
+            $table->dateTime('start_trial')->nullable();
+            $table->dateTime('end_trial')->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@ namespace App\Application\Stock\Product;
 use App\Application\Stock\Product\DTO\UpdateProductRequestDTO;
 use App\Domain\Exceptions\Stock\Product\ProductException;
 use App\Domain\Exceptions\Stock\Product\ProductNotFoundException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Services\Image\ProcessImage;
 

@@ -15,16 +15,20 @@ class SignupController extends Controller
 
     public function store(Request $request)
     {
-        $fantasyName = $request->input('fantasy_name');
-        $username = $request->input('username');
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $phoneNumber = $request->input('phone_number');
-        $password = $request->input('password');
-        $workSchedule = $request->input('days');
+        $planId = $request->input('plan_id') ?? 0;
+        $modules = $request->input('modules') ?? [];
+        $fantasyName = $request->input('fantasy_name') ?? '';
+        $username = $request->input('username') ?? '';
+        $name = $request->input('name') ?? '';
+        $email = $request->input('email') ?? '';
+        $phoneNumber = $request->input('phone_number') ?? '';
+        $password = $request->input('password') ?? '';
+        $workSchedule = $request->input('days') ?? [];
 
         try {
             $input = new CreateCompanyAndAdminUserRequestDTO(
+                $planId,
+                $modules,
                 $fantasyName,
                 $username,
                 $name,

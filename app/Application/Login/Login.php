@@ -5,10 +5,10 @@ namespace App\Application\Login;
 use App\Application\Login\DTO\LoginRequestDTO;
 use App\Application\Login\DTO\LoginResponseDTO;
 use App\Domain\Exceptions\Login\LoginException;
-use App\Domain\Exceptions\User\UserException;
-use App\Domain\Exceptions\User\UserNotFoundException;
-use App\Domain\Interfaces\Company\CompanyRepositoryInterface;
-use App\Domain\Interfaces\User\UserRepositoryInterface;
+use App\Domain\Exceptions\Register\User\UserException;
+use App\Domain\Exceptions\Register\User\UserNotFoundException;
+use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
 
 class Login

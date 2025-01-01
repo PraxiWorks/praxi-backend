@@ -10,6 +10,13 @@ RUN apt-get update && apt-get install -y \
     curl \
     && docker-php-ext-install pdo_pgsql zip
 
+# Instalar Xdebug para cobertura de código
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# Configurar Xdebug
+RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.start_with_request=no" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Instalar Composer
 COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 

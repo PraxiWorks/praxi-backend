@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone_number')->nullable();
-            $table->foreignId('user_type_id')->constrained('user_types');
             $table->date('date_of_birth')->nullable();
             $table->string('cpf_number')->nullable();
             $table->string('rg_number')->nullable();
@@ -26,8 +25,10 @@ return new class extends Migration
             $table->boolean('send_notification_email')->nullable();
             $table->boolean('send_notification_sms')->nullable();
             $table->boolean('send_notification_whatsapp')->nullable();
-            $table->string('path_image')->nullable();
+            $table->string('path_image');
             $table->string('password');
+            $table->boolean('is_professional');
+            $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->boolean('status');
             $table->timestamps();
         });

@@ -54,6 +54,19 @@ class JwtAuth
         return isset($decodedPayload['exp']) && $decodedPayload['exp'] > time();
     }
 
+    public function getUserIdFromToken(string $token): ?int
+    {
+        $parts = explode('.', $token);
+        if (count($parts) !== 3) {
+            return null;
+        }
+
+        $payload = $parts[1];
+
+        $decodedPayload = json_decode(self::urlsafeB64Decode($payload), true);
+        return $decodedPayload['sub'] ?? null;
+    }
+
     /**
      * URL-safe Base64 encode
      * 
