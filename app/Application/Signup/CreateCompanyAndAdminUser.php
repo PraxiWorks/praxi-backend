@@ -201,7 +201,9 @@ class CreateCompanyAndAdminUser
                 false
             );
 
-            $this->groupPermissionRepositoryInterface->save($groupPermission);
+            if(!$this->groupPermissionRepositoryInterface->save($groupPermission)){
+                throw new CreateCompanyAndAdminUserException('Erro ao atribuir as permissões ao grupo', 500);
+            }
         }
 
         return $group;
