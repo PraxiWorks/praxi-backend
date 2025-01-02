@@ -4,9 +4,6 @@ namespace Tests\Application\Signup;
 
 use App\Application\Signup\CreateCompanyAndAdminUser;
 use App\Application\Signup\DTO\CreateCompanyAndAdminUserRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
-use App\Domain\Exceptions\Register\User\UserException;
-use App\Domain\Exceptions\Scheduling\ScheduleSettings\ScheduleSettingsException;
 use App\Domain\Exceptions\Signup\CreateCompanyAndAdminUserException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Core\Module\ModuleRepositoryInterface;
@@ -23,11 +20,10 @@ use App\Infrastructure\Services\Jwt\JwtAuth;
 use App\Models\Core\Company\Company;
 use App\Models\Core\Module\Module;
 use App\Models\Core\Plan\Plan;
-use App\Models\Core\Plan\PlanModule;
+use App\Models\Register\Group\Group;
 use App\Models\Register\User\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Config;
-use stdClass;
 use Tests\TestCase;
 
 class CreateCompanyAndAdminUserTest extends TestCase
@@ -212,6 +208,25 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->useCase->execute($input);
     }
 
+    public function testValidateInputThrowsExceptionForEmptyPlanAndModule()
+    {
+        $this->expectException(CreateCompanyAndAdminUserException::class);
+        $this->expectExceptionMessage('É necessário informar pelo menos um plano ou módulo.');
+
+        $input = new CreateCompanyAndAdminUserRequestDTO(
+            0,
+            [],
+            'Fantasy Name',
+            'username',
+            'name',
+            'email',
+            'phoneNumber',
+            'password',
+            [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]
+        );
+        $this->useCase->execute($input);
+    }
+
     public function testPlanNotFound()
     {
         $this->expectException(CreateCompanyAndAdminUserException::class);
@@ -252,6 +267,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -260,7 +279,6 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
         $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
@@ -289,6 +307,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -297,11 +319,11 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
 
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn($company);
 
@@ -327,6 +349,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -335,11 +361,11 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
 
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
@@ -366,6 +392,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -374,17 +404,16 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
-
-        $companyMock = $this->createMock(Company::class);
-
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
 
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
+
+        $companyMock = $this->createMock(Company::class);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')
             ->with($this->callback(function ($arg) use ($companyMock) {
                 $arg->id = 1;
@@ -416,6 +445,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -424,17 +457,16 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
-
-        $companyMock = $this->createMock(Company::class);
-
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
 
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
+
+        $companyMock = $this->createMock(Company::class);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')
             ->with($this->callback(function ($arg) use ($companyMock) {
                 $arg->id = 1;
@@ -467,6 +499,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -475,17 +511,16 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
-
-        $companyMock = $this->createMock(Company::class);
-
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
 
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
+
+        $companyMock = $this->createMock(Company::class);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')
             ->with($this->callback(function ($arg) use ($companyMock) {
                 $arg->id = 1;
@@ -497,6 +532,78 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
+
+        $this->useCase->execute($input);
+    }
+
+    public function testErrorSavingGroupPermission()
+    {
+        $this->expectException(CreateCompanyAndAdminUserException::class);
+        $this->expectExceptionMessage('Erro ao atribuir as permissões ao grupo');
+
+        $input = new CreateCompanyAndAdminUserRequestDTO(
+            1,
+            [1],
+            'Fantasy Name',
+            'username',
+            'name',
+            'email',
+            'phoneNumber',
+            'password',
+            [['day' => 'seg', 'start_time' => '08:00', 'end_time' => '17:00', 'is_working_day' => true]]
+        );
+
+        $plan = new Plan();
+        $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
+
+        $planModule = new \stdClass();
+        $planModule->module_id = 1;
+
+        $collection = new Collection([
+            $planModule
+        ]);
+
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
+        $module = new Module();
+        $module->id = 1;
+
+        $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
+
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
+
+        $companyMock = $this->createMock(Company::class);
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($companyMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
         $this->useCase->execute($input);
     }
@@ -520,6 +627,10 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
+
+        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
         $planModule = new \stdClass();
         $planModule->module_id = 1;
@@ -528,17 +639,16 @@ class CreateCompanyAndAdminUserTest extends TestCase
             $planModule
         ]);
 
+        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
+
         $module = new Module();
         $module->id = 1;
-
-        $companyMock = $this->createMock(Company::class);
-
-        $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
-        $this->planModuleRepositoryInterfaceMock->expects($this->once())->method('getByPlanId')->willReturn($collection);
 
         $this->moduleRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($module);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getByName')->willReturn(null);
+
+        $companyMock = $this->createMock(Company::class);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('save')
             ->with($this->callback(function ($arg) use ($companyMock) {
                 $arg->id = 1;
@@ -549,7 +659,24 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+
 
         $user = new User();;
 
@@ -577,6 +704,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -607,7 +736,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 
@@ -637,6 +782,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -667,7 +814,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 
@@ -696,6 +859,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -726,7 +891,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 
@@ -761,6 +942,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -791,7 +974,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 
@@ -828,6 +1027,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -858,7 +1059,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 
@@ -897,6 +1114,8 @@ class CreateCompanyAndAdminUserTest extends TestCase
 
         $plan = new Plan();
         $plan->id = 1;
+        $plan->name = 'Plano Gratuito';
+        $plan->duration_days = 3;
 
         $this->planRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($plan);
 
@@ -927,7 +1146,23 @@ class CreateCompanyAndAdminUserTest extends TestCase
         $this->companyPlanRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
         $this->companyModuleRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+        $groupMock = $this->createMock(Group::class);
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $modulePermission = new \stdClass();
+        $modulePermission->id = 1;
+
+        $collection = new Collection([
+            $modulePermission
+        ]);
+
+        $this->modulePermissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionsByList')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
 

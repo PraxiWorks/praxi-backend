@@ -4,6 +4,7 @@ namespace Tests\Application\User;
 
 use App\Application\DTO\IdRequestDTO;
 use App\Application\Stock\Product\ShowProduct;
+use App\Domain\Exceptions\Stock\Product\ProductNotFoundException;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Models\Stock\Product;
 use Tests\TestCase;
@@ -22,6 +23,18 @@ class ShowProductTest extends TestCase
         $this->useCase = new ShowProduct(
             $this->productRepositoryInterfaceMock
         );
+    }
+
+    public function testProductNotFound()
+    {
+        $this->expectException(ProductNotFoundException::class);
+
+        $input = new IdRequestDTO(1);
+        $this->productRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
+
+        $result = $this->useCase->execute($input);
+
+        $this->assertNull($result);
     }
 
     public function testExecuteReturnsExpectedUser()
