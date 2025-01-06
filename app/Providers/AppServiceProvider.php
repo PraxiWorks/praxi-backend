@@ -8,6 +8,7 @@ use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
+use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
@@ -24,6 +25,7 @@ use App\Infrastructure\Eloquent\Core\Permission\ModulePermissionRepository;
 use App\Infrastructure\Eloquent\Core\Permission\PermissionRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanModuleRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanRepository;
+use App\Infrastructure\Eloquent\Register\Client\ClientRepository;
 use App\Infrastructure\Eloquent\Register\Group\GroupRepository;
 use App\Infrastructure\Eloquent\Register\User\GroupPermissionRepository;
 use App\Infrastructure\Eloquent\Register\User\UserPermissionRepository;
@@ -65,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(GroupRepositoryInterface::class, GroupRepository::class);
         $this->app->bind(UserPermissionRepositoryInterface::class, UserPermissionRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
 
         //Settings
         $this->app->bind(CompanyModuleRepositoryInterface::class, CompanyModuleRepository::class);

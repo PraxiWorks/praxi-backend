@@ -13,13 +13,25 @@ return [
         'system.group.show',
         'system.group.update',
         'system.group.delete',
+
+        'system.plan.list',
+        'system.plan.store',
+        'system.plan.show',
+        'system.plan.update',
+        'system.plan.delete',
+
+        'system.client.list',
+        'system.client.store',
+        'system.client.show',
+        'system.client.update',
+        'system.client.delete',
     ],
     'Stock' => [
-        'stock.item.list',
-        'stock.item.store',
-        'stock.item.show',
-        'stock.item.update',
-        'stock.item.delete',
+        'stock.product.list',
+        'stock.product.store',
+        'stock.product.show',
+        'stock.product.update',
+        'stock.product.delete',
 
         'stock.category.list',
         'stock.category.store',
@@ -39,5 +51,11 @@ return [
         'scheduling.scheduleSettings.show',
         'scheduling.scheduleSettings.update',
         'scheduling.scheduleSettings.delete',
+
+        'scheduling.event.list',
+        'scheduling.event.store',
+        'scheduling.event.show',
+        'scheduling.event.update',
+        'scheduling.event.delete',
     ],
 ];
