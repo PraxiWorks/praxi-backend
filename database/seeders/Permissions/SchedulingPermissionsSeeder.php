@@ -17,6 +17,12 @@ class SchedulingPermissionsSeeder extends BasePermissionsSeeder
             'scheduling.scheduleSettings.show',
             'scheduling.scheduleSettings.update',
             'scheduling.scheduleSettings.delete',
+
+            'scheduling.event.list',
+            'scheduling.event.store',
+            'scheduling.event.show',
+            'scheduling.event.update',
+            'scheduling.event.delete',
         ];
     }
 }

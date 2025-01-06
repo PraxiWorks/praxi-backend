@@ -3,6 +3,7 @@
 namespace App\Domain\Interfaces\Core\Permission;
 
 use App\Models\Core\Permission\Permission;
+use Illuminate\Database\Eloquent\Collection;
 
 interface PermissionRepositoryInterface
 {
@@ -12,4 +13,5 @@ interface PermissionRepositoryInterface
     public function update(Permission $entity): bool;
     public function delete(Permission $entity): bool;
     public function getByName(string $name): ?Permission;
+    public function getPermissionByAction(string $action): ?Collection;
 }

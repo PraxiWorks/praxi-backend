@@ -4,6 +4,7 @@ namespace App\Infrastructure\Eloquent\Core\Permission;
 
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Models\Core\Permission\Permission;
+use Illuminate\Database\Eloquent\Collection;
 
 class PermissionRepository implements PermissionRepositoryInterface
 {
@@ -35,5 +36,10 @@ class PermissionRepository implements PermissionRepositoryInterface
     public function getByName(string $name): ?Permission
     {
         return Permission::where('name', $name)->first();
+    }
+
+    public function getPermissionByAction(string $action): ?Collection
+    {
+        return Permission::where('name', 'like', '%' . $action . '%')->get();
     }
 }
