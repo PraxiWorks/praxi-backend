@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\User;
+namespace Tests\Application\Login;
 
 use App\Application\Login\DTO\LoginRequestDTO;
 use App\Application\Login\DTO\LoginResponseDTO;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\User;
+namespace Tests\Application\Stock\Product;
 
 use App\Application\Stock\Product\CreateProduct;
 use App\Application\Stock\Product\DTO\CreateProductRequestDTO;
