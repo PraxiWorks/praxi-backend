@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Stock\ProductController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Register\Client\ClientController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
+use App\Http\Controllers\Stock\Product\ProductController;
+use App\Http\Controllers\Stock\ProductCategory\ProductCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,12 +67,13 @@ Route::middleware('auth')->group(function () {
                 Route::delete('/{productId}', [ProductController::class, 'delete'])->middleware('permission:stock.product.delete');
             });
 
-            // Route::prefix('categories')->group(function () {
-            //     Route::post('/', [CategoryController::class, 'store']);
-            //     Route::get('/', [CategoryController::class, 'index']);
-            //     Route::get('/{categoryId}', [CategoryController::class, 'show']);
-            //     Route::put('/{categoryId}', [CategoryController::class, 'update']);
-            //     Route::delete('/{categoryId}', [CategoryController::class, 'delete']);
+            Route::prefix('product-categories')->group(function () {
+                Route::post('/', [ProductCategoryController::class, 'store']);
+                Route::get('/', [ProductCategoryController::class, 'index']);
+                Route::get('/{productCategoryId}', [ProductCategoryController::class, 'show']);
+                Route::put('/{productCategoryId}', [ProductCategoryController::class, 'update']);
+                Route::delete('/{productCategoryId}', [ProductCategoryController::class, 'delete']);
+            });
         });
 
         Route::prefix('register')->group(function () {

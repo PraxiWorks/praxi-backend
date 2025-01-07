@@ -17,6 +17,7 @@ use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Settings\Company\CompanyModuleRepositoryInterface;
 use App\Domain\Interfaces\Settings\Company\CompanyPlanRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
+use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 use App\Infrastructure\Eloquent\Core\Company\CompanyRepository;
@@ -34,6 +35,7 @@ use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
 use App\Infrastructure\Eloquent\Settings\Company\CompanyModuleRepository;
 use App\Infrastructure\Eloquent\Settings\Company\CompanyPlanRepository;
 use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
+use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
 use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
 use Illuminate\Support\ServiceProvider;
@@ -61,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Stock
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(ProductCategoryRepositoryInterface::class, ProductCategoryRepository::class);
 
         // Register
         $this->app->bind(GroupPermissionRepositoryInterface::class, GroupPermissionRepository::class);
