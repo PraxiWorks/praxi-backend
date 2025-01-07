@@ -4,61 +4,26 @@ namespace App\Application\Register\User\DTO;
 
 class UpdateUserRequestDTO
 {
-    private int $id;
-    private int $companyId;
-    private string $username;
-    private string $name;
-    private string $email;
-    private ?string $phoneNumber;
-    private ?string $dateOfBirth;
-    private ?string $cpfNumber;
-    private ?string $rgNumber;
-    private ?string $gender;
-    private ?bool $sendNotificationEmail;
-    private ?bool $sendNotificationSms;
-    private ?bool $sendNotificationWhatsapp;
-    private ?string $imageBase64;
-    private bool $isProfessional;
-    private ?int $groupId;
-    private bool $status;
 
     public function __construct(
-        int $id,
-        int $companyId,
-        string $username,
-        string $name,
-        string $email,
-        ?string $phoneNumber,
-        ?string $dateOfBirth,
-        ?string $cpfNumber,
-        ?string $rgNumber,
-        ?string $gender,
-        ?bool $sendNotificationEmail,
-        ?bool $sendNotificationSms,
-        ?bool $sendNotificationWhatsapp,
-        ?string $imageBase64,
-        bool $isProfessional,
-        ?int $groupId,
-        bool $status
-    ) {
-        $this->id = $id;
-        $this->companyId = $companyId;
-        $this->username = $username;
-        $this->name = $name;
-        $this->email = $email;
-        $this->phoneNumber = $phoneNumber;
-        $this->dateOfBirth = $dateOfBirth;
-        $this->cpfNumber = $cpfNumber;
-        $this->rgNumber = $rgNumber;
-        $this->gender = $gender;
-        $this->sendNotificationEmail = $sendNotificationEmail;
-        $this->sendNotificationSms = $sendNotificationSms;
-        $this->sendNotificationWhatsapp = $sendNotificationWhatsapp;
-        $this->imageBase64 = $imageBase64;
-        $this->isProfessional = $isProfessional;
-        $this->groupId = $groupId;
-        $this->status = $status;
-    }
+        private int $id,
+        private int $companyId,
+        private string $username,
+        private string $name,
+        private string $email,
+        private ?string $phoneNumber,
+        private ?string $dateOfBirth,
+        private ?string $cpfNumber,
+        private ?string $rgNumber,
+        private ?string $gender,
+        private ?bool $sendNotificationEmail,
+        private ?bool $sendNotificationSms,
+        private ?bool $sendNotificationWhatsapp,
+        private ?string $imageBase64,
+        private bool $isProfessional,
+        private ?int $groupId,
+        private bool $status
+    ) {}
 
     public function getId(): int
     {

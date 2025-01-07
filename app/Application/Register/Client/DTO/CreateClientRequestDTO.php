@@ -4,55 +4,24 @@ namespace App\Application\Register\Client\DTO;
 
 class CreateClientRequestDTO
 {
-    private int $companyId;
-    private string $name;
-    private string $email;
-    private ?string $phoneNumber;
-    private ?string $dateOfBirth;
-    private ?string $cpfNumber;
-    private ?string $rgNumber;
-    private ?string $gender;
-    private ?bool $sendNotificationEmail;
-    private ?bool $sendNotificationSms;
-    private ?bool $sendNotificationWhatsapp;
-    private ?string $imageBase64;
-    private string $password;
-    private bool $hasAccessToTheSystem;
-    private bool $status;
 
     public function __construct(
-        int $companyId,
-        string $name,
-        string $email,
-        ?string $phoneNumber,
-        ?string $dateOfBirth,
-        ?string $cpfNumber,
-        ?string $rgNumber,
-        ?string $gender,
-        ?bool $sendNotificationEmail,
-        ?bool $sendNotificationSms,
-        ?bool $sendNotificationWhatsapp,
-        ?string $imageBase64,
-        string $password,
-        bool $hasAccessToTheSystem,
-        bool $status
-    ) {
-        $this->companyId = $companyId;
-        $this->name = $name;
-        $this->email = $email;
-        $this->phoneNumber = $phoneNumber;
-        $this->dateOfBirth = $dateOfBirth;
-        $this->cpfNumber = $cpfNumber;
-        $this->rgNumber = $rgNumber;
-        $this->gender = $gender;
-        $this->sendNotificationEmail = $sendNotificationEmail;
-        $this->sendNotificationSms = $sendNotificationSms;
-        $this->sendNotificationWhatsapp = $sendNotificationWhatsapp;
-        $this->imageBase64 = $imageBase64;
-        $this->password = $password;
-        $this->hasAccessToTheSystem = $hasAccessToTheSystem;
-        $this->status = $status;
-    }
+        private int $companyId,
+        private string $name,
+        private string $email,
+        private ?string $phoneNumber,
+        private ?string $dateOfBirth,
+        private ?string $cpfNumber,
+        private ?string $rgNumber,
+        private ?string $gender,
+        private ?bool $sendNotificationEmail,
+        private ?bool $sendNotificationSms,
+        private ?bool $sendNotificationWhatsapp,
+        private ?string $imageBase64,
+        private string $password,
+        private bool $hasAccessToTheSystem,
+        private bool $status
+    ) {}
 
     public function getCompanyId(): int
     {

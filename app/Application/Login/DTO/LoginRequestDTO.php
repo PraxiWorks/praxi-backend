@@ -4,14 +4,11 @@ namespace App\Application\Login\DTO;
 
 class LoginRequestDTO
 {
-    private string $username;
-    private string $password;
 
-    public function __construct(string $username, string $password)
-    {
-        $this->username = $username;
-        $this->password = $password;
-    }
+    public function __construct(
+        private string $username,
+        private string $password
+    ) {}
 
     public function getUsername(): string
     {

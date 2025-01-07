@@ -4,37 +4,17 @@ namespace App\Application\Signup\DTO;
 
 class CreateCompanyAndAdminUserRequestDTO
 {
-    private int $planId;
-    private array $modules;
-    private string $fantasyName;
-    private string $username;
-    private string $name;
-    private string $email;
-    private string $phoneNumber;
-    private string $password;
-    private array $workSchedule;
-
     public function __construct(
-        int $planId,
-        array $modules,
-        string $fantasyName,
-        string $username,
-        string $name,
-        string $email,
-        string $phoneNumber,
-        string $password,
-        array $workSchedule
-    ) {
-        $this->planId = $planId;
-        $this->modules = $modules;
-        $this->fantasyName = $fantasyName;
-        $this->username = $username;
-        $this->name = $name;
-        $this->email = $email;
-        $this->phoneNumber = $phoneNumber;
-        $this->password = $password;
-        $this->workSchedule = $workSchedule;
-    }
+        private int $planId,
+        private array $modules,
+        private string $fantasyName,
+        private string $username,
+        private string $name,
+        private string $email,
+        private string $phoneNumber,
+        private string $password,
+        private array $workSchedule
+    ) {}
 
     public function getPlanId(): int
     {
