@@ -3,7 +3,7 @@
 namespace App\Application\Register\User;
 
 use App\Application\DTO\IdRequestDTO;
-use App\Domain\Exceptions\Register\User\UserException;
+use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Models\Register\User\User;
 
@@ -18,7 +18,7 @@ class ShowUser
     {
         $user = $this->userRepositoryInterface->getById($input->getId());
         if (empty($user)) {
-            throw new UserException('Usuário não encontrado', 404);
+            throw new UserNotFoundException('Usuário não encontrado', 404);
         }
 
         return $user;
