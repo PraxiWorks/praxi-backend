@@ -38,9 +38,11 @@ class CreateUser
             throw new UserException('Email já cadastrado', 400);
         }
 
-        $group = $this->groupRepositoryInterface->getById($input->getGroupId());
-        if (empty($group)) {
-            throw new SettingsNotFoundException('Grupo não encontrado', 400);
+        if (!empty($input->getGroupId())) {
+            $group = $this->groupRepositoryInterface->getById($input->getGroupId());
+            if (empty($group)) {
+                throw new SettingsNotFoundException('Grupo não encontrado', 400);
+            }
         }
 
         $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name);
@@ -63,7 +65,7 @@ class CreateUser
             $pathImage,
             $hashedPassword,
             $input->getIsProfessional(),
-            $group->id,
+            $group->id ?? null,
             $input->getStatus()
         );
 

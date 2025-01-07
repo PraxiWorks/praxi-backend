@@ -105,7 +105,6 @@ class UserController extends Controller
         $name = $request->name ?? null;
         $email = $request->email ?? null;
         $phoneNumber = $request->phone_number ?? null;
-        $userTypeId = $request->user_type_id ?? 0;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
         $rgNumber = $request->rg_number ?? null;
@@ -115,6 +114,7 @@ class UserController extends Controller
         $sendNotificationWhatsapp = $request->send_notification_whatsapp ?? false;
         $imageBase64 = $request->image_base_64 ?? null;
         $isProfessional = $request->is_professional ?? false;
+        $groupId = $request->group_id ?? null;
         $status = $request->status ?? false;
 
         try {
@@ -125,7 +125,6 @@ class UserController extends Controller
                 $name,
                 $email,
                 $phoneNumber,
-                $userTypeId,
                 $dateOfBirth,
                 $cpfNumber,
                 $rgNumber,
@@ -135,6 +134,7 @@ class UserController extends Controller
                 $sendNotificationWhatsapp,
                 $imageBase64,
                 $isProfessional,
+                $groupId,
                 $status
             );
             $output = $this->updateUserUseCase->execute($input);
