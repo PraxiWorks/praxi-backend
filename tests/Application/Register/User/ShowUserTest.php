@@ -4,7 +4,7 @@ namespace Tests\Application\Register\User;
 
 use App\Application\DTO\IdRequestDTO;
 use App\Application\Register\User\ShowUser;
-use App\Domain\Exceptions\Register\User\UserException;
+use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Models\Register\User\User;
 use Tests\TestCase;
@@ -27,7 +27,7 @@ class ShowUserTest extends TestCase
 
     public function testUserNotFound()
     {
-        $this->expectException(UserException::class);
+        $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('Usuário não encontrado');
 
         $input = new IdRequestDTO(1);
