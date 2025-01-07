@@ -4,43 +4,19 @@ namespace App\Application\Stock\Product\DTO;
 
 class UpdateProductRequestDTO
 {
-    private int $companyId;
-    private int $productId;
-    private string $name;
-    private ?string $categoryId;
-    private string $skuCode;
-    private ?float $price;
-    private ?string $imageBase64;
-    private ?string $currentStock;
-    private ?string $minimumStockLevel;
-    private ?string $maximumStockLevel;
-    private bool $status;
-
     public function __construct(
-        int $companyId,
-        int $productId,
-        string $name,
-        ?string $categoryId,
-        string $skuCode,
-        ?float $price,
-        ?string $imageBase64,
-        ?string $currentStock,
-        ?string $minimumStockLevel,
-        ?string $maximumStockLevel,
-        bool $status
-    ) {
-        $this->companyId = $companyId;
-        $this->productId = $productId;
-        $this->name = $name;
-        $this->categoryId = $categoryId;
-        $this->skuCode = $skuCode;
-        $this->price = $price;
-        $this->imageBase64 = $imageBase64;
-        $this->currentStock = $currentStock;
-        $this->minimumStockLevel = $minimumStockLevel;
-        $this->maximumStockLevel = $maximumStockLevel;
-        $this->status = $status;
-    }
+        private int $companyId,
+        private int $productId,
+        private string $name,
+        private ?string $categoryId,
+        private string $skuCode,
+        private ?float $price,
+        private ?string $imageBase64,
+        private ?string $currentStock,
+        private ?string $minimumStockLevel,
+        private ?string $maximumStockLevel,
+        private bool $status
+    ) {}
 
     public function getCompanyId(): int
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Login\DTO;
+namespace Tests\Application\Stock\Product\DTO;
 
 use App\Application\Stock\Product\DTO\UpdateProductRequestDTO;
 use Tests\TestCase;
