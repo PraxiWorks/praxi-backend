@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Stock;
+namespace App\Http\Controllers\Stock\Product;
 
 use App\Application\DTO\IdRequestDTO;
 use App\Application\Stock\Product\CreateProduct;
