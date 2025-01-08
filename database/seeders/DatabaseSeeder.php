@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
             Permissions\SchedulingPermissionsSeeder::class,
             FreePlanSeeder::class,
             PraxiSeeder::class,
+            EventColorSeeder::class,
+            EventProcedureSeeder::class,
+            EventRecurrenceSeeder::class,
+            EventStatusSeeder::class,
+            EventTypeSeeder::class,
         ]);
     }
 }

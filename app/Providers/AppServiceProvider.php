@@ -13,6 +13,13 @@ use App\Domain\Interfaces\Register\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventColorRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventProcedureRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventRecurrenceRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventStatusRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventTypeRepositoryInterface;
+use App\Domain\Interfaces\Scheduling\EventValidatorRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Settings\Company\CompanyModuleRepositoryInterface;
 use App\Domain\Interfaces\Settings\Company\CompanyPlanRepositoryInterface;
@@ -31,6 +38,12 @@ use App\Infrastructure\Eloquent\Register\Group\GroupRepository;
 use App\Infrastructure\Eloquent\Register\User\GroupPermissionRepository;
 use App\Infrastructure\Eloquent\Register\User\UserPermissionRepository;
 use App\Infrastructure\Eloquent\Register\User\UserRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventColorRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventProcedureRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventRecurrenceRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventStatusRepository;
+use App\Infrastructure\Eloquent\Scheduling\EventTypeRepository;
 use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
 use App\Infrastructure\Eloquent\Settings\Company\CompanyModuleRepository;
 use App\Infrastructure\Eloquent\Settings\Company\CompanyPlanRepository;
@@ -38,6 +51,7 @@ use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
 use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
 use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
+use App\Services\Scheduling\Event\EventValidator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -60,6 +74,13 @@ class AppServiceProvider extends ServiceProvider
 
         // Schedule
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
+        $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
+        $this->app->bind(EventTypeRepositoryInterface::class, EventTypeRepository::class);
+        $this->app->bind(EventProcedureRepositoryInterface::class, EventProcedureRepository::class);
+        $this->app->bind(EventStatusRepositoryInterface::class, EventStatusRepository::class);
+        $this->app->bind(EventColorRepositoryInterface::class, EventColorRepository::class);
+        $this->app->bind(EventRecurrenceRepositoryInterface::class, EventRecurrenceRepository::class);
+        $this->app->bind(EventValidatorRepositoryInterface::class, EventValidator::class);
 
         // Stock
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
@@ -78,13 +99,5 @@ class AppServiceProvider extends ServiceProvider
 
         // Storage
         $this->app->bind(LocalStorageRepositoryInterface::class, LocalStorageRepository::class);
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
     }
 }
