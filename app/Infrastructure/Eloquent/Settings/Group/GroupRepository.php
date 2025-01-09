@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Register\Group;
+namespace App\Infrastructure\Eloquent\Settings\Group;
 
-use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
-use App\Models\Register\Group\Group;
+use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Models\Settings\Group\Group;
 
 class GroupRepository implements GroupRepositoryInterface
 {

@@ -28,13 +28,7 @@ class SystemPermissionsSeeder extends BasePermissionsSeeder
             'system.plan.store',
             'system.plan.show',
             'system.plan.update',
-            'system.plan.delete',
-
-            'system.client.list',
-            'system.client.store',
-            'system.client.show',
-            'system.client.update',
-            'system.client.delete',
+            'system.plan.delete'
         ];
     }
 }

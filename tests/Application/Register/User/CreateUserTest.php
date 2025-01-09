@@ -8,11 +8,11 @@ use App\Domain\Exceptions\Company\CompanyException;
 use App\Domain\Exceptions\Register\User\UserException;
 use App\Domain\Exceptions\Settings\SettingsNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
-use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
+use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
 use App\Models\Core\Company\Company;
-use App\Models\Register\Group\Group;
 use App\Models\Register\User\User;
+use App\Models\Settings\Group\Group;
 use App\Services\Image\ProcessImage;
 use Tests\TestCase;
 

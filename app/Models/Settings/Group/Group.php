@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Register\Group;
+namespace App\Models\Settings\Group;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

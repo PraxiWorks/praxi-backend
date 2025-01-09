@@ -23,6 +23,24 @@ class SchedulingPermissionsSeeder extends BasePermissionsSeeder
             'scheduling.event.show',
             'scheduling.event.update',
             'scheduling.event.delete',
+
+            'scheduling.eventProcedure.list',
+            'scheduling.eventProcedure.store',
+            'scheduling.eventProcedure.show',
+            'scheduling.eventProcedure.update',
+            'scheduling.eventProcedure.delete',
+
+            'scheduling.client.list',
+            'scheduling.client.store',
+            'scheduling.client.show',
+            'scheduling.client.update',
+            'scheduling.client.delete',
+
+            'scheduling.clientAddress.list',
+            'scheduling.clientAddress.store',
+            'scheduling.clientAddress.show',
+            'scheduling.clientAddress.update',
+            'scheduling.clientAddress.delete'
         ];
     }
 }

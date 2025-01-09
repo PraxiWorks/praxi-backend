@@ -8,7 +8,7 @@ use App\Domain\Exceptions\Register\Client\ClientException;
 use App\Domain\Exceptions\Register\Client\ClientNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
-use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
 use App\Models\Core\Company\Company;
 use App\Models\Register\Client\Client;
 use App\Services\Image\ProcessImage;
