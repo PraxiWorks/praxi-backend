@@ -13,7 +13,7 @@ class EventProcedureSeeder extends Seeder
     public function run(): void
     {
         $eventProcedures = [
-            ['company_id' => '1', 'name' => 'Revisão Geral', 'created_at' => now(), 'updated_at' => now()],
+            ['company_id' => '1', 'name' => 'Revisão Geral', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
         ];
 
         foreach ($eventProcedures as $procedure) {

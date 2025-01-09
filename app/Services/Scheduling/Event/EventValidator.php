@@ -5,17 +5,17 @@ namespace App\Services\Scheduling\Event;
 use App\Domain\Exceptions\Register\Client\ClientNotFoundException;
 use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Exceptions\Scheduling\Event\EventColorNotFoundException;
-use App\Domain\Exceptions\Scheduling\Event\EventProcedureNotFoundException;
 use App\Domain\Exceptions\Scheduling\Event\EventRecurrenceNotFoundException;
 use App\Domain\Exceptions\Scheduling\Event\EventStatusNotFoundException;
 use App\Domain\Exceptions\Scheduling\Event\EventTypeNotFoundException;
+use App\Domain\Exceptions\Settings\EventProcedure\EventProcedureNotFoundException;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventColorRepositoryInterface;
-use App\Domain\Interfaces\Scheduling\EventProcedureRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventStatusRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventTypeRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventValidatorRepositoryInterface;
+use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Infrastructure\Eloquent\Scheduling\EventRecurrenceRepository;
 
 class EventValidator implements EventValidatorRepositoryInterface

@@ -7,6 +7,7 @@ use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
 use App\Http\Controllers\Scheduling\Event\EventController;
+use App\Http\Controllers\Settings\EventProcedure\EventProcedureController;
 use App\Http\Controllers\Settings\Group\GroupController;
 use App\Http\Controllers\Stock\Product\ProductController;
 use App\Http\Controllers\Stock\ProductCategory\ProductCategoryController;
@@ -118,13 +119,13 @@ Route::middleware('auth')->group(function () {
             });
 
             // Cadastro de procedimentos
-            // Route::prefix('event-procedures')->group(function () {
-            //     Route::post('/', [ClientController::class, 'store'])->middleware('permission:system.client.store');
-            //     Route::get('/', [ClientController::class, 'index'])->middleware('permission:system.client.list');
-            //     Route::get('/{eventProcedureId}', [ClientController::class, 'show'])->middleware('permission:system.client.show');
-            //     Route::put('/{eventProcedureId}', [ClientController::class, 'update'])->middleware('permission:system.client.update');
-            //     Route::delete('/{eventProcedureId}', [ClientController::class, 'delete'])->middleware('permission:system.client.delete');
-            // });
+            Route::prefix('event-procedures')->group(function () {
+                Route::post('/', [EventProcedureController::class, 'store'])->middleware('permission:scheduling.eventProcedure.store');
+                Route::get('/', [EventProcedureController::class, 'index'])->middleware('permission:scheduling.eventProcedure.list');
+                Route::get('/{eventProcedureId}', [EventProcedureController::class, 'show'])->middleware('permission:scheduling.eventProcedure.show');
+                Route::put('/{eventProcedureId}', [EventProcedureController::class, 'update'])->middleware('permission:scheduling.eventProcedure.update');
+                Route::delete('/{eventProcedureId}', [EventProcedureController::class, 'delete'])->middleware('permission:scheduling.eventProcedure.delete');
+            });
         });
     })->middleware('validateCompany');
 });
