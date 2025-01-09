@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Register\User;
+namespace App\Infrastructure\Eloquent\Settings\Group;
 
-use App\Domain\Interfaces\Register\Group\GroupPermissionRepositoryInterface;
+use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Models\Core\Permission\GroupPermission;
 
 class GroupPermissionRepository implements GroupPermissionRepositoryInterface

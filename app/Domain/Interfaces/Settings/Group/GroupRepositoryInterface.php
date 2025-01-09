@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Interfaces\Register\Group;
+namespace App\Domain\Interfaces\Settings\Group;
 
-use App\Models\Register\Group\Group;
+use App\Models\Settings\Group\Group;
 
 interface GroupRepositoryInterface
 {

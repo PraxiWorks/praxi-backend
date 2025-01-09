@@ -7,9 +7,8 @@ use App\Domain\Exceptions\Register\User\UserException;
 use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Exceptions\Settings\SettingsNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
-use App\Domain\Interfaces\Register\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
-
+use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
 use App\Services\Image\ProcessImage;
 
 class UpdateUser

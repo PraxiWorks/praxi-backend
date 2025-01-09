@@ -7,6 +7,7 @@ use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
 use App\Http\Controllers\Scheduling\Event\EventController;
+use App\Http\Controllers\Settings\Group\GroupController;
 use App\Http\Controllers\Stock\Product\ProductController;
 use App\Http\Controllers\Stock\ProductCategory\ProductCategoryController;
 use Illuminate\Support\Facades\Route;
@@ -94,18 +95,27 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{clientId}', [ClientController::class, 'update'])->middleware('permission:system.client.update');
                 Route::delete('/{clientId}', [ClientController::class, 'delete'])->middleware('permission:system.client.delete');
             });
+
+            // Clientes Endereços
+            // Route::prefix('client-addresses')->group(function () {
+            //     Route::post('/', [ClientController::class, 'store'])->middleware('permission:system.clientAddress.store');
+            //     Route::get('/', [ClientController::class, 'index'])->middleware('permission:system.clientAddress.list');
+            //     Route::get('/{clientAddressId}', [ClientController::class, 'show'])->middleware('permission:system.clientAddress.show');
+            //     Route::put('/{clientAddressId}', [ClientController::class, 'update'])->middleware('permission:system.clientAddress.update');
+            //     Route::delete('/{clientAddressId}', [ClientController::class, 'delete'])->middleware('permission:system.clientAddress.delete');
+            // });
         });
 
         // Configurações
         Route::prefix('settings')->group(function () {
             // Grupos de permissões
-            // Route::prefix('groups')->group(function () {
-            //     Route::post('/', [ClientController::class, 'store'])->middleware('permission:system.client.store');
-            //     Route::get('/', [ClientController::class, 'index'])->middleware('permission:system.client.list');
-            //     Route::get('/{groupId}', [ClientController::class, 'show'])->middleware('permission:system.client.show');
-            //     Route::put('/{groupId}', [ClientController::class, 'update'])->middleware('permission:system.client.update');
-            //     Route::delete('/{groupId}', [ClientController::class, 'delete'])->middleware('permission:system.client.delete');
-            // });
+            Route::prefix('groups')->group(function () {
+                Route::post('/', [GroupController::class, 'store'])->middleware('permission:system.group.store');
+                Route::get('/', [GroupController::class, 'index'])->middleware('permission:system.group.list');
+                Route::get('/{groupId}', [GroupController::class, 'show'])->middleware('permission:system.group.show');
+                Route::put('/{groupId}', [GroupController::class, 'update'])->middleware('permission:system.group.update');
+                Route::delete('/{groupId}', [GroupController::class, 'delete'])->middleware('permission:system.group.delete');
+            });
 
             // Cadastro de procedimentos
             // Route::prefix('event-procedures')->group(function () {
