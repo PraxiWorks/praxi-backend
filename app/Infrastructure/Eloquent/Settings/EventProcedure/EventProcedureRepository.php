@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Scheduling;
 
-use App\Domain\Interfaces\Scheduling\EventProcedureRepositoryInterface;
+use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Models\Scheduling\EventProcedure;
 
 class EventProcedureRepository implements EventProcedureRepositoryInterface
@@ -30,5 +30,10 @@ class EventProcedureRepository implements EventProcedureRepositoryInterface
     public function delete(EventProcedure $entity): bool
     {
         return $entity->delete();
+    }
+
+    public function findByNameAndCompanyId(int $company_id, string $name): ?EventProcedure
+    {
+        return EventProcedure::where('company_id', $company_id)->where('name', $name)->first();
     }
 }

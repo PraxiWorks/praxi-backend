@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Exceptions\Scheduling\Event;
+namespace App\Domain\Exceptions\Settings\EventProcedure;
 
 use Exception;
 

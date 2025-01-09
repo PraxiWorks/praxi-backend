@@ -11,14 +11,15 @@ class EventProcedure extends Model
     protected $table = 'event_procedures';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['company_id', 'name'];
+    protected $fillable = ['company_id', 'name', 'status'];
 
-    public static function new(int $companyId, string $name): EventProcedure
+    public static function new(int $companyId, string $name, bool $status): EventProcedure
     {
         return new self(
             [
                 'company_id' => $companyId,
-                'name' => $name
+                'name' => $name,
+                'status' => $status,
             ]
         );
     }
