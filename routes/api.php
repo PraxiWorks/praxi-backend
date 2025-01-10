@@ -91,20 +91,20 @@ Route::middleware('auth')->group(function () {
 
             // Clientes
             Route::prefix('clients')->group(function () {
-                Route::post('/', [ClientController::class, 'store'])->middleware('permission:system.client.store');
-                Route::get('/', [ClientController::class, 'index'])->middleware('permission:system.client.list');
-                Route::get('/{clientId}', [ClientController::class, 'show'])->middleware('permission:system.client.show');
-                Route::put('/{clientId}', [ClientController::class, 'update'])->middleware('permission:system.client.update');
-                Route::delete('/{clientId}', [ClientController::class, 'delete'])->middleware('permission:system.client.delete');
+                Route::post('/', [ClientController::class, 'store'])->middleware('permission:scheduling.client.store');
+                Route::get('/', [ClientController::class, 'index'])->middleware('permission:scheduling.client.list');
+                Route::get('/{clientId}', [ClientController::class, 'show'])->middleware('permission:scheduling.client.show');
+                Route::put('/{clientId}', [ClientController::class, 'update'])->middleware('permission:scheduling.client.update');
+                Route::delete('/{clientId}', [ClientController::class, 'delete'])->middleware('permission:scheduling.client.delete');
             });
 
             // Clientes Endereços
             Route::prefix('client-addresses')->group(function () {
-                Route::post('/', [ClientAddressController::class, 'store'])->middleware('permission:system.clientAddress.store');
-                Route::get('/', [ClientAddressController::class, 'index'])->middleware('permission:system.clientAddress.list');
-                Route::get('/{clientAddressId}', [ClientAddressController::class, 'show'])->middleware('permission:system.clientAddress.show');
-                Route::put('/{clientAddressId}', [ClientAddressController::class, 'update'])->middleware('permission:system.clientAddress.update');
-                Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:system.clientAddress.delete');
+                Route::post('/', [ClientAddressController::class, 'store'])->middleware('permission:scheduling.clientAddress.store');
+                Route::get('/', [ClientAddressController::class, 'index'])->middleware('permission:scheduling.clientAddress.list');
+                Route::get('/{clientAddressId}', [ClientAddressController::class, 'show'])->middleware('permission:scheduling.clientAddress.show');
+                Route::put('/{clientAddressId}', [ClientAddressController::class, 'update'])->middleware('permission:scheduling.clientAddress.update');
+                Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:scheduling.clientAddress.delete');
             });
         });
 

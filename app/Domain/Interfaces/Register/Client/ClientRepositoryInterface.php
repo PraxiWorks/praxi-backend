@@ -12,4 +12,5 @@ interface ClientRepositoryInterface
     public function update(Client $entity): bool;
     public function delete(Client $entity): bool;
     public function getByEmailAndCompanyId(string $email, int $companyId): ?Client;
+    public function getByCpfAndCompanyId(string $cpf, int $companyId): ?Client;
 }

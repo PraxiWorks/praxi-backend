@@ -29,6 +29,14 @@ class UpdateClient
             throw new ClientNotFoundException('Cliente não encontrado', 400);
         }
 
+        if (!empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $input->getCompanyId()))) {
+            throw new ClientException('Email já cadastrado', 400);
+        }
+
+        if(!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $input->getCompanyId()))) {
+            throw new ClientException('CPF já cadastrado', 400);
+        }
+
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
         $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $client->path_image);
 
@@ -38,7 +46,6 @@ class UpdateClient
         $client->phone_number = $input->getPhoneNumber();
         $client->date_of_birth = $input->getDateOfBirth();
         $client->cpf_number = $input->getCpfNumber();
-        $client->rg_number = $input->getRgNumber();
         $client->gender = $input->getGender();
         $client->send_notification_email = $input->getSendNotificationEmail();
         $client->send_notification_sms = $input->getSendNotificationSms();

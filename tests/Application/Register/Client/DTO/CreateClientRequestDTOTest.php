@@ -16,7 +16,6 @@ class CreateClientRequestDTOTest extends TestCase
             'phoneNumber',
             'dateOfBirth',
             'cpfNumber',
-            'rgNumber',
             'gender',
             true,
             true,
@@ -33,7 +32,6 @@ class CreateClientRequestDTOTest extends TestCase
         $this->assertEquals('phoneNumber', $input->getPhoneNumber());
         $this->assertEquals('dateOfBirth', $input->getDateOfBirth());
         $this->assertEquals('cpfNumber', $input->getCpfNumber());
-        $this->assertEquals('rgNumber', $input->getRgNumber());
         $this->assertEquals('gender', $input->getGender());
         $this->assertTrue($input->getSendNotificationEmail());
         $this->assertTrue($input->getSendNotificationSms());

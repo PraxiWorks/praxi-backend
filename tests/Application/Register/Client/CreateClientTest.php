@@ -4,7 +4,7 @@ namespace Tests\Application\Register\Client;
 
 use App\Application\Register\Client\CreateClient;
 use App\Application\Register\Client\DTO\CreateClientRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
+use App\Domain\Exceptions\Core\Company\CompanyException;
 use App\Domain\Exceptions\Register\Client\ClientException;
 use App\Domain\Exceptions\Settings\SettingsException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
@@ -57,7 +57,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Nome é obrigatório');
 
-        $input = new CreateClientRequestDTO(1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
         $this->useCase->execute($input);
     }
 
@@ -66,7 +66,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Email é obrigatório');
 
-        $input = new CreateClientRequestDTO(1, 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
         $this->useCase->execute($input);
     }
 
@@ -75,7 +75,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Senha é obrigatório');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, '', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, '', false, true);
         $this->useCase->execute($input);
     }
 
@@ -84,7 +84,7 @@ class CreateClientTest extends TestCase
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Empresa não encontrada');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
@@ -96,7 +96,7 @@ class CreateClientTest extends TestCase
         $this->expectException(SettingsException::class);
         $this->expectExceptionMessage('Erro ao criar o grupo');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -113,7 +113,7 @@ class CreateClientTest extends TestCase
         $this->expectException(SettingsException::class);
         $this->expectExceptionMessage('Erro ao atribuir permissões ao grupo');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -144,7 +144,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Email já cadastrado');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -176,12 +176,50 @@ class CreateClientTest extends TestCase
         $this->useCase->execute($input);
     }
 
+    public function testCpfAlreadyExists()
+    {
+        $this->expectException(ClientException::class);
+        $this->expectExceptionMessage('CPF já cadastrado');
+
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+
+        $companyMock = new Company();
+        $companyMock->id = 1;
+        $companyMock->name = 'companyName';
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($companyMock);
+
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
+        $groupMock = new Group();
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')
+            ->with($this->callback(function ($arg) use ($groupMock) {
+                $arg->id = 1;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $permission = new stdClass();
+        $permission->id = 1;
+        $collection = new Collection([
+            $permission
+        ]);
+        $this->permissionRepositoryInterfaceMock->expects($this->once())->method('getPermissionByAction')->willReturn($collection);
+        $this->groupPermissionRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
+
+        $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
+
+        $clientMock = new Client();
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn($clientMock);
+
+        $this->useCase->execute($input);
+    }
+
     public function testErrorSavingClient()
     {
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Erro ao salvar cliente');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -208,6 +246,7 @@ class CreateClientTest extends TestCase
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
 
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn(null);
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
         $this->useCase->execute($input);
@@ -215,7 +254,7 @@ class CreateClientTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -229,6 +268,7 @@ class CreateClientTest extends TestCase
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
 
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn(null);
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $this->useCase->execute($input);

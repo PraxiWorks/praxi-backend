@@ -38,4 +38,11 @@ class ClientRepository implements ClientRepositoryInterface
             ->where('company_id', $companyId)
             ->first();
     }
+
+    public function getByCpfAndCompanyId(string $cpf, int $companyId): ?Client
+    {
+        return Client::where('cpf', $cpf)
+            ->where('company_id', $companyId)
+            ->first();
+    }
 }

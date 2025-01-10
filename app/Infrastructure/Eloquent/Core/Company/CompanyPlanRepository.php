@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Settings\Company;
+namespace App\Infrastructure\Eloquent\Core\Company;
 
-use App\Domain\Interfaces\Settings\Company\CompanyPlanRepositoryInterface;
-use App\Models\Settings\Company\CompanyPlan;
+use App\Domain\Interfaces\Core\Company\CompanyPlanRepositoryInterface;
+use App\Models\Core\Company\CompanyPlan;
 
 class CompanyPlanRepository implements CompanyPlanRepositoryInterface
 {

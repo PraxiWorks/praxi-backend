@@ -38,7 +38,7 @@ class ShowClientAddressTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testExecuteReturnsExpectedClient()
+    public function testExecuteReturnsExpectedClientAddress()
     {
         // Define o valor de retorno esperado do método list
         $clientAddressMock = new ClientAddress();
