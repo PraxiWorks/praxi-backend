@@ -3,6 +3,7 @@
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Register\Client\ClientController;
+use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
@@ -98,13 +99,13 @@ Route::middleware('auth')->group(function () {
             });
 
             // Clientes Endereços
-            // Route::prefix('client-addresses')->group(function () {
-            //     Route::post('/', [ClientController::class, 'store'])->middleware('permission:system.clientAddress.store');
-            //     Route::get('/', [ClientController::class, 'index'])->middleware('permission:system.clientAddress.list');
-            //     Route::get('/{clientAddressId}', [ClientController::class, 'show'])->middleware('permission:system.clientAddress.show');
-            //     Route::put('/{clientAddressId}', [ClientController::class, 'update'])->middleware('permission:system.clientAddress.update');
-            //     Route::delete('/{clientAddressId}', [ClientController::class, 'delete'])->middleware('permission:system.clientAddress.delete');
-            // });
+            Route::prefix('client-addresses')->group(function () {
+                Route::post('/', [ClientAddressController::class, 'store'])->middleware('permission:system.clientAddress.store');
+                Route::get('/', [ClientAddressController::class, 'index'])->middleware('permission:system.clientAddress.list');
+                Route::get('/{clientAddressId}', [ClientAddressController::class, 'show'])->middleware('permission:system.clientAddress.show');
+                Route::put('/{clientAddressId}', [ClientAddressController::class, 'update'])->middleware('permission:system.clientAddress.update');
+                Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:system.clientAddress.delete');
+            });
         });
 
         // Configurações
