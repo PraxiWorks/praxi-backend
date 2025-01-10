@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Interfaces\Core\Company\CompanyModuleRepositoryInterface;
+use App\Domain\Interfaces\Core\Company\CompanyPlanRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Core\Module\ModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
@@ -9,6 +11,7 @@ use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
+use App\Domain\Interfaces\Register\ClientAddress\ClientAddressRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventColorRepositoryInterface;
@@ -18,8 +21,6 @@ use App\Domain\Interfaces\Scheduling\EventStatusRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventTypeRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventValidatorRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
-use App\Domain\Interfaces\Settings\Company\CompanyModuleRepositoryInterface;
-use App\Domain\Interfaces\Settings\Company\CompanyPlanRepositoryInterface;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
@@ -27,12 +28,15 @@ use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
+use App\Infrastructure\Eloquent\Core\Company\CompanyModuleRepository;
+use App\Infrastructure\Eloquent\Core\Company\CompanyPlanRepository;
 use App\Infrastructure\Eloquent\Core\Company\CompanyRepository;
 use App\Infrastructure\Eloquent\Core\Module\ModuleRepository;
 use App\Infrastructure\Eloquent\Core\Permission\ModulePermissionRepository;
 use App\Infrastructure\Eloquent\Core\Permission\PermissionRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanModuleRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanRepository;
+use App\Infrastructure\Eloquent\Register\Client\ClientAddressRepository;
 use App\Infrastructure\Eloquent\Register\Client\ClientRepository;
 use App\Infrastructure\Eloquent\Register\User\UserPermissionRepository;
 use App\Infrastructure\Eloquent\Register\User\UserRepository;
@@ -43,8 +47,6 @@ use App\Infrastructure\Eloquent\Scheduling\EventRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventStatusRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventTypeRepository;
 use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
-use App\Infrastructure\Eloquent\Settings\Company\CompanyModuleRepository;
-use App\Infrastructure\Eloquent\Settings\Company\CompanyPlanRepository;
 use App\Infrastructure\Eloquent\Settings\Group\GroupPermissionRepository;
 use App\Infrastructure\Eloquent\Settings\Group\GroupRepository;
 use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
@@ -63,6 +65,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Core
         $this->app->bind(CompanyRepositoryInterface::class, CompanyRepository::class);
+        $this->app->bind(CompanyModuleRepositoryInterface::class, CompanyModuleRepository::class);
+        $this->app->bind(CompanyPlanRepositoryInterface::class, CompanyPlanRepository::class);
         $this->app->bind(ModuleRepositoryInterface::class, ModuleRepository::class);
         $this->app->bind(ModulePermissionRepositoryInterface::class, ModulePermissionRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
@@ -76,7 +80,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
         $this->app->bind(EventTypeRepositoryInterface::class, EventTypeRepository::class);
-        $this->app->bind(EventProcedureRepositoryInterface::class, EventProcedureRepository::class);
         $this->app->bind(EventStatusRepositoryInterface::class, EventStatusRepository::class);
         $this->app->bind(EventColorRepositoryInterface::class, EventColorRepository::class);
         $this->app->bind(EventRecurrenceRepositoryInterface::class, EventRecurrenceRepository::class);
@@ -87,15 +90,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductCategoryRepositoryInterface::class, ProductCategoryRepository::class);
 
         // Register
-        $this->app->bind(GroupPermissionRepositoryInterface::class, GroupPermissionRepository::class);
-        $this->app->bind(GroupRepositoryInterface::class, GroupRepository::class);
         $this->app->bind(UserPermissionRepositoryInterface::class, UserPermissionRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
+        $this->app->bind(ClientAddressRepositoryInterface::class, ClientAddressRepository::class);
 
         //Settings
-        $this->app->bind(CompanyModuleRepositoryInterface::class, CompanyModuleRepository::class);
-        $this->app->bind(CompanyPlanRepositoryInterface::class, CompanyPlanRepository::class);
+        $this->app->bind(GroupPermissionRepositoryInterface::class, GroupPermissionRepository::class);
+        $this->app->bind(GroupRepositoryInterface::class, GroupRepository::class);
+        $this->app->bind(EventProcedureRepositoryInterface::class, EventProcedureRepository::class);
 
         // Storage
         $this->app->bind(LocalStorageRepositoryInterface::class, LocalStorageRepository::class);
