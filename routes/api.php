@@ -70,11 +70,11 @@ Route::middleware('auth')->group(function () {
 
             // Categorias de Produtos
             Route::prefix('product-categories')->group(function () {
-                Route::post('/', [ProductCategoryController::class, 'store']);
-                Route::get('/', [ProductCategoryController::class, 'index']);
-                Route::get('/{productCategoryId}', [ProductCategoryController::class, 'show']);
-                Route::put('/{productCategoryId}', [ProductCategoryController::class, 'update']);
-                Route::delete('/{productCategoryId}', [ProductCategoryController::class, 'delete']);
+                Route::post('/', [ProductCategoryController::class, 'store'])->middleware('permission:stock.category.store');
+                Route::get('/', [ProductCategoryController::class, 'index'])->middleware('permission:stock.category.list');
+                Route::get('/{productCategoryId}', [ProductCategoryController::class, 'show'])->middleware('permission:stock.category.show');
+                Route::put('/{productCategoryId}', [ProductCategoryController::class, 'update'])->middleware('permission:stock.category.update');
+                Route::delete('/{productCategoryId}', [ProductCategoryController::class, 'delete'])->middleware('permission:stock.category.delete');
             });
         });
 
@@ -96,15 +96,15 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{clientId}', [ClientController::class, 'show'])->middleware('permission:scheduling.client.show');
                 Route::put('/{clientId}', [ClientController::class, 'update'])->middleware('permission:scheduling.client.update');
                 Route::delete('/{clientId}', [ClientController::class, 'delete'])->middleware('permission:scheduling.client.delete');
-            });
 
-            // Clientes Endereços
-            Route::prefix('client-addresses')->group(function () {
-                Route::post('/', [ClientAddressController::class, 'store'])->middleware('permission:scheduling.clientAddress.store');
-                Route::get('/', [ClientAddressController::class, 'index'])->middleware('permission:scheduling.clientAddress.list');
-                Route::get('/{clientAddressId}', [ClientAddressController::class, 'show'])->middleware('permission:scheduling.clientAddress.show');
-                Route::put('/{clientAddressId}', [ClientAddressController::class, 'update'])->middleware('permission:scheduling.clientAddress.update');
-                Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:scheduling.clientAddress.delete');
+                // Endereços de Clientes
+                Route::prefix('addresses')->group(function () {
+                    Route::post('/', [ClientAddressController::class, 'store'])->middleware('permission:scheduling.clientAddress.store');
+                    Route::get('/', [ClientAddressController::class, 'index'])->middleware('permission:scheduling.clientAddress.list');
+                    Route::get('/{clientAddressId}', [ClientAddressController::class, 'show'])->middleware('permission:scheduling.clientAddress.show');
+                    Route::put('/{clientAddressId}', [ClientAddressController::class, 'update'])->middleware('permission:scheduling.clientAddress.update');
+                    Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:scheduling.clientAddress.delete');
+                });
             });
         });
 
