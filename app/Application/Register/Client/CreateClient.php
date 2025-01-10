@@ -3,7 +3,7 @@
 namespace App\Application\Register\Client;
 
 use App\Application\Register\Client\DTO\CreateClientRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
+use App\Domain\Exceptions\Core\Company\CompanyException;
 use App\Domain\Exceptions\Register\Client\ClientException;
 use App\Domain\Exceptions\Settings\SettingsException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
@@ -112,9 +112,12 @@ class CreateClient
 
     private function createClient(CreateClientRequestDTO $input, Company $company, Group $group, string $pathImage, string $hashedPassword): void
     {
-        $client = $this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id);
-        if (!empty($client)) {
+        if (!empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id))) {
             throw new ClientException('Email já cadastrado', 400);
+        }
+
+        if(!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $company->id))) {
+            throw new ClientException('CPF já cadastrado', 400);
         }
 
         $client = Client::new(
@@ -124,7 +127,6 @@ class CreateClient
             $input->getPhoneNumber(),
             $input->getDateOfBirth(),
             $input->getCpfNumber(),
-            $input->getRgNumber(),
             $input->getGender(),
             $input->getSendNotificationEmail(),
             $input->getSendNotificationSms(),

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('cpf_number')->nullable();
-            $table->string('rg_number')->nullable();
             $table->string('gender')->nullable();
             $table->boolean('send_notification_email')->default(false);
             $table->boolean('send_notification_sms')->default(false);

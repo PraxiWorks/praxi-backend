@@ -4,7 +4,7 @@ namespace Tests\Application\Stock\Product;
 
 use App\Application\Stock\Product\CreateProduct;
 use App\Application\Stock\Product\DTO\CreateProductRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
+use App\Domain\Exceptions\Core\Company\CompanyException;
 use App\Domain\Exceptions\Stock\Product\ProductException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;

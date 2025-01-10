@@ -45,7 +45,7 @@ class UpdateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Nome é obrigatório');
 
-        $input = new UpdateClientRequestDTO(1, 1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
         $this->useCase->execute($input);
     }
 
@@ -54,7 +54,7 @@ class UpdateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Email é obrigatório');
 
-        $input = new UpdateClientRequestDTO(1, 1, 'name', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'name', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
         $this->useCase->execute($input);
     }
 
@@ -63,8 +63,37 @@ class UpdateClientTest extends TestCase
         $this->expectException(ClientNotFoundException::class);
         $this->expectExceptionMessage('Cliente não encontrado');
 
-        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
+
+        $this->useCase->execute($input);
+    }
+
+    public function testEmailAlreadyExists()
+    {
+        $this->expectException(ClientException::class);
+        $this->expectExceptionMessage('Email já cadastrado');
+
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
+
+        $clientMock = new Client();
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn($clientMock);
+
+        $this->useCase->execute($input);
+    }
+
+    public function testCpfAlreadyExists()
+    {
+        $this->expectException(ClientException::class);
+        $this->expectExceptionMessage('CPF já cadastrado');
+
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
+
+        $clientMock = new Client();
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn($clientMock);
 
         $this->useCase->execute($input);
     }
@@ -74,7 +103,7 @@ class UpdateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Erro ao atualizar cliente');
 
-        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
 
         $clientMock = new Client();
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);
@@ -83,6 +112,8 @@ class UpdateClientTest extends TestCase
         $companyMock->id = 1;
         $companyMock->name = 'companyName';
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($companyMock);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn(null);
 
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
 
@@ -93,7 +124,7 @@ class UpdateClientTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
 
         $clientMock = new Client();
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);
@@ -102,6 +133,8 @@ class UpdateClientTest extends TestCase
         $companyMock->id = 1;
         $companyMock->name = 'companyName';
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($companyMock);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
+        $this->clientRepositoryInterfaceMock->expects($this->once())->method('getByCpfAndCompanyId')->willReturn(null);
 
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
 

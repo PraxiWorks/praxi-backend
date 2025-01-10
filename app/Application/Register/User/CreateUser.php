@@ -3,7 +3,7 @@
 namespace App\Application\Register\User;
 
 use App\Application\Register\User\DTO\CreateUserRequestDTO;
-use App\Domain\Exceptions\Company\CompanyException;
+use App\Domain\Exceptions\Core\Company\CompanyException;
 use App\Domain\Exceptions\Register\User\UserException;
 use App\Domain\Exceptions\Settings\SettingsNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
