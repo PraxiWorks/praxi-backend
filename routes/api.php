@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Login\LoginController;
+use App\Http\Controllers\Payments\Customer\CustomerController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Register\Client\ClientController;
 use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
@@ -25,14 +26,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('proxy')->group(function () {
-    Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
-});
 
 Route::prefix('auth')->group(function () {
     Route::post('signup', [SignupController::class, 'store']);
     Route::post('login', [LoginController::class, 'login']);
 });
+
+Route::prefix('payments')->group(function () {
+    Route::prefix('customer')->group(function () {
+        Route::post('/', [CustomerController::class, 'store']);
+        Route::get('/{customerId}', [CustomerController::class, 'show']);
+        Route::put('/{customerId}', [CustomerController::class, 'update']);
+    });
+
+    // Route::prefix('cards')->group(function () {
+    //     Route::post('/', [CardController::class, 'store']);
+    //     Route::get('/{customerId}', [CardController::class, 'index']);
+    //     Route::get('/{cardId}', [CardController::class, 'show']);
+    //     Route::put('/{cardId}', [CardController::class, 'update']);
+    //     Route::delete('/{customerId}/{cardId}', [CardController::class, 'delete']);
+    // });
+
+    // Route::prefix('subscriptions')->group(function () {
+    //     Route::post('/', [SubscriptionController::class, 'store']);
+    //     Route::get('/{customerId}', [SubscriptionController::class, 'show']);
+    //     Route::put('/{customerId}', [SubscriptionController::class, 'update']);
+    // });
+
+    // Route::prefix('payments')->group(function () {
+    //     Route::post('/', [PaymentController::class, 'store']);
+    //     Route::get('/{paymentId}', [PaymentController::class, 'show']);
+    //     Route::put('/{paymentId}', [PaymentController::class, 'update']);
+    // });
+});
+
+Route::prefix('proxy')->group(function () {
+    Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
+});
+
 
 Route::middleware('auth')->group(function () {
 

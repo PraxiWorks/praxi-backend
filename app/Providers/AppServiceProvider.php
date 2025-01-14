@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Factories\Http\HttpFactory;
 use App\Domain\Interfaces\Core\Company\CompanyModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyPlanRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
@@ -10,6 +11,7 @@ use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
+use App\Domain\Interfaces\Http\HttpRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\ClientAddress\ClientAddressRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
@@ -27,6 +29,7 @@ use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
+use App\Domain\Service\Payments\Customer\CustomerGateway;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 use App\Infrastructure\Eloquent\Core\Company\CompanyModuleRepository;
 use App\Infrastructure\Eloquent\Core\Company\CompanyPlanRepository;
@@ -51,6 +54,7 @@ use App\Infrastructure\Eloquent\Settings\Group\GroupPermissionRepository;
 use App\Infrastructure\Eloquent\Settings\Group\GroupRepository;
 use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
 use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
+use App\Infrastructure\Services\Payments\MercadoPago\Customer\MercadoPagoCustomerGateway;
 use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
 use App\Services\Scheduling\Event\EventValidator;
@@ -75,6 +79,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Proxy
         $this->app->bind(HolidaysServiceInterface::class, HolidaysService::class);
+
+        // Http
+        $this->app->bind(HttpRepositoryInterface::class, HttpFactory::new(env('HTTP_CLIENT')));
 
         // Schedule
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
@@ -102,5 +109,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Storage
         $this->app->bind(LocalStorageRepositoryInterface::class, LocalStorageRepository::class);
+    
+        // Payments
+        $this->app->bind(CustomerGateway::class, MercadoPagoCustomerGateway::class);
     }
 }
