@@ -41,7 +41,7 @@ class PraxiSeeder extends Seeder
             "send_notification_whatsapp" => true,
             "path_image" => config('image.praxi.default_image'),
             "password" => Hash::make('teste123'),
-            "is_professional" => false,
+            "is_professional" => true,
             "status" => true,
             "created_at" => now(),
             "updated_at" => now()

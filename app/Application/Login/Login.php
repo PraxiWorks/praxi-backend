@@ -32,7 +32,12 @@ class Login
             throw new UserException('Senha inválida', 400);
         }
 
-        $jwtToken = $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
+        $data = [
+            'user_id' => $user->id,
+            'company_id' => $user->company_id,
+        ];
+
+        $jwtToken = $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));
 
         return new LoginResponseDTO($jwtToken);
     }

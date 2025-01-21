@@ -10,14 +10,15 @@ class UpdateEventRequestDTO
     public function __construct(
         private int $id,
         private int $companyId,
-        private int $eventTypeId,
+        private string $eventType,
         private int $clientId,
         private int $professionalId,
         private int $eventProcedureId,
         private int $eventStatusId,
         private int $eventColorId,
         private ?string $observation,
-        private string $day,
+        private int $selectedDayIndex,
+        private string $date,
         private string $startEvent,
         private string $endEvent,
         private int $eventRecurrenceId
@@ -33,9 +34,9 @@ class UpdateEventRequestDTO
         return $this->companyId;
     }
 
-    public function getEventTypeId(): int
+    public function getEventType(): string
     {
-        return $this->eventTypeId;
+        return $this->eventType;
     }
 
     public function getClientId(): int
@@ -68,9 +69,14 @@ class UpdateEventRequestDTO
         return $this->observation;
     }
 
-    public function getDay(): string
+    public function getSelectedDayIndex(): int
     {
-        return $this->day;
+        return $this->selectedDayIndex;
+    }
+
+    public function getDate(): string
+    {
+        return $this->date;
     }
 
     public function getStartEvent(): string

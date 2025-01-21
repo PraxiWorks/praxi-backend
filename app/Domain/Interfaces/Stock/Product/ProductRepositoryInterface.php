@@ -12,4 +12,5 @@ interface ProductRepositoryInterface
     public function update(Product $entity): bool;
     public function delete (Product $entity): bool;
     public function getBySkuCode(string $skuCode): ?Product;
+    public function getByCategoryId(int $categoryId): array;
 }

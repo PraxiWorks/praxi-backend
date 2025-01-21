@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function delete(User $entity): bool;
     public function getByEmailAndCompanyId(string $email, int $companyId): ?User;
     public function getByUsername(string $username): ?User;
+    public function listProfessionalUserByCompanyId(int $companyId): array;
 }

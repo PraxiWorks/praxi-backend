@@ -36,4 +36,9 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::where('sku_code', $skuCode)->first();
     }
+
+    public function getByCategoryId(int $categoryId): array
+    {
+        return Product::where('category_id', $categoryId)->get()->toArray();
+    }
 }

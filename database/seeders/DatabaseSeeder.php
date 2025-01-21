@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
             EventColorSeeder::class,
             EventProcedureSeeder::class,
             EventRecurrenceSeeder::class,
-            EventStatusSeeder::class,
-            EventTypeSeeder::class,
+            EventStatusSeeder::class
         ]);
     }
 }

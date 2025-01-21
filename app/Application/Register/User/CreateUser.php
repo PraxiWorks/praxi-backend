@@ -44,7 +44,7 @@ class CreateUser
             }
         }
 
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name);
+        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $input->getName());
 
         $hashedPassword = password_hash($input->getPassword(), PASSWORD_DEFAULT);
 
@@ -56,7 +56,6 @@ class CreateUser
             $input->getPhoneNumber(),
             $input->getDateOfBirth(),
             $input->getCpfNumber(),
-            $input->getRgNumber(),
             $input->getGender(),
             $input->getSendNotificationEmail(),
             $input->getSendNotificationSms(),

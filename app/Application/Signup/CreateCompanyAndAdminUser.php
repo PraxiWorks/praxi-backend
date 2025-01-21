@@ -136,6 +136,7 @@ class CreateCompanyAndAdminUser
 
     private function createCompany(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan, array $moduleIds): Company
     {
+
         $existingCompany = $this->companyRepositoryInterface->getByName($input->getFantasyName());
         if (!empty($existingCompany)) {
             throw new CompanyException('Uma empresa com este nome já existe', 400);
@@ -201,7 +202,7 @@ class CreateCompanyAndAdminUser
                 false
             );
 
-            if(!$this->groupPermissionRepositoryInterface->save($groupPermission)){
+            if (!$this->groupPermissionRepositoryInterface->save($groupPermission)) {
                 throw new CreateCompanyAndAdminUserException('Erro ao atribuir as permissões ao grupo', 500);
             }
         }
@@ -238,7 +239,7 @@ class CreateCompanyAndAdminUser
             false,
             config('image.users.default_image'),
             $hashPassword,
-            false,
+            true,
             $group->id,
             true
         );
@@ -278,6 +279,12 @@ class CreateCompanyAndAdminUser
         if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain')) || empty(config('jwtAuth.expirationTime'))) {
             throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
         }
-        return $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
+
+        $data = [
+            'user_id' => $user->id,
+            'company_id' => $user->company_id,
+        ];
+
+        return $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));
     }
 }

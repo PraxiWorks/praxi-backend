@@ -7,6 +7,7 @@ use App\Application\Register\User\CreateUser;
 use App\Application\Register\User\DeleteUser;
 use App\Application\Register\User\DTO\CreateUserRequestDTO;
 use App\Application\Register\User\DTO\UpdateUserRequestDTO;
+use App\Application\Register\User\ListProfessionalUser;
 use App\Application\Register\User\ListUsers;
 use App\Application\Register\User\ShowUser;
 use App\Application\Register\User\UpdateUser;
@@ -22,7 +23,8 @@ class UserController extends Controller
         private ShowUser $showUserUseCase,
         private ListUsers $listUserUseCase,
         private UpdateUser $updateUserUseCase,
-        private DeleteUser $deleteUserUseCase
+        private DeleteUser $deleteUserUseCase,
+        private ListProfessionalUser $listProfessionalUserUseCase
     ) {}
 
     public function index(Request $request)
@@ -47,7 +49,6 @@ class UserController extends Controller
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
@@ -67,7 +68,6 @@ class UserController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,
@@ -107,7 +107,6 @@ class UserController extends Controller
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
@@ -127,7 +126,6 @@ class UserController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,
@@ -150,6 +148,18 @@ class UserController extends Controller
         try {
             $input = new IdRequestDTO($id);
             $output = $this->deleteUserUseCase->execute($input);
+            return $this->outputSuccessArrayToJson($output, 200);
+        } catch (Exception $e) {
+            return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function professionals(Request $request)
+    {
+        try {
+            $companyId = $request->route('companyId') ?? 0;
+            $input = new IdRequestDTO($companyId);
+            $output = $this->listProfessionalUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
