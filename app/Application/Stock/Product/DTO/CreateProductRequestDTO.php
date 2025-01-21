@@ -8,8 +8,9 @@ class CreateProductRequestDTO
     public function __construct(
         private int $companyId,
         private string $name,
-        private ?string $categoryId,
+        private ?int $categoryId,
         private string $skuCode,
+        private ?int $supplierId,
         private ?float $price,
         private ?string $imageBase64,
         private ?string $currentStock,
@@ -28,7 +29,7 @@ class CreateProductRequestDTO
         return $this->name;
     }
 
-    public function getCategoryId(): ?string
+    public function getCategoryId(): ?int
     {
         return $this->categoryId;
     }
@@ -36,6 +37,11 @@ class CreateProductRequestDTO
     public function getSkuCode(): string
     {
         return $this->skuCode;
+    }
+
+    public function getSupplierId(): ?int
+    {
+        return $this->supplierId;
     }
 
     public function getPrice(): ?float

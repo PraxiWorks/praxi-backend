@@ -25,7 +25,8 @@ class Authenticate extends Middleware
         }
 
         // Obter o ID do usuário a partir do token JWT
-        $userId = $jwtAuth->getUserIdFromToken($token);
+        $jwtJsonDecoded = json_decode($jwtAuth->getUserIdFromToken($token), true);
+        $userId = $jwtJsonDecoded['user_id'];
 
         if (empty($userId)) {
             throw new HttpResponseException(response()->json([

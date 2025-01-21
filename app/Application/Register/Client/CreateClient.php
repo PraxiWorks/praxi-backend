@@ -36,14 +36,20 @@ class CreateClient
         DB::beginTransaction();
         try {
             $company = $this->getCompany($input);
-            $group = $this->createGroup($company);
-            $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name);
-            $hashedPassword = password_hash($input->getPassword(), PASSWORD_DEFAULT);
+            $group = null;
+            if ($input->getHasAccessToTheSystem()) {
+                $group = $this->createGroup($company);
+            }
+            $pathImage = $this->processImage->execute($input->getImageBase64(), 'clients', $company->name, $input->getName());
+            $hashedPassword = $input->getPassword() ? password_hash($input->getPassword(), PASSWORD_DEFAULT) : null;
             $this->createClient($input, $company, $group, $pathImage, $hashedPassword);
 
             DB::commit();
             return true;
         } catch (Exception $e) {
+            if (!empty($pathImage)) {
+                $this->processImage->deleteExistingImage($pathImage, 'clients');
+            }
             DB::rollBack();
             throw $e;
         }
@@ -53,14 +59,17 @@ class CreateClient
     {
         $requiredFields = [
             'Nome' => $input->getName(),
-            'Email' => $input->getEmail(),
-            'Senha' => $input->getPassword()
+            'Email' => $input->getEmail()
         ];
 
         foreach ($requiredFields as $field => $value) {
             if (empty($value)) {
                 throw new ClientException("{$field} é obrigatório", 400);
             }
+        }
+
+        if (!empty($input->getHasAccessToTheSystem()) && empty($input->getPassword())) {
+            throw new ClientException('Senha é obrigatória', 400);
         }
     }
 
@@ -110,14 +119,16 @@ class CreateClient
         }
     }
 
-    private function createClient(CreateClientRequestDTO $input, Company $company, Group $group, string $pathImage, string $hashedPassword): void
+    private function createClient(CreateClientRequestDTO $input, Company $company, ?Group $group, string $pathImage, ?string $hashedPassword): void
     {
         if (!empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $company->id))) {
             throw new ClientException('Email já cadastrado', 400);
         }
 
-        if(!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $company->id))) {
-            throw new ClientException('CPF já cadastrado', 400);
+        if (!empty($input->getCpfNumber())) {
+            if (!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $company->id))) {
+                throw new ClientException('CPF já cadastrado', 400);
+            }
         }
 
         $client = Client::new(
@@ -134,7 +145,7 @@ class CreateClient
             $pathImage,
             $hashedPassword,
             $input->getHasAccessToTheSystem(),
-            $group->id,
+            $group->id ?? null,
             $input->getStatus()
         );
 

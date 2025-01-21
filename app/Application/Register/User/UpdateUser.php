@@ -36,7 +36,7 @@ class UpdateUser
         }
 
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $user->path_image);
+        $pathImage = !empty($input->getImageBase64()) ? $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $input->getName(), $user->path_image) : $user->path_image;
 
         $user->company_id = $input->getCompanyId();
         $user->username = $input->getUsername();
@@ -45,7 +45,6 @@ class UpdateUser
         $user->phone_number = $input->getPhoneNumber();
         $user->date_of_birth = $input->getDateOfBirth();
         $user->cpf_number = $input->getCpfNumber();
-        $user->rg_number = $input->getRgNumber();
         $user->gender = $input->getGender();
         $user->send_notification_email = $input->getSendNotificationEmail();
         $user->send_notification_sms = $input->getSendNotificationSms();

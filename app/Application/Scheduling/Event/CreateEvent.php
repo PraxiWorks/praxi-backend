@@ -21,14 +21,15 @@ class CreateEvent
 
         $event = Event::new(
             $input->getCompanyId(),
-            $input->getEventTypeId(),
+            $input->getEventType(),
             $input->getClientId(),
             $input->getProfessionalId(),
             $input->getEventProcedureId(),
             $input->getEventStatusId(),
             $input->getEventColorId(),
             $input->getObservation(),
-            $input->getDay(),
+            $input->getSelectedDayIndex(),
+            $input->getDate(),
             $input->getStartEvent(),
             $input->getEndEvent(),
             $input->getEventRecurrenceId()

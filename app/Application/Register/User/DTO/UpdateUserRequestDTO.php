@@ -14,7 +14,6 @@ class UpdateUserRequestDTO
         private ?string $phoneNumber,
         private ?string $dateOfBirth,
         private ?string $cpfNumber,
-        private ?string $rgNumber,
         private ?string $gender,
         private ?bool $sendNotificationEmail,
         private ?bool $sendNotificationSms,
@@ -63,11 +62,6 @@ class UpdateUserRequestDTO
     public function getCpfNumber(): ?string
     {
         return $this->cpfNumber;
-    }
-
-    public function getRgNumber(): ?string
-    {
-        return $this->rgNumber;
     }
 
     public function getGender(): ?string

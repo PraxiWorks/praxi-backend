@@ -9,12 +9,12 @@ class ImageValueObject
     private string $base64String;
     private string $mimeType;
 
-    private const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+    private const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
 
     public function __construct(string $base64String, float $tamanhoMaximoMb)
     {
         $this->isValidImage($base64String, $tamanhoMaximoMb);
-        $this->base64String = $base64String;
+        $this->base64String = $base64String;        
     }
 
     private function isValidImage(string $base64String, float $tamanhoMaximoMb): void
@@ -37,11 +37,11 @@ class ImageValueObject
             ), 400);
         }
 
+        $this->setMimeType($imageData);
+
         if (!$this->validateMimeType($imageData)) {
             throw new InvalidArgumentException('Tipo MIME da imagem inválido. Permitidos: JPEG, PNG, GIF.', 400);
         }
-
-        $this->setMimeType($imageData);
     }
 
     private function validateSize(string $imageData, float $maxFileSizeMb): bool
@@ -51,16 +51,16 @@ class ImageValueObject
         return $imageSizeBytes <= $maxFileSizeBytes;
     }
 
-    private function validateMimeType(string $imageData): bool
-    {
-        $mimeType = $this->getMimeType($imageData);
-        return in_array($mimeType, self::VALID_MIME_TYPES, true);
-    }
-
     private function setMimeType(string $imageData): void
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $this->mimeType = $finfo->buffer($imageData) ?? $this->getMimeTypeFallback($imageData);
+    }
+
+    private function validateMimeType(string $imageData): bool
+    {
+        $mimeType = $this->getMimeType($imageData);
+        return in_array($mimeType, self::VALID_MIME_TYPES, true);
     }
 
     private function getMimeTypeFallback(string $imageData): ?string

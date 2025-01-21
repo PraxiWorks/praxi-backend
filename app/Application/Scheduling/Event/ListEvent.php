@@ -2,17 +2,21 @@
 
 namespace App\Application\Scheduling\Event;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\DTO\OutputArrayDTO;
+use App\Application\Scheduling\Event\DTO\ListEventRequestDTO;
+use App\Application\Scheduling\Event\Mapper\ListEventMapper;
 use App\Domain\Interfaces\Scheduling\EventRepositoryInterface;
 
 class ListEvent
 {
     public function __construct(
-       private EventRepositoryInterface $eventRepositoryInterface
+       private EventRepositoryInterface $eventRepositoryInterface,
+       private ListEventMapper $listEventMapper
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListEventRequestDTO $input): OutputArrayDTO
     {
-        return $this->eventRepositoryInterface->list($input->getId());
+        $result = $this->eventRepositoryInterface->list($input);
+        return $this->listEventMapper->toOutputDto($result);
     }
 }

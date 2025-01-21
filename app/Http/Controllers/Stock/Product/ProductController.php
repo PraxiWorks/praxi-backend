@@ -32,7 +32,7 @@ class ProductController extends Controller
         try {
             $input = new IdRequestDTO($companyId);
             $output = $this->listProductUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -44,6 +44,7 @@ class ProductController extends Controller
         $name = $request->name ?? '';
         $categoryId = $request->category_id ?? null;
         $skuCode = $request->sku_code ?? '';
+        $supplier = $request->supplier_id ?? null;
         $price = $request->price ?? null;
         $imageBase64 = $request->image_base_64 ?? null;
         $currentStock = $request->current_stock ?? null;
@@ -57,6 +58,7 @@ class ProductController extends Controller
                 $name,
                 $categoryId,
                 $skuCode,
+                $supplier,
                 $price,
                 $imageBase64,
                 $currentStock,

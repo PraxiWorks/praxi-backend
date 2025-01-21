@@ -43,4 +43,12 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::where('username', $userName)->first();
     }
+
+    public function listProfessionalUserByCompanyId(int $companyId): array
+    {
+        return User::where('company_id', $companyId)
+            ->where('is_professional', true)
+            ->get()
+            ->toArray();
+    }
 }

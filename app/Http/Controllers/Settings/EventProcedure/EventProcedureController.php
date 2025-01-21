@@ -27,7 +27,7 @@ class EventProcedureController extends Controller
 
     public function index(Request $request)
     {
-        $companyId = $request->route('eventProcedureId');
+        $companyId = $request->route('companyId');
 
         try {
             $input = new IdRequestDTO($companyId);

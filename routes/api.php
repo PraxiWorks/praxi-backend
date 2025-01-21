@@ -7,11 +7,15 @@ use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
+use App\Http\Controllers\Scheduling\Event\EventColorController;
 use App\Http\Controllers\Scheduling\Event\EventController;
+use App\Http\Controllers\Scheduling\Event\EventRecurrenceController;
+use App\Http\Controllers\Scheduling\Event\EventStatusController;
 use App\Http\Controllers\Settings\EventProcedure\EventProcedureController;
 use App\Http\Controllers\Settings\Group\GroupController;
 use App\Http\Controllers\Stock\Product\ProductController;
 use App\Http\Controllers\Stock\ProductCategory\ProductCategoryController;
+use App\Http\Controllers\Stock\Supplier\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +53,10 @@ Route::middleware('auth')->group(function () {
 
             // Eventos
             Route::prefix('events')->group(function () {
+                Route::get('status', [EventStatusController::class, 'index']);
+                Route::get('colors', [EventColorController::class, 'index']);
+                Route::get('recurrences', [EventRecurrenceController::class, 'index']);
+
                 Route::post('/', [EventController::class, 'store'])->middleware('permission:scheduling.event.store');
                 Route::get('/', [EventController::class, 'index'])->middleware('permission:scheduling.event.list');
                 Route::get('/{eventId}', [EventController::class, 'show'])->middleware('permission:scheduling.event.show');
@@ -76,6 +84,15 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{productCategoryId}', [ProductCategoryController::class, 'update'])->middleware('permission:stock.category.update');
                 Route::delete('/{productCategoryId}', [ProductCategoryController::class, 'delete'])->middleware('permission:stock.category.delete');
             });
+
+            // Fornecedores
+            Route::prefix('suppliers')->group(function () {
+                Route::post('/', [SupplierController::class, 'store'])->middleware('permission:stock.supplier.store');
+                Route::get('/', [SupplierController::class, 'index'])->middleware('permission:stock.supplier.list');
+                Route::get('/{supplierId}', [SupplierController::class, 'show'])->middleware('permission:stock.supplier.show');
+                Route::put('/{supplierId}', [SupplierController::class, 'update'])->middleware('permission:stock.supplier.update');
+                Route::delete('/{supplierId}', [SupplierController::class, 'delete'])->middleware('permission:stock.supplier.delete');
+            });
         });
 
         // Cadastros
@@ -84,6 +101,7 @@ Route::middleware('auth')->group(function () {
             Route::prefix('users')->group(function () {
                 Route::post('/', [UserController::class, 'store'])->middleware('permission:system.user.store');
                 Route::get('/', [UserController::class, 'index'])->middleware('permission:system.user.list');
+                Route::get('professionals', [UserController::class, 'professionals']);
                 Route::get('/{userId}', [UserController::class, 'show'])->middleware('permission:system.user.show');
                 Route::put('/{userId}', [UserController::class, 'update'])->middleware('permission:system.user.update');
                 Route::delete('/{userId}', [UserController::class, 'delete'])->middleware('permission:system.user.delete');

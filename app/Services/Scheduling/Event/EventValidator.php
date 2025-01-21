@@ -13,7 +13,6 @@ use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventColorRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventStatusRepositoryInterface;
-use App\Domain\Interfaces\Scheduling\EventTypeRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventValidatorRepositoryInterface;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Infrastructure\Eloquent\Scheduling\EventRecurrenceRepository;
@@ -21,7 +20,6 @@ use App\Infrastructure\Eloquent\Scheduling\EventRecurrenceRepository;
 class EventValidator implements EventValidatorRepositoryInterface
 {
     public function __construct(
-        private EventTypeRepositoryInterface $eventTypeRepository,
         private ClientRepositoryInterface $clientRepository,
         private UserRepositoryInterface $userRepository,
         private EventProcedureRepositoryInterface $eventProcedureRepository,
@@ -32,22 +30,12 @@ class EventValidator implements EventValidatorRepositoryInterface
 
     public function validate($input): void
     {
-        $this->validateEventType($input->getEventTypeId());
         $this->validateClient($input->getClientId());
         $this->validateProfessional($input->getProfessionalId());
         $this->validateEventProcedure($input->getEventProcedureId());
         $this->validateEventStatus($input->getEventStatusId());
         $this->validateEventColor($input->getEventColorId());
         $this->validateEventRecurrence($input->getEventRecurrenceId());
-    }
-
-    private function validateEventType(int $eventTypeId): void
-    {
-        $eventType = $this->eventTypeRepository->getById($eventTypeId);
-
-        if (empty($eventType)) {
-            throw new EventTypeNotFoundException('Tipo não encontrado', 404);
-        }
     }
 
     private function validateClient(int $clientId): void

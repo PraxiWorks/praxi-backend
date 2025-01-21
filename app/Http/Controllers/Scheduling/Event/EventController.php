@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Scheduling\Event\CreateEvent;
 use App\Application\Scheduling\Event\DeleteEvent;
 use App\Application\Scheduling\Event\DTO\CreateEventRequestDTO;
+use App\Application\Scheduling\Event\DTO\ListEventRequestDTO;
 use App\Application\Scheduling\Event\DTO\UpdateEventRequestDTO;
 use App\Application\Scheduling\Event\ListEvent;
 use App\Application\Scheduling\Event\ShowEvent;
@@ -26,12 +27,20 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-        $id = $request->route('eventId') ?? 0;
+        $id = $request->route('companyId') ?? 0;
+        $startDay = $request->start_day ?? null;
+        $endDay = $request->end_day ?? null;
+
         try {
-            $input = new IdRequestDTO($id);
+            $input = new ListEventRequestDTO(
+                $id,
+                $startDay,
+                $endDay
+            );
             $output = $this->listEventUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
+            dd($e);
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }
@@ -39,14 +48,15 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $companyId = $request->companyId ?? null;
-        $eventTypeId = $request->event_type_id ?? null;
+        $eventType = $request->event_type ?? null;
         $clientId = $request->client_id ?? null;
         $professionalId = $request->professional_id ?? null;
         $eventProcedureId = $request->event_procedure_id ?? null;
         $eventStatusId = $request->event_status_id ?? null;
         $eventColorId = $request->event_color_id ?? null;
-        $observation = $request->observation ?? null;
-        $day = $request->day ?? null;
+        $observation = $request->observations ?? null;
+        $selectedDayIndex = $request->selected_day_index ?? null;
+        $date = $request->date ?? null;
         $startEvent = $request->start_event ?? null;
         $endEvent = $request->end_event ?? null;
         $eventRecurrenceId = $request->event_recurrence_id ?? null;
@@ -54,14 +64,15 @@ class EventController extends Controller
         try {
             $input = new CreateEventRequestDTO(
                 $companyId,
-                $eventTypeId,
+                $eventType,
                 $clientId,
                 $professionalId,
                 $eventProcedureId,
                 $eventStatusId,
                 $eventColorId,
                 $observation,
-                $day,
+                $selectedDayIndex,
+                $date,
                 $startEvent,
                 $endEvent,
                 $eventRecurrenceId
@@ -89,14 +100,15 @@ class EventController extends Controller
     {
         $id = $request->route('eventId') ?? 0;
         $companyId = $request->companyId ?? null;
-        $eventTypeId = $request->event_type_id ?? null;
+        $eventType = $request->event_type ?? null;
         $clientId = $request->client_id ?? null;
         $professionalId = $request->professional_id ?? null;
         $eventProcedureId = $request->event_procedure_id ?? null;
         $eventStatusId = $request->event_status_id ?? null;
         $eventColorId = $request->event_color_id ?? null;
         $observation = $request->observation ?? null;
-        $day = $request->day ?? null;
+        $selectedDayIndex = $request->selected_day_index ?? null;
+        $date = $request->date ?? null;
         $startEvent = $request->start_event ?? null;
         $endEvent = $request->end_event ?? null;
         $eventRecurrenceId = $request->event_recurrence_id ?? null;
@@ -105,14 +117,15 @@ class EventController extends Controller
             $input = new UpdateEventRequestDTO(
                 $id,
                 $companyId,
-                $eventTypeId,
+                $eventType,
                 $clientId,
                 $professionalId,
                 $eventProcedureId,
                 $eventStatusId,
                 $eventColorId,
                 $observation,
-                $day,
+                $selectedDayIndex,
+                $date,
                 $startEvent,
                 $endEvent,
                 $eventRecurrenceId

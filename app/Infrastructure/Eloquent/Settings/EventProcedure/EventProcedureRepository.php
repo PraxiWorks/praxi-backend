@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Scheduling;
+namespace App\Infrastructure\Eloquent\Settings\EventProcedure;
 
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Models\Scheduling\EventProcedure;

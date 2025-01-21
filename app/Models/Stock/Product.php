@@ -21,7 +21,8 @@ class Product extends Model
         'status',
         'current_stock',
         'minimum_stock_level',
-        'maximum_stock_level'
+        'maximum_stock_level',
+        'supplier_id'
     ];
 
     public static function new(
@@ -34,7 +35,8 @@ class Product extends Model
         string $status,
         ?int $currentStock,
         ?int $minimumStockLevel,
-        ?int $maximumStockLevel
+        ?int $maximumStockLevel,
+        ?int $supplierId
     ): Product {
         return new self(
             [
@@ -47,7 +49,8 @@ class Product extends Model
                 'status' => $status,
                 'current_stock' => $currentStock,
                 'minimum_stock_level' => $minimumStockLevel,
-                'maximum_stock_level' => $maximumStockLevel
+                'maximum_stock_level' => $maximumStockLevel,
+                'supplier_id' => $supplierId
             ]
         );
     }

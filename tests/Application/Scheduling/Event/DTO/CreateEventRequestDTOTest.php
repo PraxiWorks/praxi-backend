@@ -25,7 +25,7 @@ class CreateEventRequestDTOTest extends TestCase
         );
 
         $this->assertEquals(1, $input->getCompanyId());
-        $this->assertEquals(1, $input->getEventTypeId());
+        $this->assertEquals(1, $input->getEventType());
         $this->assertEquals(1, $input->getClientId());
         $this->assertEquals(1, $input->getProfessionalId());
         $this->assertEquals(1, $input->getEventProcedureId());

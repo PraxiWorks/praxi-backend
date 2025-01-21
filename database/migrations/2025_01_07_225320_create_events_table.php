@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
-            $table->foreignId('event_type_id')->constrained('event_types');
+            $table->string('event_type');
             $table->foreignId('client_id')->constrained('clients');
             $table->foreignId('professional_id')->constrained('users');
             $table->foreignId('event_procedure_id')->constrained('event_procedures');
             $table->foreignId('event_status_id')->constrained('event_status');
             $table->foreignId('event_color_id')->constrained('event_colors');
             $table->string('observation')->nullable();
-            $table->string('day');
+            $table->integer('selected_day_index');
+            $table->date('date');
             $table->time('start_event');
             $table->time('end_event');
             $table->foreignId('event_recurrence_id')->constrained('event_recurrences');
