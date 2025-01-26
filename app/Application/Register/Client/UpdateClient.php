@@ -29,11 +29,11 @@ class UpdateClient
             throw new ClientNotFoundException('Cliente não encontrado', 400);
         }
 
-        if (!empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $input->getCompanyId()))) {
+        if ($client->email != $input->getEmail()  && !empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $input->getCompanyId()))) {
             throw new ClientException('Email já cadastrado', 400);
         }
 
-        if (!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $input->getCompanyId()))) {
+        if ($client->cpf_number != $input->getCpfNumber()  && !empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $input->getCompanyId()))) {
             throw new ClientException('CPF já cadastrado', 400);
         }
 

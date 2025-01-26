@@ -2,8 +2,8 @@
 
 namespace App\Application\Stock\Product;
 
-use App\Application\DTO\IdRequestDTO;
 use App\Application\DTO\OutputArrayDTO;
+use App\Application\Stock\Product\DTO\ListProductRequestDTO;
 use App\Application\Stock\Product\Mapper\ListProductMapper;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 
@@ -14,9 +14,9 @@ class ListProduct
         private ListProductMapper $listProductMapper
     ) {}
 
-    public function execute(IdRequestDTO $input): OutputArrayDTO
+    public function execute(ListProductRequestDTO $input): OutputArrayDTO
     {
-        $result = $this->productRepositoryInterface->list($input->getId());
+        $result = $this->productRepositoryInterface->list($input);
         return $this->listProductMapper->toOutputDto($result);
     }
 }

@@ -13,7 +13,7 @@ class CreateGroup
         private GroupRepositoryInterface $groupRepositoryInterface,
     ) {}
 
-    public function execute(CreateGroupRequestDTO $input): bool
+    public function execute(CreateGroupRequestDTO $input): Group
     {
         $this->validateInput($input);
 
@@ -31,7 +31,7 @@ class CreateGroup
             throw new GroupException('Erro ao salvar o grupo', 500);
         }
 
-        return true;
+        return $group;
     }
 
     private function validateInput(CreateGroupRequestDTO $input): void

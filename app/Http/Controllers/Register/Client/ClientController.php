@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Register\Client\CreateClient;
 use App\Application\Register\Client\DeleteClient;
 use App\Application\Register\Client\DTO\CreateClientRequestDTO;
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Application\Register\Client\DTO\UpdateClientRequestDTO;
 use App\Application\Register\Client\ListClients;
 use App\Application\Register\Client\ShowClient;
@@ -29,7 +30,12 @@ class ClientController extends Controller
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $input = new IdRequestDTO($companyId);
+            $status = $request->status ?? '';
+
+            $input = new ListClientRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listClientUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

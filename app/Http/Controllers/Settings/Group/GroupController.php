@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Settings\Group;
 use App\Application\DTO\IdRequestDTO;
 use App\Application\Settings\Group\CreateGroup;
 use App\Application\Settings\Group\DeleteGroup;
+use App\Application\Settings\Group\DTO\AssignPermissionsToGroupRequestDTO;
 use App\Application\Settings\Group\DTO\CreateGroupRequestDTO;
+use App\Application\Settings\Group\DTO\ListGroupRequestDTO;
 use App\Application\Settings\Group\DTO\UpdateGroupRequestDTO;
 use App\Application\Settings\Group\ListGroup;
 use App\Application\Settings\Group\ShowGroup;
@@ -27,10 +29,14 @@ class GroupController extends Controller
 
     public function index(Request $request)
     {
-        $companyId = $request->route('groupId');
+        $companyId = $request->route('companyId');
+        $status = $request->status ?? '';
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListGroupRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listGroupUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

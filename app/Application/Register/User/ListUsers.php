@@ -2,7 +2,7 @@
 
 namespace App\Application\Register\User;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Register\User\DTO\ListUserRequestDTO;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 
 class ListUsers
@@ -11,8 +11,8 @@ class ListUsers
         private UserRepositoryInterface $userRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListUserRequestDTO $input): array
     {
-        return $this->userRepositoryInterface->list($input->getId());
+        return $this->userRepositoryInterface->list($input);
     }
 }

@@ -16,17 +16,17 @@ use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
-use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
 use App\Models\Core\Company\Company;
 use App\Models\Core\Company\CompanyModule;
 use App\Models\Core\Company\CompanyPlan;
-use App\Models\Core\Permission\GroupPermission;
 use App\Models\Core\Plan\Plan;
 use App\Models\Scheduling\ScheduleSettings;
 use App\Models\Register\User\User;
 use App\Models\Settings\Group\Group;
+use App\Models\Settings\GroupPermission\GroupPermission;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -230,7 +230,6 @@ class CreateCompanyAndAdminUser
             $input->getName(),
             $input->getEmail(),
             $input->getPhoneNumber(),
-            null,
             null,
             null,
             null,

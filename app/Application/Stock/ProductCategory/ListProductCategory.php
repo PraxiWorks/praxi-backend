@@ -2,7 +2,7 @@
 
 namespace App\Application\Stock\ProductCategory;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Stock\ProductCategory\DTO\ListProductCategoryRequestDTO;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 
 class ListProductCategory
@@ -11,8 +11,8 @@ class ListProductCategory
         private ProductCategoryRepositoryInterface $productCategoryRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListProductCategoryRequestDTO $input): array
     {
-        return $this->productCategoryRepositoryInterface->list($input->getId());
+        return $this->productCategoryRepositoryInterface->list($input);
     }
 }

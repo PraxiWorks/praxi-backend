@@ -47,10 +47,6 @@ class UpdateScheduleSettings
             $errors[] = 'Hora de término é obrigatório';
         }
 
-        if (empty($input->getIsWorkingDay())) {
-            $errors[] = 'Dia de trabalho é obrigatório';
-        }
-
         if (!empty($errors)) {
             throw new ScheduleSettingsException(implode(', ', $errors), 400);
         }

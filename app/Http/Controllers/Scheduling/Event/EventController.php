@@ -40,7 +40,6 @@ class EventController extends Controller
             $output = $this->listEventUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
-            dd($e);
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }

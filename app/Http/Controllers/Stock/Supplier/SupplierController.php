@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Stock\Supplier\CreateSupplier;
 use App\Application\Stock\Supplier\DeleteSupplier;
 use App\Application\Stock\Supplier\DTO\CreateSupplierRequestDTO;
+use App\Application\Stock\Supplier\DTO\ListSupplierRequestDTO;
 use App\Application\Stock\Supplier\DTO\UpdateSupplierRequestDTO;
 use App\Application\Stock\Supplier\ListSupplier;
 use App\Application\Stock\Supplier\ShowSupplier;
@@ -28,9 +29,13 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
+        $status = $request->status ?? '';
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListSupplierRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listSupplierUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

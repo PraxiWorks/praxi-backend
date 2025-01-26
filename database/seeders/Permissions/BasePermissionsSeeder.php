@@ -28,14 +28,19 @@ abstract class BasePermissionsSeeder extends Seeder
             // Inserir permissões evitando duplicação
             foreach ($permissions as $permission) {
                 DB::table('permissions')->updateOrInsert(
-                    ['name' => $permission],
-                    ['created_at' => now(), 'updated_at' => now()]
+                    ['name' => $permission['name']],
+                    [
+                        'display_name' => $permission['display_name'],
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]
                 );
             }
 
             // Buscar os IDs das permissões inseridas
+            $permissionNames = array_column($permissions, 'name');
             $permissionIds = DB::table('permissions')
-                ->whereIn('name', $permissions)
+                ->whereIn('name', $permissionNames)
                 ->pluck('id')
                 ->toArray();
 

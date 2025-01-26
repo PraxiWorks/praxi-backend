@@ -10,4 +10,5 @@ interface CompanyModuleRepositoryInterface
     public function getById(int $id): ?CompanyModule;
     public function list(): array;
     public function update(CompanyModule $entity): bool;
+    public function getByCompanyId(int $id): array;
 }

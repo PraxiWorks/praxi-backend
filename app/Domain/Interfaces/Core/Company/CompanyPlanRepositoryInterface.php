@@ -10,4 +10,5 @@ interface CompanyPlanRepositoryInterface
     public function getById(int $id): ?CompanyPlan;
     public function list(): array;
     public function update(CompanyPlan $entity): bool;
+    public function getByCompanyId(int $id): array;
 }

@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Settings\EventProcedure\CreateEventProcedure;
 use App\Application\Settings\EventProcedure\DeleteEventProcedure;
 use App\Application\Settings\EventProcedure\DTO\CreateEventProcedureRequestDTO;
+use App\Application\Settings\EventProcedure\DTO\ListEventProcedureRequestDTO;
 use App\Application\Settings\EventProcedure\DTO\UpdateEventProcedureRequestDTO;
 use App\Application\Settings\EventProcedure\ListEventProcedure;
 use App\Application\Settings\EventProcedure\ShowEventProcedure;
@@ -28,9 +29,13 @@ class EventProcedureController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
+        $status = $request->status ?? '';
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListEventProcedureRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listEventProcedureUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

@@ -2,7 +2,7 @@
 
 namespace App\Application\Stock\Supplier;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Stock\Supplier\DTO\ListSupplierRequestDTO;
 use App\Domain\Interfaces\Stock\Supplier\SupplierRepositoryInterface;
 
 class ListSupplier
@@ -11,8 +11,8 @@ class ListSupplier
         private SupplierRepositoryInterface $supplierRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListSupplierRequestDTO $input): array
     {
-        return $this->supplierRepositoryInterface->list($input->getId());
+        return $this->supplierRepositoryInterface->list($input);
     }
 }

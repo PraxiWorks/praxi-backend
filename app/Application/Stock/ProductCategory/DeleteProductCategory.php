@@ -24,7 +24,7 @@ class DeleteProductCategory
         }
 
         if(!empty($this->productRepositoryInterface->getByCategoryId($product->id))) {
-            throw new ProductCategoryException('Categoria não pode ser deletada, pois existem produtos vinculados a ela', 500);
+            throw new ProductCategoryException('Categoria não pode ser deletada, pois existem produtos vinculados a ela', 400);
         }
 
         if (!$this->productCategoryRepositoryInterface->delete($product)) {
