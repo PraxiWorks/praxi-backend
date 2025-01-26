@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Register\Client;
 
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Models\Register\Client\Client;
 
@@ -17,9 +18,17 @@ class ClientRepository implements ClientRepositoryInterface
         return Client::find($id);
     }
 
-    public function list(int $companyId): array
+    public function list(ListClientRequestDTO $input): array
     {
-        return Client::where('company_id', $companyId)->get()->toArray();
+        $query = Client::where('company_id', $input->getCompanyId());
+
+        if (!empty($input->getStatus())) {
+            $query->where('status', $input->getStatus());
+        }
+
+        $query->orderBy('id', 'desc');
+
+        return $query->get()->toArray();
     }
 
     public function update(Client $entity): bool

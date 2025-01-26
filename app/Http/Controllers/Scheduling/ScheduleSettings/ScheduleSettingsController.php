@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Scheduling\ScheduleSettings;
 
+use App\Application\DTO\IdRequestDTO;
 use App\Application\Scheduling\ScheduleSettings\CreateScheduleSettings;
 use App\Application\Scheduling\ScheduleSettings\DTO\CreateScheduleSettingsRequestDTO;
 use App\Application\Scheduling\ScheduleSettings\DTO\UpdateScheduleSettingsRequestDTO;
@@ -19,10 +20,12 @@ class ScheduleSettingsController extends Controller
         private UpdateScheduleSettings $updateScheduleSettingsUseCase,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
+        $id = $request->route('companyId') ?? 0;
         try {
-            $output = $this->listScheduleSettingsUseCase->execute();
+            $input = new IdRequestDTO($id);
+            $output = $this->listScheduleSettingsUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
@@ -46,7 +49,7 @@ class ScheduleSettingsController extends Controller
     public function update(Request $request)
     {
         $id = $request->configId ?? 0;
-        $dayOfWeek = $request->day ?? '';
+        $dayOfWeek = $request->day_of_week ?? '';
         $startTime = $request->start_time ?? '';
         $endTime = $request->end_time ?? '';
         $isWorkingDay = $request->is_working_day ?? false;

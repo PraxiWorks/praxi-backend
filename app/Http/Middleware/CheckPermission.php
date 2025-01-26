@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
-use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
-use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
+use App\Domain\Interfaces\Register\UserPermission\UserPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Register\User\CreateUser;
 use App\Application\Register\User\DeleteUser;
 use App\Application\Register\User\DTO\CreateUserRequestDTO;
+use App\Application\Register\User\DTO\ListUserRequestDTO;
 use App\Application\Register\User\DTO\UpdateUserRequestDTO;
 use App\Application\Register\User\ListProfessionalUser;
 use App\Application\Register\User\ListUsers;
@@ -31,7 +32,12 @@ class UserController extends Controller
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $input = new IdRequestDTO($companyId);
+            $status = $request->status ?? '';
+
+            $input = new ListUserRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

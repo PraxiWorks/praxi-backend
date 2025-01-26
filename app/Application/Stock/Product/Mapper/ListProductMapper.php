@@ -3,7 +3,7 @@
 namespace App\Application\Stock\Product\Mapper;
 
 use App\Application\DTO\OutputArrayDTO;
-use App\Application\Stock\Product\DTO\OutputListProductDTO;
+use App\Application\Stock\Product\DTO\OutputProductDTO;
 use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
 use App\Infrastructure\Eloquent\Stock\Supplier\SupplierRepository;
 
@@ -22,9 +22,10 @@ class ListProductMapper
             $productCategory = !empty($row['category_id']) ? $this->productCategoryRepository->getById($row['category_id']) : null;
             $supplier = !empty($row['supplier_id']) ? $this->supplierRepository->getById($row['supplier_id']) : null;
 
-            $outputDto = new OutputListProductDTO(
+            $outputDto = new OutputProductDTO(
                 $row['id'],
                 $row['name'],
+                $row['category_id'],
                 $productCategory->name ?? null,
                 $row['sku_code'],
                 $row['price'],
@@ -33,6 +34,7 @@ class ListProductMapper
                 $row['current_stock'],
                 $row['minimum_stock_level'],
                 $row['maximum_stock_level'],
+                $row['supplier_id'],
                 $supplier->name ?? null
             );
             $novaLista[] = $outputDto->toArray();

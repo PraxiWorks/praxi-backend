@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Settings\EventProcedure;
 
+use App\Application\Settings\EventProcedure\DTO\ListEventProcedureRequestDTO;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Models\Scheduling\EventProcedure;
 
@@ -17,9 +18,17 @@ class EventProcedureRepository implements EventProcedureRepositoryInterface
         return EventProcedure::find($id);
     }
 
-    public function list(): array
+    public function list(ListEventProcedureRequestDTO $input): array
     {
-        return EventProcedure::orderBy('id')->get()->toArray();
+        $query = EventProcedure::where('company_id', $input->getCompanyId());
+
+        if (!empty($input->getStatus())) {
+            $query->where('status', $input->getStatus());
+        }
+
+        $query->orderBy('id', 'desc');
+
+        return $query->get()->toArray();
     }
 
     public function update(EventProcedure $entity): bool

@@ -18,7 +18,7 @@ class PermissionRepository implements PermissionRepositoryInterface
         return Permission::find($id);
     }
 
-    public function list(int $companyId): array
+    public function list(): array
     {
         return Permission::get()->toArray();
     }
@@ -41,5 +41,10 @@ class PermissionRepository implements PermissionRepositoryInterface
     public function getPermissionByAction(string $action): ?Collection
     {
         return Permission::where('name', 'like', '%' . $action . '%')->get();
+    }
+
+    public function getPermissionsByIds(array $ids): array
+    {
+        return Permission::whereIn('id', $ids)->get()->toArray();
     }
 }

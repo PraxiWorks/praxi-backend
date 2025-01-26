@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Register\User;
 
+use App\Application\Register\User\DTO\ListUserRequestDTO;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Models\Register\User\User;
 
@@ -17,9 +18,17 @@ class UserRepository implements UserRepositoryInterface
         return User::find($id);
     }
 
-    public function list(int $companyId): array
+    public function list(ListUserRequestDTO $input): array
     {
-        return User::where('company_id', $companyId)->get()->toArray();
+        $query = User::where('company_id', $input->getCompanyId());
+
+        if (!empty($input->getStatus())) {
+            $query->where('status', $input->getStatus());
+        }
+
+        $query->orderBy('id', 'desc');
+
+        return $query->get()->toArray();
     }
 
     public function update(User $entity): bool

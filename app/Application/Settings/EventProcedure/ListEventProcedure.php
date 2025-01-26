@@ -2,7 +2,7 @@
 
 namespace App\Application\Settings\EventProcedure;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Settings\EventProcedure\DTO\ListEventProcedureRequestDTO;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 
 class ListEventProcedure
@@ -11,8 +11,8 @@ class ListEventProcedure
         private EventProcedureRepositoryInterface $eventProcedureRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListEventProcedureRequestDTO $input): array
     {
-        return $this->eventProcedureRepositoryInterface->list($input->getId());
+        return $this->eventProcedureRepositoryInterface->list($input);
     }
 }

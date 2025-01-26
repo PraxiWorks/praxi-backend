@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Register\User;
+namespace App\Infrastructure\Eloquent\Register\UserPermission;
 
-use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
-use App\Models\Register\User\UserPermission;
+use App\Domain\Interfaces\Register\UserPermission\UserPermissionRepositoryInterface;
+use App\Models\Register\UserPermission\UserPermission;
 
 class UserPermissionRepository implements UserPermissionRepositoryInterface
 {
@@ -32,10 +32,29 @@ class UserPermissionRepository implements UserPermissionRepositoryInterface
         return $entity->delete();
     }
 
+    public function deleteByUserIdAndPermissionIds(int $userId, array $permissionIds): bool
+    {
+        return UserPermission::where('user_id', $userId)
+            ->whereIn('permission_id', $permissionIds)
+            ->delete();
+    }
+
     public function getByUserIdAndPermissionId(int $userId, int $permissionId): ?UserPermission
     {
         return UserPermission::where('user_id', $userId)
             ->where('permission_id', $permissionId)
             ->first();
+    }
+
+    public function getByUserId(int $userId): array
+    {
+        return UserPermission::where('user_id', $userId)->get()->toArray();
+    }
+
+    public function getPermissionIdsByUserId(int $userId): array
+    {
+        return UserPermission::where('user_id', $userId)
+            ->pluck('permission_id')
+            ->toArray();
     }
 }

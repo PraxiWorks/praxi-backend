@@ -17,13 +17,15 @@ class UpdateEventProcedure
     {
         $this->validateInput($input);
 
-        if (!empty($this->eventProcedureRepositoryInterface->findByNameAndCompanyId($input->getCompanyId(), $input->getName()))) {
-            throw new EventProcedureException('Já existe um procedimento com esse nome', 400);
-        }
-
         $eventProcedure = $this->eventProcedureRepositoryInterface->getById($input->getId());
         if (empty($eventProcedure)) {
             throw new EventProcedureNotFoundException();
+        }
+
+        if ($input->getName() != $eventProcedure->name) {
+            if (!empty($this->eventProcedureRepositoryInterface->findByNameAndCompanyId($input->getCompanyId(), $input->getName()))) {
+                throw new EventProcedureException('Já existe um procedimento com esse nome', 400);
+            }
         }
 
         $eventProcedure->name = $input->getName();

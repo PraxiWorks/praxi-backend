@@ -2,7 +2,7 @@
 
 namespace App\Application\Settings\Group;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Settings\Group\DTO\ListGroupRequestDTO;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
 
 class ListGroup
@@ -11,8 +11,8 @@ class ListGroup
         private GroupRepositoryInterface $groupRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListGroupRequestDTO $input): array
     {
-        return $this->groupRepositoryInterface->list($input->getId());
+        return $this->groupRepositoryInterface->list($input);
     }
 }

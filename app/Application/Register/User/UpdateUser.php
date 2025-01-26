@@ -30,9 +30,11 @@ class UpdateUser
             throw new UserNotFoundException('Usuário não encontrado', 400);
         }
 
-        $group = $this->groupRepositoryInterface->getById($input->getGroupId());
-        if (empty($group)) {
-            throw new SettingsNotFoundException('Grupo não encontrado', 400);
+        if (!empty($input->getGroupId())) {
+            $group = $this->groupRepositoryInterface->getById($input->getGroupId());
+            if (empty($group)) {
+                throw new SettingsNotFoundException('Grupo não encontrado', 400);
+            }
         }
 
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
@@ -50,8 +52,8 @@ class UpdateUser
         $user->send_notification_sms = $input->getSendNotificationSms();
         $user->send_notification_whatsapp = $input->getSendNotificationWhatsapp();
         $user->path_image = $pathImage;
-        $user->isProfessional = $input->getIsProfessional();
-        $user->groupId = $input->getGroupId();
+        $user->is_professional = $input->getIsProfessional();
+        $user->group_id = $group->id ?? null;
         $user->status = $input->getStatus();
 
         if (!$this->userRepositoryInterface->update($user)) {
@@ -63,7 +65,7 @@ class UpdateUser
 
     private function validateInput(UpdateUserRequestDTO $input): void
     {
-        if(empty($input->getUsername())){
+        if (empty($input->getUsername())) {
             throw new UserException('Nome de usuário não informado', 400);
         }
 

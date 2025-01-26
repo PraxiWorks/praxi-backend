@@ -2,7 +2,7 @@
 
 namespace App\Application\Register\Client;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 
 class ListClients
@@ -11,8 +11,8 @@ class ListClients
         private ClientRepositoryInterface $clientRepositoryInterface
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListClientRequestDTO $input): array
     {
-        return $this->clientRepositoryInterface->list($input->getId());
+        return $this->clientRepositoryInterface->list($input);
     }
 }

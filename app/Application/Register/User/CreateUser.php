@@ -21,7 +21,7 @@ class CreateUser
         private ProcessImage $processImage,
     ) {}
 
-    public function execute(CreateUserRequestDTO $input): bool
+    public function execute(CreateUserRequestDTO $input): User
     {
 
         $this->validateInput($input);
@@ -71,7 +71,7 @@ class CreateUser
             throw new UserException('Erro ao salvar usuário', 500);
         }
 
-        return true;
+        return $user;
     }
 
     private function validateInput(CreateUserRequestDTO $input): void

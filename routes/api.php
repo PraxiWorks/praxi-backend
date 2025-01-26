@@ -7,12 +7,15 @@ use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
 use App\Http\Controllers\Scheduling\ScheduleSettings\ScheduleSettingsController;
 use App\Http\Controllers\Signup\SignupController;
 use App\Http\Controllers\Register\User\UserController;
+use App\Http\Controllers\Register\UserPermission\UserPermissionController;
 use App\Http\Controllers\Scheduling\Event\EventColorController;
 use App\Http\Controllers\Scheduling\Event\EventController;
 use App\Http\Controllers\Scheduling\Event\EventRecurrenceController;
 use App\Http\Controllers\Scheduling\Event\EventStatusController;
 use App\Http\Controllers\Settings\EventProcedure\EventProcedureController;
 use App\Http\Controllers\Settings\Group\GroupController;
+use App\Http\Controllers\Settings\GroupPermission\GroupPermissionController;
+use App\Http\Controllers\Settings\Permission\PermissionController;
 use App\Http\Controllers\Stock\Product\ProductController;
 use App\Http\Controllers\Stock\ProductCategory\ProductCategoryController;
 use App\Http\Controllers\Stock\Supplier\SupplierController;
@@ -44,13 +47,6 @@ Route::middleware('auth')->group(function () {
 
         // Agendamento
         Route::prefix('scheduling')->group(function () {
-            // Configurações Agenda
-            Route::prefix('schedule-settings')->group(function () {
-                Route::post('/', [ScheduleSettingsController::class, 'store'])->middleware('permission:scheduling.scheduleSettings.store');
-                Route::get('', [ScheduleSettingsController::class, 'index'])->middleware('permission:scheduling.scheduleSettings.list');
-                Route::put('/{configId}', [ScheduleSettingsController::class, 'update'])->middleware('permission:scheduling.scheduleSettings.update');
-            });
-
             // Eventos
             Route::prefix('events')->group(function () {
                 Route::get('status', [EventStatusController::class, 'index']);
@@ -101,10 +97,18 @@ Route::middleware('auth')->group(function () {
             Route::prefix('users')->group(function () {
                 Route::post('/', [UserController::class, 'store'])->middleware('permission:system.user.store');
                 Route::get('/', [UserController::class, 'index'])->middleware('permission:system.user.list');
-                Route::get('professionals', [UserController::class, 'professionals']);
+
+                Route::get('/professionals', [UserController::class, 'professionals']);
+
                 Route::get('/{userId}', [UserController::class, 'show'])->middleware('permission:system.user.show');
                 Route::put('/{userId}', [UserController::class, 'update'])->middleware('permission:system.user.update');
                 Route::delete('/{userId}', [UserController::class, 'delete'])->middleware('permission:system.user.delete');
+
+                Route::get('/{userId}/group', [UserController::class, 'getGroupPermission'])->middleware('permission:system.user.show');
+
+                Route::get('{userId}/permissions', [UserPermissionController::class, 'index'])->middleware('permission:system.user.list');
+                Route::post('{userId}/permissions', [UserPermissionController::class, 'store'])->middleware('permission:system.user.store');
+                Route::put('{userId}/permissions', [UserPermissionController::class, 'update'])->middleware('permission:system.user.update');
             });
 
             // Clientes
@@ -124,18 +128,6 @@ Route::middleware('auth')->group(function () {
                     Route::delete('/{clientAddressId}', [ClientAddressController::class, 'delete'])->middleware('permission:scheduling.clientAddress.delete');
                 });
             });
-        });
-
-        // Configurações
-        Route::prefix('settings')->group(function () {
-            // Grupos de permissões
-            Route::prefix('groups')->group(function () {
-                Route::post('/', [GroupController::class, 'store'])->middleware('permission:system.group.store');
-                Route::get('/', [GroupController::class, 'index'])->middleware('permission:system.group.list');
-                Route::get('/{groupId}', [GroupController::class, 'show'])->middleware('permission:system.group.show');
-                Route::put('/{groupId}', [GroupController::class, 'update'])->middleware('permission:system.group.update');
-                Route::delete('/{groupId}', [GroupController::class, 'delete'])->middleware('permission:system.group.delete');
-            });
 
             // Cadastro de procedimentos
             Route::prefix('event-procedures')->group(function () {
@@ -144,6 +136,35 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{eventProcedureId}', [EventProcedureController::class, 'show'])->middleware('permission:scheduling.eventProcedure.show');
                 Route::put('/{eventProcedureId}', [EventProcedureController::class, 'update'])->middleware('permission:scheduling.eventProcedure.update');
                 Route::delete('/{eventProcedureId}', [EventProcedureController::class, 'delete'])->middleware('permission:scheduling.eventProcedure.delete');
+            });
+        });
+
+        // Configurações
+        Route::prefix('settings')->group(function () {
+            // Permissões
+            Route::prefix('permissions')->group(function () {
+                Route::get('/', [PermissionController::class, 'index']);
+            });
+
+            // Configurações Agenda
+            Route::prefix('schedule-settings')->group(function () {
+                Route::post('/', [ScheduleSettingsController::class, 'store'])->middleware('permission:scheduling.scheduleSettings.store');
+                Route::get('', [ScheduleSettingsController::class, 'index'])->middleware('permission:scheduling.scheduleSettings.list');
+                Route::put('/{configId}', [ScheduleSettingsController::class, 'update'])->middleware('permission:scheduling.scheduleSettings.update');
+            });
+
+            // Grupos de permissões
+            Route::prefix('groups')->group(function () {
+                Route::post('/', [GroupController::class, 'store'])->middleware('permission:system.group.store');
+                Route::get('/', [GroupController::class, 'index'])->middleware('permission:system.group.list');
+                Route::get('/{groupId}', [GroupController::class, 'show'])->middleware('permission:system.group.show');
+                Route::put('/{groupId}', [GroupController::class, 'update'])->middleware('permission:system.group.update');
+                Route::delete('/{groupId}', [GroupController::class, 'delete'])->middleware('permission:system.group.delete');
+
+                Route::get('{groupId}/permissions', [GroupPermissionController::class, 'index'])->middleware('permission:system.group.list');
+                Route::post('{groupId}/permissions', [GroupPermissionController::class, 'store'])->middleware('permission:system.group.store');
+                Route::put('{groupId}/permissions', [GroupPermissionController::class, 'update'])->middleware('permission:system.group.update');
+                Route::delete('{groupId}/permissions', [GroupPermissionController::class, 'delete'])->middleware('permission:system.group.delete');
             });
         });
     })->middleware('validateCompany');
