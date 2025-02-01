@@ -2,17 +2,14 @@
 
 namespace App\Application\Settings\Permission;
 
-use App\Application\DTO\IdRequestDTO;
 use App\Application\DTO\OutputArrayDTO;
+use App\Application\Settings\Permission\DTO\ListPermissionsRequestDTO;
 use App\Application\Settings\Permission\Mapper\ListPermissionMapper;
 use App\Domain\Interfaces\Core\Company\CompanyModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyPlanRepositoryInterface;
-use App\Domain\Interfaces\Core\Module\ModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
-use Exception;
-use Illuminate\Support\Collection;
 
 class ListPermission
 {
@@ -25,11 +22,17 @@ class ListPermission
         private ListPermissionMapper $listPermissionMapper
     ) {}
 
-    public function execute(IdRequestDTO $input): OutputArrayDTO
+    public function execute(ListPermissionsRequestDTO $input): OutputArrayDTO
     {
-        $plan = $this->companyPlanRepositoryInterface->getByCompanyId($input->getId());
-        
-        $modules = $this->companyModuleRepositoryInterface->getByCompanyId($input->getId());
+        if (!empty($input->getPermissions())) {
+            $permissions = $this->permissionRepositoryInterface->getPermissionsByIds($input->getPermissions());
+
+            return $this->listPermissionMapper->toOutputDto($permissions);
+        }
+
+        $plan = $this->companyPlanRepositoryInterface->getByCompanyId($input->getCompanyId());
+
+        $modules = $this->companyModuleRepositoryInterface->getByCompanyId($input->getCompanyId());
 
         $moduleIds = $this->getModuleIds($modules, $plan);
 

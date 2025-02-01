@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings\Permission;
 
 use App\Application\DTO\IdRequestDTO;
+use App\Application\Settings\Permission\DTO\ListPermissionsRequestDTO;
 use App\Application\Settings\Permission\ListPermission;
 use App\Http\Controllers\Controller;
 use Exception;
@@ -18,9 +19,13 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
+        $permissions = $request->permission_id ?? [];
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListPermissionsRequestDTO(
+                $companyId,
+                $permissions
+            );
             $output = $this->listPermissionUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
