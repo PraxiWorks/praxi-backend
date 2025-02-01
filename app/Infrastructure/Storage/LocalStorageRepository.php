@@ -13,7 +13,7 @@ class LocalStorageRepository implements LocalStorageRepositoryInterface
         try {
             Storage::disk('public')->put($destinationPath, base64_decode($base64EncodedImage));
             if (Storage::disk('public')->exists($destinationPath)) {
-                return $destinationPath;
+                return 'storage/' . $destinationPath;
             }
         } catch (Exception $e) {
             return false;

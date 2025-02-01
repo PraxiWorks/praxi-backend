@@ -98,7 +98,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [UserController::class, 'store'])->middleware('permission:system.user.store');
                 Route::get('/', [UserController::class, 'index'])->middleware('permission:system.user.list');
 
-                Route::get('/professionals', [UserController::class, 'professionals']);
+                Route::get('/professionals', [UserController::class, 'professionals'])->middleware('permission:system.user.list');
 
                 Route::get('/{userId}', [UserController::class, 'show'])->middleware('permission:system.user.show');
                 Route::put('/{userId}', [UserController::class, 'update'])->middleware('permission:system.user.update');
@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('/{userId}/group', [UserController::class, 'getGroupPermission'])->middleware('permission:system.user.show');
 
-                Route::get('{userId}/permissions', [UserPermissionController::class, 'index'])->middleware('permission:system.user.list');
+                Route::get('{userId}/permissions', [UserPermissionController::class, 'index'])->middleware('permission:system.user.show');
                 Route::post('{userId}/permissions', [UserPermissionController::class, 'store'])->middleware('permission:system.user.store');
                 Route::put('{userId}/permissions', [UserPermissionController::class, 'update'])->middleware('permission:system.user.update');
             });
