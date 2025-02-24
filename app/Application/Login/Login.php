@@ -28,14 +28,21 @@ class Login
             throw new UserNotFoundException('Usuário não encontrado', 404);
         }
 
+        $company = $this->companyRepositoryInterface->getById($user->company_id);
+
         if (!password_verify($input->getPassword(), $user->password)) {
             throw new UserException('Senha inválida', 400);
         }
 
         $data = [
-            'user_id' => $user->id,
             'company_id' => $user->company_id,
+            'user_id' => $user->id,
+            'group_id' => $user->group_id
         ];
+
+        if (!empty($company->end_trial)) {
+            $data['end_trial'] = $company->end_trial;
+        }
 
         $jwtToken = $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));
 

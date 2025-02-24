@@ -22,13 +22,18 @@ class UserRepository implements UserRepositoryInterface
     {
         $query = User::where('company_id', $input->getCompanyId());
 
-        if (!empty($input->getStatus())) {
+        if ($input->getStatus() !== null) {
             $query->where('status', $input->getStatus());
+        }
+
+        if (!empty($input->getSearchQuery())) {
+            $query->where('name', 'like', '%' . $input->getSearchQuery() . '%');
         }
 
         $query->orderBy('id', 'desc');
 
-        return $query->get()->toArray();
+        $paginatedData = $query->paginate($input->getPerPage(), ['*'], 'page', $input->getPage());
+        return $paginatedData->toArray();
     }
 
     public function update(User $entity): bool

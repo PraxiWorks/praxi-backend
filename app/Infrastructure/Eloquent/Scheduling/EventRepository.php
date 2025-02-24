@@ -27,6 +27,22 @@ class EventRepository implements EventRepositoryInterface
             $query->whereBetween('date', [$input->getStartDay(), $input->getEndDay()]);
         }
 
+        if (!empty($input->getStartDay())) {
+            $query->where('date', '>=', $input->getStartDay());
+        }
+
+        if (!empty($input->getProfessionalId())) {
+            $query->where('professional_id', $input->getProfessionalId());
+        }
+
+        if (!empty($input->getClientId())) {
+            $query->where('client_id', $input->getClientId());
+        }
+
+        if (!empty($input->getProcedureId())) {
+            $query->where('event_procedure_id', $input->getProcedureId());
+        }
+
         return $query->get()->toArray();
     }
 

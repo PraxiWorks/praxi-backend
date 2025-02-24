@@ -24,24 +24,27 @@ class HolidaysService implements HolidaysServiceInterface
         foreach ($data as $value) {
             $splitDate = explode('-', $value['date']);
             if ($splitDate[1] == ($month - 1 < 1 ? 12 : $month - 1)) {
-                $filteredData['last_month'][] = [
+                $filteredData[] = [
                     'day' => (int) $splitDate[2],
                     'name' => $value['name'],
                     'month' => (int) $splitDate[1],
+                    'year' => (int) $splitDate[0],
                 ];
             }
             if ($splitDate[1] == $month) {
-                $filteredData['current_month'][] = [
+                $filteredData[] = [
                     'day' => (int) $splitDate[2],
                     'name' => $value['name'],
                     'month' => (int) $splitDate[1],
+                    'year' => (int) $splitDate[0],
                 ];
             }
             if ($splitDate[1] == ($month + 1 < 13 ? $month + 1 : 1)) {
-                $filteredData['next_month'][] = [
+                $filteredData[] = [
                     'day' => (int) $splitDate[2],
                     'name' => $value['name'],
                     'month' => (int) $splitDate[1],
+                    'year' => (int) $splitDate[1] == 1 ? (int) $splitDate[0] + 1 : (int) $splitDate[0],
                 ];
             }
         }

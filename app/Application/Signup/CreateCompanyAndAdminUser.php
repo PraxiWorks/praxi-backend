@@ -71,7 +71,8 @@ class CreateCompanyAndAdminUser
             ];
         } catch (Exception $e) {
             DB::rollBack();
-            throw new CreateCompanyAndAdminUserException($e->getMessage(), $e->getCode());
+            $statusCode = ($e->getCode() >= 100 && $e->getCode() <= 599) ? $e->getCode() : 500;
+            throw new CreateCompanyAndAdminUserException($e->getMessage(), $statusCode);
         }
     }
 
@@ -112,7 +113,8 @@ class CreateCompanyAndAdminUser
 
     private function getModuleIds(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan): array
     {
-        $moduleIds = [];
+        // Modulo do systema se mantem fixo para todos os casos
+        $moduleIds = [1];
         if (!empty($plan)) {
             $planModules = $this->planModuleRepositoryInterface->getByPlanId($plan->id);
             foreach ($planModules as $planModule) {
@@ -280,8 +282,9 @@ class CreateCompanyAndAdminUser
         }
 
         $data = [
-            'user_id' => $user->id,
             'company_id' => $user->company_id,
+            'user_id' => $user->id,
+            'group_id' => $user->group_id
         ];
 
         return $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));

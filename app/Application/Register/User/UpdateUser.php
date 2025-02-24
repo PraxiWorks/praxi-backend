@@ -41,7 +41,7 @@ class UpdateUser
         $pathImage = !empty($input->getImageBase64()) ? $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $input->getName(), $user->path_image) : $user->path_image;
 
         $user->company_id = $input->getCompanyId();
-        $user->username = $input->getUsername();
+        $user->username = !empty($input->getUsername()) ? $input->getUsername() : $user->username;
         $user->name = $input->getName();
         $user->email = $input->getEmail();
         $user->phone_number = $input->getPhoneNumber();
@@ -65,10 +65,6 @@ class UpdateUser
 
     private function validateInput(UpdateUserRequestDTO $input): void
     {
-        if (empty($input->getUsername())) {
-            throw new UserException('Nome de usuário não informado', 400);
-        }
-
         if (empty($input->getName())) {
             throw new UserException('Nome não informado', 400);
         }

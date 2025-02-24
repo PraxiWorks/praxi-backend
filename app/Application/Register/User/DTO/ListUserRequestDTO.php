@@ -4,10 +4,12 @@ namespace App\Application\Register\User\DTO;
 
 class ListUserRequestDTO
 {
-
     public function __construct(
         private int $companyId,
-        private bool $status,
+        private ?bool $status,
+        private ?string $searchQuery,
+        private int $page,
+        private int $perPage
     ) {}
 
     public function getCompanyId(): int
@@ -15,8 +17,23 @@ class ListUserRequestDTO
         return $this->companyId;
     }
 
-    public function getStatus(): bool
+    public function getStatus(): ?bool
     {
         return $this->status;
+    }
+
+    public function getSearchQuery(): ?string
+    {
+        return $this->searchQuery;
+    }
+
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    public function getPerPage(): int
+    {
+        return $this->perPage;
     }
 }
