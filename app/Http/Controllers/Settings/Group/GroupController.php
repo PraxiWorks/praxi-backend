@@ -30,12 +30,18 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
-        $status = $request->status ?? '';
+        $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+        $searchQuery = $request->search_query ?? null;
+        $page = $request->page ?? 1;
+        $perPage = $request->per_page ?? 10;
 
         try {
             $input = new ListGroupRequestDTO(
                 $companyId,
-                $status
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
             );
             $output = $this->listGroupUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);

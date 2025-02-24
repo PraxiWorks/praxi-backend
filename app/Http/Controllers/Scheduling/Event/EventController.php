@@ -30,12 +30,18 @@ class EventController extends Controller
         $id = $request->route('companyId') ?? 0;
         $startDay = $request->start_day ?? null;
         $endDay = $request->end_day ?? null;
+        $professionalId = $request->professional_id ?? null;
+        $clientId = $request->client_id ?? null;
+        $procedureId = $request->procedure_id ?? null;
 
         try {
             $input = new ListEventRequestDTO(
                 $id,
                 $startDay,
-                $endDay
+                $endDay,
+                $professionalId,
+                $clientId,
+                $procedureId
             );
             $output = $this->listEventUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
@@ -105,7 +111,7 @@ class EventController extends Controller
         $eventProcedureId = $request->event_procedure_id ?? null;
         $eventStatusId = $request->event_status_id ?? null;
         $eventColorId = $request->event_color_id ?? null;
-        $observation = $request->observation ?? null;
+        $observation = $request->observations ?? null;
         $selectedDayIndex = $request->selected_day_index ?? null;
         $date = $request->date ?? null;
         $startEvent = $request->start_event ?? null;

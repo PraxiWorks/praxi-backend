@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Settings\Permission;
 
-use App\Application\DTO\IdRequestDTO;
 use App\Application\Settings\Permission\DTO\ListPermissionsRequestDTO;
 use App\Application\Settings\Permission\ListPermission;
 use App\Http\Controllers\Controller;
@@ -29,7 +28,8 @@ class PermissionController extends Controller
             $output = $this->listPermissionUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
-            return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
+            $statusCode = ($e->getCode() >= 100 && $e->getCode() <= 599) ? $e->getCode() : 500;
+            return $this->outputErrorArrayToJson($e->getMessage(), $statusCode);
         }
     }
 }

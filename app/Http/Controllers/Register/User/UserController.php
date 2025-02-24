@@ -32,11 +32,17 @@ class UserController extends Controller
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $status = $request->status ?? '';
+            $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+            $searchQuery = $request->search_query ?? null;
+            $page = $request->page ?? 1;
+            $perPage = $request->per_page ?? 10;
 
             $input = new ListUserRequestDTO(
                 $companyId,
-                $status
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
             );
             $output = $this->listUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
@@ -97,8 +103,9 @@ class UserController extends Controller
         try {
             $input = new IdRequestDTO($id);
             $output = $this->showUserUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
+            dd($e);
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }

@@ -8,7 +8,7 @@ class UpdateUserRequestDTO
     public function __construct(
         private int $id,
         private int $companyId,
-        private string $username,
+        private ?string $username,
         private string $name,
         private string $email,
         private ?string $phoneNumber,
@@ -34,7 +34,7 @@ class UpdateUserRequestDTO
         return $this->companyId;
     }
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }

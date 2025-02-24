@@ -8,7 +8,10 @@ class ListEventRequestDTO
     public function __construct(
         private int $companyId,
         private ?string $startDay,
-        private ?string $endDay
+        private ?string $endDay,
+        private ?int $professionalId,
+        private ?int $clientId,
+        private ?int $procedureId
     ) {}
 
     public function getCompanyId(): ?int
@@ -24,5 +27,20 @@ class ListEventRequestDTO
     public function getEndDay(): ?string
     {
         return $this->endDay;
+    }
+
+    public function getProfessionalId(): ?int
+    {
+        return $this->professionalId;
+    }
+
+    public function getClientId(): ?int
+    {
+        return $this->clientId;
+    }
+
+    public function getProcedureId(): ?int
+    {
+        return $this->procedureId;
     }
 }

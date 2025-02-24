@@ -30,11 +30,17 @@ class ClientController extends Controller
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $status = $request->status ?? '';
+            $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+            $searchQuery = $request->search_query ?? null;
+            $page = $request->page ?? 1;
+            $perPage = $request->per_page ?? 10;
 
             $input = new ListClientRequestDTO(
                 $companyId,
-                $status
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
             );
             $output = $this->listClientUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);

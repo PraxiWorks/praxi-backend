@@ -27,8 +27,8 @@ class CompanyPlanRepository implements CompanyPlanRepositoryInterface
         return $entity->update();
     }
 
-    public function getByCompanyId(int $id): array
+    public function getByCompanyId(int $id): ?CompanyPlan
     {
-        return CompanyPlan::select('id')->where('company_id', $id)->get()->toArray();
+        return CompanyPlan::where('company_id', $id)->first();
     }
 }

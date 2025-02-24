@@ -161,7 +161,7 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{groupId}', [GroupController::class, 'update'])->middleware('permission:system.group.update');
                 Route::delete('/{groupId}', [GroupController::class, 'delete'])->middleware('permission:system.group.delete');
 
-                Route::get('{groupId}/permissions', [GroupPermissionController::class, 'index'])->middleware('permission:system.group.list');
+                Route::get('{groupId}/permissions', [GroupPermissionController::class, 'index'])->middleware('permission:system.group.show');
                 Route::post('{groupId}/permissions', [GroupPermissionController::class, 'store'])->middleware('permission:system.group.store');
                 Route::put('{groupId}/permissions', [GroupPermissionController::class, 'update'])->middleware('permission:system.group.update');
                 Route::delete('{groupId}/permissions', [GroupPermissionController::class, 'delete'])->middleware('permission:system.group.delete');
