@@ -11,6 +11,7 @@ use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
+use App\Models\Core\Company\Company;
 use App\Models\Register\User\User;
 use Tests\TestCase;
 
@@ -72,10 +73,14 @@ class LoginTest extends TestCase
         $this->expectExceptionMessage('Senha inválida');
 
         $hashedPassword = password_hash('teste123', PASSWORD_DEFAULT);
+        $company = new Company();
+        $company->end_trial = '2022-12-31';
         $user = new User();
+        $user->company_id = 1;
         $user->password = $hashedPassword;
 
         $input = new LoginRequestDTO('username', 'password');
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $this->useCase->execute($input);
@@ -84,11 +89,15 @@ class LoginTest extends TestCase
     public function testSuccess()
     {
         $hashedPassword = password_hash('password', PASSWORD_DEFAULT);
+        $company = new Company();
+        $company->end_trial = '2022-12-31';
         $user = new User();
+        $user->company_id = 1;
         $user->id = 1;
         $user->password = $hashedPassword;
 
         $input = new LoginRequestDTO('username', 'password');
+        $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByUsername')->willReturn($user);
 
         $jwtToken = 'sample_jwt_token';

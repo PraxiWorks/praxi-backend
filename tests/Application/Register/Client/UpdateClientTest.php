@@ -103,7 +103,7 @@ class UpdateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Erro ao atualizar cliente');
 
-        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, 'caminhoImagem', false, true);
 
         $clientMock = new Client();
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);
@@ -124,7 +124,7 @@ class UpdateClientTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, true);
+        $input = new UpdateClientRequestDTO(1, 1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, 'caminhoImagem', false, true);
 
         $clientMock = new Client();
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($clientMock);

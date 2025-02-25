@@ -45,7 +45,7 @@ class UserController extends Controller
                 $perPage
             );
             $output = $this->listUserUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -105,7 +105,6 @@ class UserController extends Controller
             $output = $this->showUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
-            dd($e);
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }

@@ -23,6 +23,7 @@ class AssignPermissionsToUserUseCase
             if (!$permission) {
                 throw new PermissionNotFoundException('Permissão não encontrada');
             }
+            
             $userPermission = UserPermission::new(
                 $input->getUserId(),
                 $permission->id

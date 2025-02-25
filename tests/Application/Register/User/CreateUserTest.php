@@ -46,7 +46,7 @@ class CreateUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Nome de usuário não informado');
 
-        $input = new CreateUserRequestDTO(1, '', 'name', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, '', 'name', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->useCase->execute($input);
     }
 
@@ -55,7 +55,7 @@ class CreateUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Nome não informado');
 
-        $input = new CreateUserRequestDTO(1, 'username', '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->useCase->execute($input);
     }
 
@@ -64,7 +64,7 @@ class CreateUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Email não informado');
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->useCase->execute($input);
     }
 
@@ -73,7 +73,7 @@ class CreateUserTest extends TestCase
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Empresa não encontrada');
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
         $this->useCase->execute($input);
@@ -88,7 +88,7 @@ class CreateUserTest extends TestCase
         $company->id = 1;
         $user = new User();
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn($user);
 
@@ -103,7 +103,7 @@ class CreateUserTest extends TestCase
         $company = new Company();
         $company->id = 1;
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
@@ -122,7 +122,7 @@ class CreateUserTest extends TestCase
 
         $group = new Group();
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($group);
@@ -140,7 +140,7 @@ class CreateUserTest extends TestCase
 
         $group = new Group();
 
-        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, 'password', false, 1, true);
+        $input = new CreateUserRequestDTO(1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, 1, true);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getByEmailAndCompanyId')->willReturn(null);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($group);

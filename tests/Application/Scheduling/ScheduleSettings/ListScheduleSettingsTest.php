@@ -2,6 +2,7 @@
 
 namespace Tests\Application\Scheduling\ScheduleSettings;
 
+use App\Application\DTO\IdRequestDTO;
 use App\Application\Scheduling\ScheduleSettings\ListScheduleSettings;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use Tests\TestCase;
@@ -28,8 +29,8 @@ class ListScheduleSettingsTest extends TestCase
         $expectedResponse = ['setting1', 'setting2'];
         $this->scheduleSettingsRepositoryInterfaceMock->expects($this->once())->method('list')->willReturn($expectedResponse);
 
-        // Chama o método execute e verifica se o retorno é o esperado
-        $response = $this->useCase->execute();
+        $input = new IdRequestDTO(1);
+        $response = $this->useCase->execute($input);
         $this->assertSame($expectedResponse, $response);
     }
 }

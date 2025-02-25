@@ -21,8 +21,8 @@ class CreateClientRequestDTOTest extends TestCase
             true,
             true,
             'imageBase64',
-            'password',
             false,
+            'password',
             true
         );
 
@@ -38,8 +38,8 @@ class CreateClientRequestDTOTest extends TestCase
         $this->assertTrue($input->getSendNotificationWhatsapp());
         $this->assertTrue($input->getStatus());
         $this->assertEquals('imageBase64', $input->getImageBase64());
-        $this->assertEquals('password', $input->getPassword());
         $this->assertFalse($input->getHasAccessToTheSystem());
+        $this->assertEquals('password', $input->getPassword());
         $this->assertTrue($input->getStatus());
     }
 }
