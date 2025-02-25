@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Scheduling;
+namespace App\Infrastructure\Eloquent\Settings\EventProcedure;
 
+use App\Application\Settings\EventProcedure\DTO\ListEventProcedureRequestDTO;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
 use App\Models\Scheduling\EventProcedure;
 
@@ -17,9 +18,22 @@ class EventProcedureRepository implements EventProcedureRepositoryInterface
         return EventProcedure::find($id);
     }
 
-    public function list(): array
+    public function list(ListEventProcedureRequestDTO $input): array
     {
-        return EventProcedure::orderBy('id')->get()->toArray();
+        $query = EventProcedure::where('company_id', $input->getCompanyId());
+
+        if ($input->getStatus() !== null) {
+            $query->where('status', $input->getStatus());
+        }
+
+        if (!empty($input->getSearchQuery())) {
+            $query->where('name', 'like', '%' . $input->getSearchQuery() . '%');
+        }
+
+        $query->orderBy('id', 'desc');
+
+        $paginatedData = $query->paginate($input->getPerPage(), ['*'], 'page', $input->getPage());
+        return $paginatedData->toArray();
     }
 
     public function update(EventProcedure $entity): bool

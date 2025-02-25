@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Register\User;
 
+use App\Application\Register\User\DTO\ListUserRequestDTO;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Models\Register\User\User;
 
@@ -17,9 +18,22 @@ class UserRepository implements UserRepositoryInterface
         return User::find($id);
     }
 
-    public function list(int $companyId): array
+    public function list(ListUserRequestDTO $input): array
     {
-        return User::where('company_id', $companyId)->get()->toArray();
+        $query = User::where('company_id', $input->getCompanyId());
+
+        if ($input->getStatus() !== null) {
+            $query->where('status', $input->getStatus());
+        }
+
+        if (!empty($input->getSearchQuery())) {
+            $query->where('name', 'like', '%' . $input->getSearchQuery() . '%');
+        }
+
+        $query->orderBy('id', 'desc');
+
+        $paginatedData = $query->paginate($input->getPerPage(), ['*'], 'page', $input->getPage());
+        return $paginatedData->toArray();
     }
 
     public function update(User $entity): bool
@@ -42,5 +56,13 @@ class UserRepository implements UserRepositoryInterface
     public function getByUsername(string $userName): ?User
     {
         return User::where('username', $userName)->first();
+    }
+
+    public function listProfessionalUserByCompanyId(int $companyId): array
+    {
+        return User::where('company_id', $companyId)
+            ->where('is_professional', true)
+            ->get()
+            ->toArray();
     }
 }

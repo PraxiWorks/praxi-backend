@@ -2,17 +2,21 @@
 
 namespace App\Application\Register\Client;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\DTO\OutputArrayDTO;
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
+use App\Application\Register\Client\Mapper\ListClientsMapper;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 
 class ListClients
 {
     public function __construct(
-        private ClientRepositoryInterface $clientRepositoryInterface
+        private ClientRepositoryInterface $clientRepositoryInterface,
+        private ListClientsMapper $listClientsMapper
     ) {}
 
-    public function execute(IdRequestDTO $input): array
+    public function execute(ListClientRequestDTO $input): OutputArrayDTO
     {
-        return $this->clientRepositoryInterface->list($input->getId());
+        $output = $this->clientRepositoryInterface->list($input);
+        return $this->listClientsMapper->toOutputDto($output);
     }
 }

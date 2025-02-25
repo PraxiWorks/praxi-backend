@@ -2,14 +2,17 @@
 
 namespace Tests\Application\Stock\Product;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\DTO\OutputArrayDTO;
+use App\Application\Stock\Product\DTO\ListProductRequestDTO;
 use App\Application\Stock\Product\ListProduct;
+use App\Application\Stock\Product\Mapper\ListProductMapper;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use Tests\TestCase;
 
 class ListProductTest extends TestCase
 {
     private ProductRepositoryInterface $productRepositoryInterfaceMock;
+    private ListProductMapper $listProductMapperMock;
 
     private ListProduct $useCase;
 
@@ -17,9 +20,11 @@ class ListProductTest extends TestCase
     {
         parent::setUp();
         $this->productRepositoryInterfaceMock = $this->createMock(ProductRepositoryInterface::class);
+        $this->listProductMapperMock = $this->createMock(ListProductMapper::class);
 
         $this->useCase = new ListProduct(
-            $this->productRepositoryInterfaceMock
+            $this->productRepositoryInterfaceMock,
+            $this->listProductMapperMock
         );
     }
 
@@ -27,14 +32,16 @@ class ListProductTest extends TestCase
     {
         // Define o valor de retorno esperado do método list
         $products = $this->productsMock();
+        $outputArrayDto = new OutputArrayDTO($products);
 
-        $input = new IdRequestDTO(1);
+        $input = new ListProductRequestDTO(1, true);
         $this->productRepositoryInterfaceMock->expects($this->once())->method('list')->willReturn($products);
+        $this->listProductMapperMock->expects($this->once())->method('toOutputDto')->with($products)->willReturn($outputArrayDto);
 
         $result = $this->useCase->execute($input);
 
         // Verifica se o resultado é o esperado
-        $this->assertEquals($products, $result);
+        $this->assertEquals($outputArrayDto, $result);
     }
 
     public function productsMock()

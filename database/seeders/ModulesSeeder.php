@@ -13,9 +13,9 @@ class ModulesSeeder extends Seeder
     public function run(): void
     {
         $modules = [
-            ['name' => 'Scheduling', 'status' => 1, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Stock', 'status' => 1, 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'System', 'status' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Scheduling', 'status' => 1, 'created_at' => now(), 'updated_at' => now()],
+            // ['name' => 'Stock', 'status' => 1, 'created_at' => now(), 'updated_at' => now()],
         ];
 
         foreach ($modules as $module) {

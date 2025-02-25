@@ -41,21 +41,12 @@ class UpdateUserTest extends TestCase
         );
     }
 
-    public function testValidateInputThrowsExceptionForEmptyUsername()
-    {
-        $this->expectException(UserException::class);
-        $this->expectExceptionMessage('Nome de usuário não informado');
-
-        $input = new UpdateUserRequestDTO(1, 1, '', 'name', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
-        $this->useCase->execute($input);
-    }
-
     public function testValidateInputThrowsExceptionForEmptyName()
     {
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Nome não informado');
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 1, true);
         $this->useCase->execute($input);
     }
 
@@ -64,7 +55,7 @@ class UpdateUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Email não informado');
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 1, true);
         $this->useCase->execute($input);
     }
 
@@ -73,7 +64,7 @@ class UpdateUserTest extends TestCase
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('Usuário não encontrado');
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 1, true);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
         $this->useCase->execute($input);
@@ -86,7 +77,7 @@ class UpdateUserTest extends TestCase
 
         $user = new User();
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 1, true);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($user);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
@@ -98,7 +89,7 @@ class UpdateUserTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Erro ao atualizar usuário');
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, 'pathImage', false, 1, true);
 
         $user = new User();
 
@@ -125,7 +116,7 @@ class UpdateUserTest extends TestCase
         $company->id = 1;
         $company->name = 'company';
 
-        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'rgNumber', 'gender', false, false, false, null, false, 1, true);
+        $input = new UpdateUserRequestDTO(1, 1, 'username', 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, 'pathImage', false, 1, true);
         $this->userRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($user);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($group);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);

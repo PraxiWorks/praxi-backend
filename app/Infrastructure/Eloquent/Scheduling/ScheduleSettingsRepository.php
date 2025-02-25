@@ -17,9 +17,9 @@ class ScheduleSettingsRepository implements ScheduleSettingsRepositoryInterface
         return ScheduleSettings::find($id);
     }
 
-    public function list(): array
+    public function list(int $companyId): array
     {
-        return ScheduleSettings::orderBy('id')->get()->toArray();
+        return ScheduleSettings::where('company_id', $companyId)->orderBy('id')->get()->toArray();
     }
 
     public function update(ScheduleSettings $entity): bool

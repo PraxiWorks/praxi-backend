@@ -13,14 +13,15 @@ class Event extends Model
 
     protected $fillable = [
         'company_id',
-        'event_type_id',
+        'event_type',
         'client_id',
         'professional_id',
         'event_procedure_id',
         'event_status_id',
         'event_color_id',
         'observation',
-        'day',
+        'selected_day_index',
+        'date',
         'start_event',
         'end_event',
         'event_recurrence_id'
@@ -28,14 +29,15 @@ class Event extends Model
 
     public static function new(
         int $companyId,
-        int $eventTypeId,
+        string $eventType,
         int $clientId,
         int $professionalId,
         int $eventProcedureId,
         int $eventStatusId,
         int $eventColorId,
         ?string $observation,
-        string $day,
+        int $selectedDayIndex,
+        string $date,
         string $startEvent,
         string $endEvent,
         int $eventRecurrenceId
@@ -43,14 +45,15 @@ class Event extends Model
         return new self(
             [
                 'company_id' => $companyId,
-                'event_type_id' => $eventTypeId,
+                'event_type' => $eventType,
                 'client_id' => $clientId,
                 'professional_id' => $professionalId,
                 'event_procedure_id' => $eventProcedureId,
                 'event_status_id' => $eventStatusId,
                 'event_color_id' => $eventColorId,
                 'observation' => $observation,
-                'day' => $day,
+                'selected_day_index' => $selectedDayIndex,
+                'date' => $date,
                 'start_event' => $startEvent,
                 'end_event' => $endEvent,
                 'event_recurrence_id' => $eventRecurrenceId

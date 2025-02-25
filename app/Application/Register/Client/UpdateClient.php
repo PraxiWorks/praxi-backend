@@ -29,16 +29,16 @@ class UpdateClient
             throw new ClientNotFoundException('Cliente não encontrado', 400);
         }
 
-        if (!empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $input->getCompanyId()))) {
+        if ($client->email != $input->getEmail()  && !empty($this->clientRepositoryInterface->getByEmailAndCompanyId($input->getEmail(), $input->getCompanyId()))) {
             throw new ClientException('Email já cadastrado', 400);
         }
 
-        if(!empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $input->getCompanyId()))) {
+        if ($client->cpf_number != $input->getCpfNumber()  && !empty($this->clientRepositoryInterface->getByCpfAndCompanyId($input->getCpfNumber(), $input->getCompanyId()))) {
             throw new ClientException('CPF já cadastrado', 400);
         }
 
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $client->path_image);
+        $pathImage = !empty($input->getImageBase64()) ? $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $input->getName(), $client->path_image) : $client->path_image;
 
         $client->company_id = $input->getCompanyId();
         $client->name = $input->getName();

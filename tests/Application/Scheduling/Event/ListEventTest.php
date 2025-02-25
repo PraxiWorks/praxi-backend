@@ -2,14 +2,17 @@
 
 namespace Tests\Application\Scheduling\Event;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\DTO\OutputArrayDTO;
+use App\Application\Scheduling\Event\DTO\ListEventRequestDTO;
 use App\Application\Scheduling\Event\ListEvent;
+use App\Application\Scheduling\Event\Mapper\ListEventMapper;
 use App\Domain\Interfaces\Scheduling\EventRepositoryInterface;
 use Tests\TestCase;
 
 class ListEventTest extends TestCase
 {
     private EventRepositoryInterface $eventRepositoryInterfaceMock;
+    private ListEventMapper $listEventMapperMock;
 
     private ListEvent $useCase;
 
@@ -17,9 +20,11 @@ class ListEventTest extends TestCase
     {
         parent::setUp();
         $this->eventRepositoryInterfaceMock = $this->createMock(EventRepositoryInterface::class);
+        $this->listEventMapperMock = $this->createMock(ListEventMapper::class);
 
         $this->useCase = new ListEvent(
-            $this->eventRepositoryInterfaceMock
+            $this->eventRepositoryInterfaceMock,
+            $this->listEventMapperMock
         );
     }
 
@@ -27,14 +32,16 @@ class ListEventTest extends TestCase
     {
         // Define o valor de retorno esperado do método list
         $events = $this->eventsMock();
+        $listEventMapper = new OutputArrayDTO($events);
 
-        $input = new IdRequestDTO(1);
+        $input = new ListEventRequestDTO(1, '2023-10-10', '2023-10-10', 1, 1, 1);
         $this->eventRepositoryInterfaceMock->expects($this->once())->method('list')->willReturn($events);
+        $this->listEventMapperMock->expects($this->once())->method('toOutputDto')->willReturn($listEventMapper);
 
         $result = $this->useCase->execute($input);
 
         // Verifica se o resultado é o esperado
-        $this->assertEquals($events, $result);
+        $this->assertEquals($result, $listEventMapper);
     }
 
     public function eventsMock()

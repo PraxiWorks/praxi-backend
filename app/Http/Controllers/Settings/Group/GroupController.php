@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Settings\Group\CreateGroup;
 use App\Application\Settings\Group\DeleteGroup;
 use App\Application\Settings\Group\DTO\CreateGroupRequestDTO;
+use App\Application\Settings\Group\DTO\ListGroupRequestDTO;
 use App\Application\Settings\Group\DTO\UpdateGroupRequestDTO;
 use App\Application\Settings\Group\ListGroup;
 use App\Application\Settings\Group\ShowGroup;
@@ -27,12 +28,22 @@ class GroupController extends Controller
 
     public function index(Request $request)
     {
-        $companyId = $request->route('groupId');
+        $companyId = $request->route('companyId');
+        $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+        $searchQuery = $request->search_query ?? null;
+        $page = $request->page ?? 1;
+        $perPage = $request->per_page ?? 10;
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListGroupRequestDTO(
+                $companyId,
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
+            );
             $output = $this->listGroupUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }

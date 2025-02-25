@@ -37,24 +37,12 @@ class CreateEventTest extends TestCase
     }
 
 
-    public function testExecuteThrowsEventTypeNotFoundException()
-    {
-        $this->expectException(EventTypeNotFoundException::class);
-        $this->expectExceptionMessage('Tipo não encontrado');
-
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
-
-        $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new EventTypeNotFoundException('Tipo não encontrado', 404));
-
-        $this->useCase->execute($input);
-    }
-
     public function testExecuteThrowsClientNotFoundException()
     {
         $this->expectException(ClientNotFoundException::class);
         $this->expectExceptionMessage('Cliente não encontrado');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new ClientNotFoundException('Cliente não encontrado', 404));
 
@@ -66,7 +54,7 @@ class CreateEventTest extends TestCase
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('Profissional não encontrado');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new UserNotFoundException('Profissional não encontrado', 404));
 
@@ -78,7 +66,7 @@ class CreateEventTest extends TestCase
         $this->expectException(EventProcedureNotFoundException::class);
         $this->expectExceptionMessage('Procedimento não encontrado');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new EventProcedureNotFoundException('Procedimento não encontrado', 404));
 
@@ -90,7 +78,7 @@ class CreateEventTest extends TestCase
         $this->expectException(EventStatusNotFoundException::class);
         $this->expectExceptionMessage('Status do evento não encontrado');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new EventStatusNotFoundException('Status do evento não encontrado', 404));
 
@@ -102,7 +90,7 @@ class CreateEventTest extends TestCase
         $this->expectException(EventColorNotFoundException::class);
         $this->expectExceptionMessage('Cor do evento não encontrada');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new EventColorNotFoundException('Cor do evento não encontrada', 404));
 
@@ -114,7 +102,7 @@ class CreateEventTest extends TestCase
         $this->expectException(EventRecurrenceNotFoundException::class);
         $this->expectExceptionMessage('Recorrência do evento não encontrada');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
 
         $this->eventValidatorRepositoryInterfaceMock->expects($this->once())->method('validate')->willThrowException(new EventRecurrenceNotFoundException('Recorrência do evento não encontrada', 404));
 
@@ -127,8 +115,8 @@ class CreateEventTest extends TestCase
         $this->expectException(EventException::class);
         $this->expectExceptionMessage('Erro ao salvar evento');
 
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
-        
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
+
         $this->eventRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(false);
 
         $this->useCase->execute($input);
@@ -136,8 +124,8 @@ class CreateEventTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new CreateEventRequestDTO(1, 1, 1, 1, 1, 1, 1, 'observation', '2021-10-10', '10:00', '11:00', 1);
-        
+        $input = new CreateEventRequestDTO(1, 'event', 1, 1, 1, 1, 1, 'observation', 1, '2021-10-10', '10:00', '11:00', 1);
+
         $this->eventRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $result = $this->useCase->execute($input);

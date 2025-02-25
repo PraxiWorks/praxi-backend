@@ -2,7 +2,7 @@
 
 namespace Tests\Application\Stock\ProductCategory;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\Stock\ProductCategory\DTO\ListProductCategoryRequestDTO;
 use App\Application\Stock\ProductCategory\ListProductCategory;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use Tests\TestCase;
@@ -28,7 +28,7 @@ class ListProductCategoryTest extends TestCase
         // Define o valor de retorno esperado do método list
         $productCategories = $this->productCategoriesMock();
 
-        $input = new IdRequestDTO(1);
+        $input = new ListProductCategoryRequestDTO(1, 1);
         $this->productCategoryRepositoryInterfaceMock->expects($this->once())->method('list')->willReturn($productCategories);
 
         $result = $this->useCase->execute($input);

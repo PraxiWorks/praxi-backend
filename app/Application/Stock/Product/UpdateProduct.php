@@ -27,7 +27,7 @@ class UpdateProduct
         }
 
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'products', $company->name, $product->path_image);
+        $pathImage = !empty($input->getImageBase64()) ? $this->processImage->execute($input->getImageBase64(), 'products', $company->name, $input->getName(), $product->path_image) : $product->path_image;
 
         $product->name = $input->getName();
         $product->category_id = $input->getCategoryId();

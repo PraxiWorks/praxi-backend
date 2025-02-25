@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Stock\Product\CreateProduct;
 use App\Application\Stock\Product\DeleteProduct;
 use App\Application\Stock\Product\DTO\CreateProductRequestDTO;
+use App\Application\Stock\Product\DTO\ListProductRequestDTO;
 use App\Application\Stock\Product\DTO\UpdateProductRequestDTO;
 use App\Application\Stock\Product\ListProduct;
 use App\Application\Stock\Product\ShowProduct;
@@ -28,11 +29,15 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
+        $status = $request->status ?? ''; 
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListProductRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listProductUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -44,6 +49,7 @@ class ProductController extends Controller
         $name = $request->name ?? '';
         $categoryId = $request->category_id ?? null;
         $skuCode = $request->sku_code ?? '';
+        $supplier = $request->supplier_id ?? null;
         $price = $request->price ?? null;
         $imageBase64 = $request->image_base_64 ?? null;
         $currentStock = $request->current_stock ?? null;
@@ -57,6 +63,7 @@ class ProductController extends Controller
                 $name,
                 $categoryId,
                 $skuCode,
+                $supplier,
                 $price,
                 $imageBase64,
                 $currentStock,
@@ -77,7 +84,7 @@ class ProductController extends Controller
         try {
             $input = new IdRequestDTO($id);
             $output = $this->showProductUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }

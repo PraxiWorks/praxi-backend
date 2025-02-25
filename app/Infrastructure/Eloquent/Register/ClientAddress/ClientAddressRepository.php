@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Eloquent\Register\Client;
+namespace App\Infrastructure\Eloquent\Register\ClientAddress;
 
 use App\Domain\Interfaces\Register\ClientAddress\ClientAddressRepositoryInterface;
 use App\Models\Register\ClientAddress\ClientAddress;

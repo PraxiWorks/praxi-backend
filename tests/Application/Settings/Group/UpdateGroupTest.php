@@ -35,6 +35,18 @@ class UpdateGroupTest extends TestCase
         $this->useCase->execute($input);
     }
 
+
+    public function testGroupNotFound()
+    {
+        $this->expectException(GroupNotFoundException::class);
+
+        $input = new UpdateGroupRequestDTO(1, 1, 'name', true);
+
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
+
+        $this->useCase->execute($input);
+    }
+
     public function testGroupAlreadyExists()
     {
         $this->expectException(GroupException::class);
@@ -43,19 +55,10 @@ class UpdateGroupTest extends TestCase
         $input = new UpdateGroupRequestDTO(1, 1, 'name', 1);
 
         $groupMock = new Group();
+        $groupMock->name = 'namee';
+
+        $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($groupMock);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn($groupMock);
-
-        $this->useCase->execute($input);
-    }
-
-    public function testGroupNotFound()
-    {
-        $this->expectException(GroupNotFoundException::class);
-
-        $input = new UpdateGroupRequestDTO(1, 1, 'name', true);
-
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
         $this->useCase->execute($input);
     }
@@ -67,7 +70,6 @@ class UpdateGroupTest extends TestCase
 
         $input = new UpdateGroupRequestDTO(1, 1, 'name', true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
         $groupMock = new Group();
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($groupMock);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(false);
@@ -81,7 +83,6 @@ class UpdateGroupTest extends TestCase
     {
         $input = new UpdateGroupRequestDTO(1, 1, 'name', true);
 
-        $this->groupRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
         $groupMock = new Group();
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($groupMock);
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(true);

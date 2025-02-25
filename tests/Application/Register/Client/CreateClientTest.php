@@ -10,8 +10,8 @@ use App\Domain\Exceptions\Settings\SettingsException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
-use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 use App\Models\Core\Company\Company;
 use App\Models\Register\Client\Client;
 use App\Models\Settings\Group\Group;
@@ -57,7 +57,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Nome é obrigatório');
 
-        $input = new CreateClientRequestDTO(1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, '', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 'password', true);
         $this->useCase->execute($input);
     }
 
@@ -66,16 +66,16 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Email é obrigatório');
 
-        $input = new CreateClientRequestDTO(1, 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', '', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 'password', true);
         $this->useCase->execute($input);
     }
 
     public function testValidateInputThrowsExceptionForEmptyPassword()
     {
         $this->expectException(ClientException::class);
-        $this->expectExceptionMessage('Senha é obrigatório');
+        $this->expectExceptionMessage('Senha é obrigatória');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, '', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, '', true);
         $this->useCase->execute($input);
     }
 
@@ -84,7 +84,7 @@ class CreateClientTest extends TestCase
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Empresa não encontrada');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, false, 'password', true);
 
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
@@ -96,7 +96,7 @@ class CreateClientTest extends TestCase
         $this->expectException(SettingsException::class);
         $this->expectExceptionMessage('Erro ao criar o grupo');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -113,7 +113,7 @@ class CreateClientTest extends TestCase
         $this->expectException(SettingsException::class);
         $this->expectExceptionMessage('Erro ao atribuir permissões ao grupo');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -144,7 +144,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Email já cadastrado');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -181,7 +181,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('CPF já cadastrado');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -219,7 +219,7 @@ class CreateClientTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage('Erro ao salvar cliente');
 
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;
@@ -254,7 +254,7 @@ class CreateClientTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, 'password', false, true);
+        $input = new CreateClientRequestDTO(1, 'nome', 'email', 'phoneNumber', 'dateOfBirth', 'cpfNumber', 'gender', false, false, false, null, true, 'password', true);
 
         $companyMock = new Company();
         $companyMock->id = 1;

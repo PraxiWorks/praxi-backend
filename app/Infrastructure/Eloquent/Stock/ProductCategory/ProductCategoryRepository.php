@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Stock\ProductCategory;
 
+use App\Application\Stock\ProductCategory\DTO\ListProductCategoryRequestDTO;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use App\Models\Stock\ProductCategory;
 
@@ -17,9 +18,17 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
         return ProductCategory::find($id);
     }
 
-    public function list(int $empresaId): array
+    public function list(ListProductCategoryRequestDTO $input): array
     {
-        return ProductCategory::where('company_id', $empresaId)->get()->toArray();
+        $query = ProductCategory::where('company_id', $input->getCompanyId());
+
+        if (!empty($input->getStatus())) {
+            $query->where('status', $input->getStatus());
+        }
+
+        $query->orderBy('id', 'desc');
+
+        return $query->get()->toArray();
     }
 
     public function update(ProductCategory $entity): bool

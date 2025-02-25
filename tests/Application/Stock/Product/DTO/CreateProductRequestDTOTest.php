@@ -12,8 +12,9 @@ class CreateProductRequestDTOTest extends TestCase
         $input = new CreateProductRequestDTO(
             1,
             'name',
-            'category_id',
+            1,
             'sku_code',
+            1,
             1.0,
             'image_base_64',
             'current_stock',
@@ -24,8 +25,9 @@ class CreateProductRequestDTOTest extends TestCase
 
         $this->assertEquals(1, $input->getCompanyId());
         $this->assertEquals('name', $input->getName());
-        $this->assertEquals('category_id', $input->getCategoryId());
+        $this->assertEquals(1, $input->getCategoryId());
         $this->assertEquals('sku_code', $input->getSkuCode());
+        $this->assertEquals(1, $input->getSupplierId());
         $this->assertEquals(1.0, $input->getPrice());
         $this->assertEquals('image_base_64', $input->getImageBase64());
         $this->assertEquals('current_stock', $input->getCurrentStock());

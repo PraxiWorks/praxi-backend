@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Stock\ProductCategory\CreateProductCategory;
 use App\Application\Stock\ProductCategory\DeleteProductCategory;
 use App\Application\Stock\ProductCategory\DTO\CreateProductCategoryRequestDTO;
+use App\Application\Stock\ProductCategory\DTO\ListProductCategoryRequestDTO;
 use App\Application\Stock\ProductCategory\DTO\UpdateProductCategoryRequestDTO;
 use App\Application\Stock\ProductCategory\ListProductCategory;
 use App\Application\Stock\ProductCategory\ShowProductCategory;
@@ -28,9 +29,13 @@ class ProductCategoryController extends Controller
     public function index(Request $request)
     {
         $companyId = $request->route('companyId');
+        $status = $request->status ?? '';
 
         try {
-            $input = new IdRequestDTO($companyId);
+            $input = new ListProductCategoryRequestDTO(
+                $companyId,
+                $status
+            );
             $output = $this->listProductCategoryUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {

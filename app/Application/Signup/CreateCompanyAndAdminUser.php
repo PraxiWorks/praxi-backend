@@ -16,17 +16,17 @@ use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
-use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
 use App\Models\Core\Company\Company;
 use App\Models\Core\Company\CompanyModule;
 use App\Models\Core\Company\CompanyPlan;
-use App\Models\Core\Permission\GroupPermission;
 use App\Models\Core\Plan\Plan;
 use App\Models\Scheduling\ScheduleSettings;
 use App\Models\Register\User\User;
 use App\Models\Settings\Group\Group;
+use App\Models\Settings\GroupPermission\GroupPermission;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -71,7 +71,8 @@ class CreateCompanyAndAdminUser
             ];
         } catch (Exception $e) {
             DB::rollBack();
-            throw new CreateCompanyAndAdminUserException($e->getMessage(), $e->getCode());
+            $statusCode = ($e->getCode() >= 100 && $e->getCode() <= 599) ? $e->getCode() : 500;
+            throw new CreateCompanyAndAdminUserException($e->getMessage(), $statusCode);
         }
     }
 
@@ -112,7 +113,8 @@ class CreateCompanyAndAdminUser
 
     private function getModuleIds(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan): array
     {
-        $moduleIds = [];
+        // Modulo do systema se mantem fixo para todos os casos
+        $moduleIds = [1];
         if (!empty($plan)) {
             $planModules = $this->planModuleRepositoryInterface->getByPlanId($plan->id);
             foreach ($planModules as $planModule) {
@@ -136,6 +138,7 @@ class CreateCompanyAndAdminUser
 
     private function createCompany(CreateCompanyAndAdminUserRequestDTO $input, ?Plan $plan, array $moduleIds): Company
     {
+
         $existingCompany = $this->companyRepositoryInterface->getByName($input->getFantasyName());
         if (!empty($existingCompany)) {
             throw new CompanyException('Uma empresa com este nome já existe', 400);
@@ -201,7 +204,7 @@ class CreateCompanyAndAdminUser
                 false
             );
 
-            if(!$this->groupPermissionRepositoryInterface->save($groupPermission)){
+            if (!$this->groupPermissionRepositoryInterface->save($groupPermission)) {
                 throw new CreateCompanyAndAdminUserException('Erro ao atribuir as permissões ao grupo', 500);
             }
         }
@@ -232,13 +235,12 @@ class CreateCompanyAndAdminUser
             null,
             null,
             null,
-            null,
             false,
             false,
             false,
             config('image.users.default_image'),
             $hashPassword,
-            false,
+            true,
             $group->id,
             true
         );
@@ -278,6 +280,13 @@ class CreateCompanyAndAdminUser
         if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain')) || empty(config('jwtAuth.expirationTime'))) {
             throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
         }
-        return $this->jwtAuth->encode($user->id, config('jwtAuth.expirationTime'));
+
+        $data = [
+            'company_id' => $user->company_id,
+            'user_id' => $user->id,
+            'group_id' => $user->group_id
+        ];
+
+        return $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));
     }
 }

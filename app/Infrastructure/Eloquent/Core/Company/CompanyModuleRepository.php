@@ -26,4 +26,9 @@ class CompanyModuleRepository implements CompanyModuleRepositoryInterface
     {
         return $entity->update();
     }
+
+    public function getByCompanyId(int $id): array
+    {
+        return CompanyModule::select('module_id')->where('company_id', $id)->get()->toArray();
+    }
 }

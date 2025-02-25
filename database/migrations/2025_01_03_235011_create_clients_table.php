@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('send_notification_sms')->default(false);
             $table->boolean('send_notification_whatsapp')->default(false);
             $table->string('path_image')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->boolean('has_access_to_the_system')->default(false);
             $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->boolean('status');

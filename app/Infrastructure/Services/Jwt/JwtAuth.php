@@ -11,7 +11,7 @@ class JwtAuth
      * @param int $hours Horas de validade
      * @return string Token JWT
      */
-    public function encode(int $userId, int $hours = 1): string
+    public function encode(array $data, int $hours = 1): string
     {
         $issuedAt = time();
         $expiration = $issuedAt + ($hours * 3600);
@@ -19,7 +19,7 @@ class JwtAuth
         $header = self::urlsafeB64Encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
         $payload = self::urlsafeB64Encode(json_encode([
             'iss' => config('jwtAuth.domain'),
-            'sub' => $userId,
+            'sub' => json_encode($data),
             'iat' => $issuedAt,
             'exp' => $expiration,
         ]));
@@ -54,7 +54,7 @@ class JwtAuth
         return isset($decodedPayload['exp']) && $decodedPayload['exp'] > time();
     }
 
-    public function getUserIdFromToken(string $token): ?int
+    public function getUserIdFromToken(string $token): ?string
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {

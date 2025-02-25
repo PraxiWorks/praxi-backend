@@ -2,14 +2,17 @@
 
 namespace Tests\Application\Register\Client;
 
-use App\Application\DTO\IdRequestDTO;
+use App\Application\DTO\OutputArrayDTO;
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Application\Register\Client\ListClients;
+use App\Application\Register\Client\Mapper\ListClientsMapper;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use Tests\TestCase;
 
 class ListClientTest extends TestCase
 {
     private ClientRepositoryInterface $clientRepositoryInterfaceMock;
+    private ListClientsMapper $listClientsMapperMock;
 
     private ListClients $useCase;
 
@@ -17,9 +20,11 @@ class ListClientTest extends TestCase
     {
         parent::setUp();
         $this->clientRepositoryInterfaceMock = $this->createMock(ClientRepositoryInterface::class);
+        $this->listClientsMapperMock = $this->createMock(ListClientsMapper::class);
 
         $this->useCase = new ListClients(
-            $this->clientRepositoryInterfaceMock
+            $this->clientRepositoryInterfaceMock,
+            $this->listClientsMapperMock
         );
     }
 
@@ -27,14 +32,16 @@ class ListClientTest extends TestCase
     {
         // Define o valor de retorno esperado do método list
         $clients = $this->clientsMock();
+        $mappedClients = new OutputArrayDTO($clients);
 
-        $input = new IdRequestDTO(1);
+        $input = new ListClientRequestDTO(1, true, 'search', 1, 10);
         $this->clientRepositoryInterfaceMock->expects($this->once())->method('list')->willReturn($clients);
+        $this->listClientsMapperMock->expects($this->once())->method('toOutputDto')->willReturn($mappedClients);
 
         $result = $this->useCase->execute($input);
 
         // Verifica se o resultado é o esperado
-        $this->assertEquals($clients, $result);
+        $this->assertEquals($mappedClients, $result);
     }
 
     public function clientsMock()

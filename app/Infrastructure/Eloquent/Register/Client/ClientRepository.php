@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Eloquent\Register\Client;
 
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Models\Register\Client\Client;
 
@@ -17,9 +18,22 @@ class ClientRepository implements ClientRepositoryInterface
         return Client::find($id);
     }
 
-    public function list(int $companyId): array
+    public function list(ListClientRequestDTO $input): array
     {
-        return Client::where('company_id', $companyId)->get()->toArray();
+        $query = Client::where('company_id', $input->getCompanyId());
+
+        if ($input->getStatus() !== null) {
+            $query->where('status', $input->getStatus());
+        }
+
+        if (!empty($input->getSearchQuery())) {
+            $query->where('name', 'like', '%' . $input->getSearchQuery() . '%');
+        }
+
+        $query->orderBy('id', 'desc');
+
+        $paginatedData = $query->paginate($input->getPerPage(), ['*'], 'page', $input->getPage());
+        return $paginatedData->toArray();
     }
 
     public function update(Client $entity): bool
@@ -41,7 +55,7 @@ class ClientRepository implements ClientRepositoryInterface
 
     public function getByCpfAndCompanyId(string $cpf, int $companyId): ?Client
     {
-        return Client::where('cpf', $cpf)
+        return Client::where('cpf_number', $cpf)
             ->where('company_id', $companyId)
             ->first();
     }

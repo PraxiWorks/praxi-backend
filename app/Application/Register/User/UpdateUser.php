@@ -30,29 +30,30 @@ class UpdateUser
             throw new UserNotFoundException('Usuário não encontrado', 400);
         }
 
-        $group = $this->groupRepositoryInterface->getById($input->getGroupId());
-        if (empty($group)) {
-            throw new SettingsNotFoundException('Grupo não encontrado', 400);
+        if (!empty($input->getGroupId())) {
+            $group = $this->groupRepositoryInterface->getById($input->getGroupId());
+            if (empty($group)) {
+                throw new SettingsNotFoundException('Grupo não encontrado', 400);
+            }
         }
 
         $company = $this->companyRepositoryInterface->getById($input->getCompanyId());
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $user->path_image);
+        $pathImage = !empty($input->getImageBase64()) ? $this->processImage->execute($input->getImageBase64(), 'users', $company->name, $input->getName(), $user->path_image) : $user->path_image;
 
         $user->company_id = $input->getCompanyId();
-        $user->username = $input->getUsername();
+        $user->username = !empty($input->getUsername()) ? $input->getUsername() : $user->username;
         $user->name = $input->getName();
         $user->email = $input->getEmail();
         $user->phone_number = $input->getPhoneNumber();
         $user->date_of_birth = $input->getDateOfBirth();
         $user->cpf_number = $input->getCpfNumber();
-        $user->rg_number = $input->getRgNumber();
         $user->gender = $input->getGender();
         $user->send_notification_email = $input->getSendNotificationEmail();
         $user->send_notification_sms = $input->getSendNotificationSms();
         $user->send_notification_whatsapp = $input->getSendNotificationWhatsapp();
         $user->path_image = $pathImage;
-        $user->isProfessional = $input->getIsProfessional();
-        $user->groupId = $input->getGroupId();
+        $user->is_professional = $input->getIsProfessional();
+        $user->group_id = $group->id ?? null;
         $user->status = $input->getStatus();
 
         if (!$this->userRepositoryInterface->update($user)) {
@@ -64,10 +65,6 @@ class UpdateUser
 
     private function validateInput(UpdateUserRequestDTO $input): void
     {
-        if(empty($input->getUsername())){
-            throw new UserException('Nome de usuário não informado', 400);
-        }
-
         if (empty($input->getName())) {
             throw new UserException('Nome não informado', 400);
         }

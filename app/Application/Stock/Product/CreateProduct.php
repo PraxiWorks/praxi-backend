@@ -33,7 +33,7 @@ class CreateProduct
             throw new ProductException('Produto já cadastrado', 400);
         }
 
-        $pathImage = $this->processImage->execute($input->getImageBase64(), 'products', $company->name);
+        $pathImage = $this->processImage->execute($input->getImageBase64(), 'products', $company->name, $input->getName());
 
         $newProduct = Product::new(
             $company->id,
@@ -45,7 +45,8 @@ class CreateProduct
             $input->getStatus(),
             $input->getCurrentStock(),
             $input->getMinimumStockLevel(),
-            $input->getMaximumStockLevel()
+            $input->getMaximumStockLevel(),
+            $input->getSupplierId()
         );
 
         if (!$this->productRepositoryInterface->save($newProduct)) {

@@ -14,20 +14,20 @@ use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
 use App\Domain\Interfaces\Http\HttpRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\ClientAddress\ClientAddressRepositoryInterface;
-use App\Domain\Interfaces\Register\User\UserPermissionRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
+use App\Domain\Interfaces\Register\UserPermission\UserPermissionRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventColorRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventRecurrenceRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventStatusRepositoryInterface;
-use App\Domain\Interfaces\Scheduling\EventTypeRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\EventValidatorRepositoryInterface;
 use App\Domain\Interfaces\Scheduling\ScheduleSettingsRepositoryInterface;
 use App\Domain\Interfaces\Settings\EventProcedure\EventProcedureRepositoryInterface;
-use App\Domain\Interfaces\Settings\Group\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Settings\Group\GroupRepositoryInterface;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
+use App\Domain\Interfaces\Stock\Supplier\SupplierRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
 use App\Domain\Service\Payments\Customer\CustomerGateway;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
@@ -39,21 +39,21 @@ use App\Infrastructure\Eloquent\Core\Permission\ModulePermissionRepository;
 use App\Infrastructure\Eloquent\Core\Permission\PermissionRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanModuleRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanRepository;
-use App\Infrastructure\Eloquent\Register\Client\ClientAddressRepository;
 use App\Infrastructure\Eloquent\Register\Client\ClientRepository;
-use App\Infrastructure\Eloquent\Register\User\UserPermissionRepository;
+use App\Infrastructure\Eloquent\Register\ClientAddress\ClientAddressRepository;
 use App\Infrastructure\Eloquent\Register\User\UserRepository;
+use App\Infrastructure\Eloquent\Register\UserPermission\UserPermissionRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventColorRepository;
-use App\Infrastructure\Eloquent\Scheduling\EventProcedureRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventRecurrenceRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventRepository;
 use App\Infrastructure\Eloquent\Scheduling\EventStatusRepository;
-use App\Infrastructure\Eloquent\Scheduling\EventTypeRepository;
 use App\Infrastructure\Eloquent\Scheduling\ScheduleSettingsRepository;
-use App\Infrastructure\Eloquent\Settings\Group\GroupPermissionRepository;
+use App\Infrastructure\Eloquent\Settings\EventProcedure\EventProcedureRepository;
 use App\Infrastructure\Eloquent\Settings\Group\GroupRepository;
+use App\Infrastructure\Eloquent\Settings\GroupPermission\GroupPermissionRepository;
 use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
 use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
+use App\Infrastructure\Eloquent\Stock\Supplier\SupplierRepository;
 use App\Infrastructure\Services\Payments\MercadoPago\Customer\MercadoPagoCustomerGateway;
 use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
@@ -86,7 +86,6 @@ class AppServiceProvider extends ServiceProvider
         // Schedule
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
-        $this->app->bind(EventTypeRepositoryInterface::class, EventTypeRepository::class);
         $this->app->bind(EventStatusRepositoryInterface::class, EventStatusRepository::class);
         $this->app->bind(EventColorRepositoryInterface::class, EventColorRepository::class);
         $this->app->bind(EventRecurrenceRepositoryInterface::class, EventRecurrenceRepository::class);
@@ -95,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
         // Stock
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductCategoryRepositoryInterface::class, ProductCategoryRepository::class);
+        $this->app->bind(SupplierRepositoryInterface::class, SupplierRepository::class);
 
         // Register
         $this->app->bind(UserPermissionRepositoryInterface::class, UserPermissionRepository::class);

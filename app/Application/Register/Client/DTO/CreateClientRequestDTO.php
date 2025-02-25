@@ -17,8 +17,8 @@ class CreateClientRequestDTO
         private ?bool $sendNotificationSms,
         private ?bool $sendNotificationWhatsapp,
         private ?string $imageBase64,
-        private string $password,
         private bool $hasAccessToTheSystem,
+        private ?string $password,
         private bool $status
     ) {}
 
@@ -77,14 +77,14 @@ class CreateClientRequestDTO
         return $this->imageBase64;
     }
 
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
     public function getHasAccessToTheSystem(): bool
     {
         return $this->hasAccessToTheSystem;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
     }
 
     public function getStatus(): bool

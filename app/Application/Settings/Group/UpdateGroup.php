@@ -17,13 +17,15 @@ class UpdateGroup
     {
         $this->validateInput($input);
 
-        if(!empty($this->groupRepositoryInterface->findByNameAndCompanyId($input->getCompanyId(), $input->getName()))){
-            throw new GroupException('Já existe um grupo com esse nome', 400);
-        }
-
         $group = $this->groupRepositoryInterface->getById($input->getId());
         if (empty($group)) {
             throw new GroupNotFoundException();
+        }
+
+        if ($input->getName() != $group->name) {
+            if (!empty($this->groupRepositoryInterface->findByNameAndCompanyId($input->getCompanyId(), $input->getName()))) {
+                throw new GroupException('Já existe um grupo com esse nome', 400);
+            }
         }
 
         $group->name = $input->getName();

@@ -14,15 +14,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ModulesSeeder::class,
             Permissions\SystemPermissionsSeeder::class,
-            Permissions\StockPermissionsSeeder::class,
+            // Permissions\StockPermissionsSeeder::class,
             Permissions\SchedulingPermissionsSeeder::class,
             FreePlanSeeder::class,
             PraxiSeeder::class,
             EventColorSeeder::class,
             EventProcedureSeeder::class,
             EventRecurrenceSeeder::class,
-            EventStatusSeeder::class,
-            EventTypeSeeder::class,
+            EventStatusSeeder::class
         ]);
     }
 }

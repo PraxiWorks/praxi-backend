@@ -8,13 +8,12 @@ class UpdateUserRequestDTO
     public function __construct(
         private int $id,
         private int $companyId,
-        private string $username,
+        private ?string $username,
         private string $name,
         private string $email,
         private ?string $phoneNumber,
         private ?string $dateOfBirth,
         private ?string $cpfNumber,
-        private ?string $rgNumber,
         private ?string $gender,
         private ?bool $sendNotificationEmail,
         private ?bool $sendNotificationSms,
@@ -35,7 +34,7 @@ class UpdateUserRequestDTO
         return $this->companyId;
     }
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -63,11 +62,6 @@ class UpdateUserRequestDTO
     public function getCpfNumber(): ?string
     {
         return $this->cpfNumber;
-    }
-
-    public function getRgNumber(): ?string
-    {
-        return $this->rgNumber;
     }
 
     public function getGender(): ?string

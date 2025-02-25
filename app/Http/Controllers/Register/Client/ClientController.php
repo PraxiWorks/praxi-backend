@@ -6,6 +6,7 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Register\Client\CreateClient;
 use App\Application\Register\Client\DeleteClient;
 use App\Application\Register\Client\DTO\CreateClientRequestDTO;
+use App\Application\Register\Client\DTO\ListClientRequestDTO;
 use App\Application\Register\Client\DTO\UpdateClientRequestDTO;
 use App\Application\Register\Client\ListClients;
 use App\Application\Register\Client\ShowClient;
@@ -29,9 +30,20 @@ class ClientController extends Controller
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $input = new IdRequestDTO($companyId);
+            $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+            $searchQuery = $request->search_query ?? null;
+            $page = $request->page ?? 1;
+            $perPage = $request->per_page ?? 10;
+
+            $input = new ListClientRequestDTO(
+                $companyId,
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
+            );
             $output = $this->listClientUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -41,19 +53,18 @@ class ClientController extends Controller
     {
 
         $companyId = $request->companyId ?? 0;
-        $name = $request->name ?? null;
-        $email = $request->email ?? null;
+        $name = $request->name ?? "";
+        $email = $request->email ?? "";
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
         $sendNotificationWhatsapp = $request->send_notification_whatsapp ?? false;
         $imageBase64 = $request->image_base_64 ?? null;
-        $password = $request->password ?? 'teste123';
         $hasAccessToTheSystem = $request->has_access_to_the_system ?? false;
+        $password = $request->password ?? '';
         $status = $request->status ?? false;
 
         try {
@@ -64,16 +75,16 @@ class ClientController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,
                 $sendNotificationWhatsapp,
                 $imageBase64,
-                $password,
                 $hasAccessToTheSystem,
+                $password,
                 $status
             );
+
             $output = $this->createClientUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
@@ -102,7 +113,6 @@ class ClientController extends Controller
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
@@ -120,7 +130,6 @@ class ClientController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,

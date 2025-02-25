@@ -24,14 +24,15 @@ class UpdateEvent
             throw new EventNotFoundException('Evento não encontrado', 404);
         }
 
-        $event->event_type_id = $input->getEventTypeId();
+        $event->event_type = $input->getEventType();
         $event->client_id = $input->getClientId();
         $event->professional_id = $input->getProfessionalId();
         $event->event_procedure_id = $input->getEventProcedureId();
         $event->event_status_id = $input->getEventStatusId();
         $event->event_color_id = $input->getEventColorId();
         $event->observation = $input->getObservation();
-        $event->day = $input->getDay();
+        $event->selected_day_index = $input->getSelectedDayIndex();
+        $event->date = $input->getDate();
         $event->start_event = $input->getStartEvent();
         $event->end_event = $input->getEndEvent();
         $event->event_recurrence_id = $input->getEventRecurrenceId();

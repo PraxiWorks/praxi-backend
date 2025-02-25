@@ -6,7 +6,9 @@ use App\Application\DTO\IdRequestDTO;
 use App\Application\Register\User\CreateUser;
 use App\Application\Register\User\DeleteUser;
 use App\Application\Register\User\DTO\CreateUserRequestDTO;
+use App\Application\Register\User\DTO\ListUserRequestDTO;
 use App\Application\Register\User\DTO\UpdateUserRequestDTO;
+use App\Application\Register\User\ListProfessionalUser;
 use App\Application\Register\User\ListUsers;
 use App\Application\Register\User\ShowUser;
 use App\Application\Register\User\UpdateUser;
@@ -22,16 +24,28 @@ class UserController extends Controller
         private ShowUser $showUserUseCase,
         private ListUsers $listUserUseCase,
         private UpdateUser $updateUserUseCase,
-        private DeleteUser $deleteUserUseCase
+        private DeleteUser $deleteUserUseCase,
+        private ListProfessionalUser $listProfessionalUserUseCase
     ) {}
 
     public function index(Request $request)
     {
         try {
             $companyId = $request->route('companyId') ?? 0;
-            $input = new IdRequestDTO($companyId);
+            $status = isset($request->status) ? filter_var($request->status, FILTER_VALIDATE_BOOLEAN) : null;
+            $searchQuery = $request->search_query ?? null;
+            $page = $request->page ?? 1;
+            $perPage = $request->per_page ?? 10;
+
+            $input = new ListUserRequestDTO(
+                $companyId,
+                $status,
+                $searchQuery,
+                $page,
+                $perPage
+            );
             $output = $this->listUserUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -47,7 +61,6 @@ class UserController extends Controller
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
@@ -67,7 +80,6 @@ class UserController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,
@@ -91,7 +103,7 @@ class UserController extends Controller
         try {
             $input = new IdRequestDTO($id);
             $output = $this->showUserUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
@@ -107,7 +119,6 @@ class UserController extends Controller
         $phoneNumber = $request->phone_number ?? null;
         $dateOfBirth = $request->date_of_birth ?? null;
         $cpfNumber = $request->cpf_number ?? null;
-        $rgNumber = $request->rg_number ?? null;
         $gender = $request->gender ?? null;
         $sendNotificationEmail = $request->send_notification_email ?? false;
         $sendNotificationSms = $request->send_notification_sms ?? false;
@@ -127,7 +138,6 @@ class UserController extends Controller
                 $phoneNumber,
                 $dateOfBirth,
                 $cpfNumber,
-                $rgNumber,
                 $gender,
                 $sendNotificationEmail,
                 $sendNotificationSms,
@@ -150,6 +160,18 @@ class UserController extends Controller
         try {
             $input = new IdRequestDTO($id);
             $output = $this->deleteUserUseCase->execute($input);
+            return $this->outputSuccessArrayToJson($output, 200);
+        } catch (Exception $e) {
+            return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function professionals(Request $request)
+    {
+        try {
+            $companyId = $request->route('companyId') ?? 0;
+            $input = new IdRequestDTO($companyId);
+            $output = $this->listProfessionalUserUseCase->execute($input);
             return $this->outputSuccessArrayToJson($output, 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
