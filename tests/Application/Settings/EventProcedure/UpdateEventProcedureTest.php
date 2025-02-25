@@ -35,7 +35,18 @@ class UpdateEventProcedureTest extends TestCase
         $this->useCase->execute($input);
     }
 
-    public function testGroupAlreadyExists()
+    public function testEventProcedureNotFound()
+    {
+        $this->expectException(EventProcedureNotFoundException::class);
+
+        $input = new UpdateEventProcedureRequestDTO(1, 1, 'name', true);
+
+        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
+
+        $this->useCase->execute($input);
+    }
+
+    public function testProcedureAlreadyExists()
     {
         $this->expectException(EventProcedureException::class);
         $this->expectExceptionMessage('Já existe um procedimento com esse nome');
@@ -43,19 +54,10 @@ class UpdateEventProcedureTest extends TestCase
         $input = new UpdateEventProcedureRequestDTO(1, 1, 'name', 1);
 
         $eventProcedureMock = new EventProcedure();
+        $eventProcedureMock->name = 'namee';
+
+        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($eventProcedureMock);
         $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn($eventProcedureMock);
-
-        $this->useCase->execute($input);
-    }
-
-    public function testGroupNotFound()
-    {
-        $this->expectException(EventProcedureNotFoundException::class);
-
-        $input = new UpdateEventProcedureRequestDTO(1, 1, 'name', true);
-
-        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
-        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
         $this->useCase->execute($input);
     }
@@ -67,8 +69,9 @@ class UpdateEventProcedureTest extends TestCase
 
         $input = new UpdateEventProcedureRequestDTO(1, 1, 'name', true);
 
-        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
         $eventProcedureMock = new EventProcedure();
+        $eventProcedureMock->name = 'name';
+
         $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($eventProcedureMock);
         $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(false);
 
@@ -81,8 +84,9 @@ class UpdateEventProcedureTest extends TestCase
     {
         $input = new UpdateEventProcedureRequestDTO(1, 1, 'name', true);
 
-        $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('findByNameAndCompanyId')->willReturn(null);
         $eventProcedureMock = new EventProcedure();
+        $eventProcedureMock->name = 'name';
+
         $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($eventProcedureMock);
         $this->eventProcedureRepositoryInterfaceMock->expects($this->once())->method('update')->willReturn(true);
 

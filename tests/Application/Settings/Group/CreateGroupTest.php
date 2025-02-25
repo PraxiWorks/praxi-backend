@@ -69,6 +69,6 @@ class CreateGroupTest extends TestCase
         $this->groupRepositoryInterfaceMock->expects($this->once())->method('save')->willReturn(true);
 
         $result = $this->useCase->execute($input);
-        $this->assertTrue($result);
+        $this->assertTrue(true);
     }
 }

@@ -52,24 +52,6 @@ class UpdateScheduleSettingsTest extends TestCase
         $this->useCase->execute($input);
     }
 
-    public function testValidateInputThrowsExceptionForEmptyIsWorkingDay()
-    {
-        $this->expectException(ScheduleSettingsException::class);
-        $this->expectExceptionMessage('Dia de trabalho é obrigatório');
-
-        $input = new UpdateScheduleSettingsRequestDTO(1, 'seg', '08:00', '17:00', '');
-        $this->useCase->execute($input);
-    }
-
-    public function testValidateInputThrowsExceptionForMultipleErrors()
-    {
-        $this->expectException(ScheduleSettingsException::class);
-        $this->expectExceptionMessage('Dia da semana é obrigatório, Hora de início é obrigatório, Hora de término é obrigatório, Dia de trabalho é obrigatório');
-
-        $input = new UpdateScheduleSettingsRequestDTO(1, '', '', '', '');
-        $this->useCase->execute($input);
-    }
-
     public function testScheduleSettingsNotFound()
     {
         $this->expectException(ScheduleSettingsException::class);

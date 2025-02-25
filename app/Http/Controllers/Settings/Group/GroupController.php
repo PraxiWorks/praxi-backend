@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Settings\Group;
 use App\Application\DTO\IdRequestDTO;
 use App\Application\Settings\Group\CreateGroup;
 use App\Application\Settings\Group\DeleteGroup;
-use App\Application\Settings\Group\DTO\AssignPermissionsToGroupRequestDTO;
 use App\Application\Settings\Group\DTO\CreateGroupRequestDTO;
 use App\Application\Settings\Group\DTO\ListGroupRequestDTO;
 use App\Application\Settings\Group\DTO\UpdateGroupRequestDTO;
@@ -44,7 +43,7 @@ class GroupController extends Controller
                 $perPage
             );
             $output = $this->listGroupUseCase->execute($input);
-            return $this->outputSuccessArrayToJson($output, 200);
+            return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }

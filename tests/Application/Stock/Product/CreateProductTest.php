@@ -40,7 +40,7 @@ class CreateProductTest extends TestCase
         $this->expectException(ProductException::class);
         $this->expectExceptionMessage('Nome não informado');
 
-        $input = new CreateProductRequestDTO(1, '', 1, 'skuCode', 1, 'imageBase64', true, 1, 1, 1);
+        $input = new CreateProductRequestDTO(1, '', 1, 'skuCode', 1, 1, 'imageBase64', true, 1, 1, 1);
         $this->useCase->execute($input);
     }
 
@@ -49,7 +49,7 @@ class CreateProductTest extends TestCase
         $this->expectException(ProductException::class);
         $this->expectExceptionMessage('Código SKU não informado');
 
-        $input = new CreateProductRequestDTO(1, 'name', 1, '', 1, 'imageBase64', true, 1, 1, 1);
+        $input = new CreateProductRequestDTO(1, 'name', 1, '', 1, 1, 'imageBase64', true, 1, 1, 1);
         $this->useCase->execute($input);
     }
 
@@ -59,7 +59,7 @@ class CreateProductTest extends TestCase
         $this->expectException(CompanyException::class);
         $this->expectExceptionMessage('Empresa não encontrada');
 
-        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 'imageBase64', true, 1, 1, 1);
+        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 1, 'imageBase64', true, 1, 1, 1);
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn(null);
 
         $this->useCase->execute($input);
@@ -70,7 +70,7 @@ class CreateProductTest extends TestCase
         $this->expectException(ProductException::class);
         $this->expectExceptionMessage('Produto já cadastrado');
 
-        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 'imageBase64', true, 1, 1, 1);
+        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 1, 'imageBase64', true, 1, 1, 1);
 
         $company = new Company();
         $company->id = 1;
@@ -88,12 +88,12 @@ class CreateProductTest extends TestCase
         $this->expectException(ProductException::class);
         $this->expectExceptionMessage('Erro ao salvar o produto');
 
-        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 'imageBase64', true, 1, 1, 1);
-        
+        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 1, 'imageBase64', true, 1, 1, 1);
+
         $company = new Company();
         $company->id = 1;
         $company->name = 'companyName';
-        
+
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->productRepositoryInterfaceMock->expects($this->once())->method('getBySkuCode')->willReturn(null);
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');
@@ -104,12 +104,12 @@ class CreateProductTest extends TestCase
 
     public function testSuccess()
     {
-        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 'imageBase64', true, 1, 1, 1);
-        
+        $input = new CreateProductRequestDTO(1, 'name', 1, 'skuCode', 1, 1, 'imageBase64', true, 1, 1, 1);
+
         $company = new Company();
         $company->id = 1;
         $company->name = 'companyName';
-        
+
         $this->companyRepositoryInterfaceMock->expects($this->once())->method('getById')->willReturn($company);
         $this->productRepositoryInterfaceMock->expects($this->once())->method('getBySkuCode')->willReturn(null);
         $this->processImageMock->expects($this->once())->method('execute')->willReturn('pathImage');

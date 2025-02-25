@@ -3,14 +3,12 @@
 namespace App\Application\Settings\GroupPermission;
 
 use App\Application\DTO\IdRequestDTO;
-use App\Infrastructure\Eloquent\Register\User\UserRepository;
-use App\Infrastructure\Eloquent\Settings\GroupPermission\GroupPermissionRepository;
+use App\Domain\Interfaces\Settings\GroupPermission\GroupPermissionRepositoryInterface;
 
 class GetPermissionsGroup
 {
     public function __construct(
-        private UserRepository $userRepositoryInterface,
-        private GroupPermissionRepository $groupPermissionRepositoryInterface
+        private GroupPermissionRepositoryInterface $groupPermissionRepositoryInterface
     ) {}
 
     public function execute(IdRequestDTO $input): array
