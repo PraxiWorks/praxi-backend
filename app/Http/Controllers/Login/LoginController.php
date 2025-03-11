@@ -23,6 +23,7 @@ class LoginController extends Controller
             $output = $this->useCase->execute($input);
             return $this->outputSuccessArrayToJson($output->toArray(), 200);
         } catch (Exception $e) {
+            dd($e);
             return $this->outputErrorArrayToJson($e->getMessage(), $e->getCode());
         }
     }

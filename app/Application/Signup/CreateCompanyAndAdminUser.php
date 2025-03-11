@@ -60,7 +60,7 @@ class CreateCompanyAndAdminUser
             $group = $this->createGroup($company, $moduleIds);
             $user = $this->createUser($input, $company, $group);
             $this->createScheduleSettings($company, $input->getWorkSchedule());
-            $jwtToken = $this->generateJwtToken($user);
+            $jwtToken = $this->generateJwtToken($company, $user);
 
             DB::commit();
 
@@ -275,7 +275,7 @@ class CreateCompanyAndAdminUser
         }
     }
 
-    private function generateJwtToken(User $user): string
+    private function generateJwtToken(Company $company, User $user): string
     {
         if (empty(config('jwtAuth.secret')) || empty(config('jwtAuth.domain')) || empty(config('jwtAuth.expirationTime'))) {
             throw new CreateCompanyAndAdminUserException('Configuração JWT inválida: verifique se "secret", "domain" e "expirationTime" estão definidos.', 500);
@@ -286,6 +286,10 @@ class CreateCompanyAndAdminUser
             'user_id' => $user->id,
             'group_id' => $user->group_id
         ];
+
+        if (!empty($company->end_trial)) {
+            $data['end_trial'] = $company->end_trial;
+        }
 
         return $this->jwtAuth->encode($data, config('jwtAuth.expirationTime'));
     }

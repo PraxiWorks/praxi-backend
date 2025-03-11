@@ -16,7 +16,7 @@ class FreePlanSeeder extends Seeder
             'name' => 'Plano Gratuito',
             'description' => 'Plano gratuito com todos os modulos disponíveis',
             'price' => 0,
-            'duration_days' => 1,
+            'duration_days' => 15,
             'status' => 1,
             'created_at' => now()
         ];

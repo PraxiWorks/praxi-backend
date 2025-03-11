@@ -18,6 +18,11 @@ class UserRepository implements UserRepositoryInterface
         return User::find($id);
     }
 
+    public function getByCompanyId(int $companyId): array
+    {
+        return User::where('company_id', $companyId)->get()->toArray();
+    }
+
     public function list(ListUserRequestDTO $input): array
     {
         $query = User::where('company_id', $input->getCompanyId());

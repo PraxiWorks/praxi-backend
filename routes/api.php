@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Login\LoginController;
-use App\Http\Controllers\Payments\Customer\CustomerController;
+use App\Http\Controllers\Payments\Stripe\Customer\CustomerController;
+use App\Http\Controllers\Payments\Stripe\Refund\RefundController;
+use App\Http\Controllers\Payments\Stripe\Subscription\SubscriptionController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Register\Client\ClientController;
 use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
@@ -39,34 +41,6 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class, 'login']);
 });
 
-Route::prefix('payments')->group(function () {
-    Route::prefix('customer')->group(function () {
-        Route::post('/', [CustomerController::class, 'store']);
-        Route::get('/{customerId}', [CustomerController::class, 'show']);
-        Route::put('/{customerId}', [CustomerController::class, 'update']);
-    });
-
-    // Route::prefix('cards')->group(function () {
-    //     Route::post('/', [CardController::class, 'store']);
-    //     Route::get('/{customerId}', [CardController::class, 'index']);
-    //     Route::get('/{cardId}', [CardController::class, 'show']);
-    //     Route::put('/{cardId}', [CardController::class, 'update']);
-    //     Route::delete('/{customerId}/{cardId}', [CardController::class, 'delete']);
-    // });
-
-    // Route::prefix('subscriptions')->group(function () {
-    //     Route::post('/', [SubscriptionController::class, 'store']);
-    //     Route::get('/{customerId}', [SubscriptionController::class, 'show']);
-    //     Route::put('/{customerId}', [SubscriptionController::class, 'update']);
-    // });
-
-    // Route::prefix('payments')->group(function () {
-    //     Route::post('/', [PaymentController::class, 'store']);
-    //     Route::get('/{paymentId}', [PaymentController::class, 'show']);
-    //     Route::put('/{paymentId}', [PaymentController::class, 'update']);
-    // });
-});
-
 Route::prefix('proxy')->group(function () {
     Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
 });
@@ -74,7 +48,7 @@ Route::prefix('proxy')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::prefix('{companyId}')->group(function () {
+    Route::prefix('{companyId}')->middleware('validateCompany')->group(function () {
 
         // Agendamento
         Route::prefix('scheduling')->group(function () {
@@ -198,5 +172,25 @@ Route::middleware('auth')->group(function () {
                 Route::delete('{groupId}/permissions', [GroupPermissionController::class, 'delete'])->middleware('permission:system.group.delete');
             });
         });
-    })->middleware('validateCompany');
+
+        // Pagamentos
+        Route::prefix('payments')->group(function () {
+            // Endpoints para o Customer
+            Route::prefix('customer')->group(function () {
+                Route::post('/', [CustomerController::class, 'store']);
+                Route::get('/{customerId}', [CustomerController::class, 'show']);
+            });
+
+            // // Endpoints para a Assinatura (Subscription)
+            Route::prefix('subscription')->group(function () {
+                Route::post('/', [SubscriptionController::class, 'store']);
+                Route::get('/{subscriptionId}', [SubscriptionController::class, 'show']);
+            });
+
+            // // Endpoint para Refund 
+            Route::prefix('refund')->group(function () {
+                Route::post('{id}', [RefundController::class, 'store']);
+            });
+        });
+    });
 });

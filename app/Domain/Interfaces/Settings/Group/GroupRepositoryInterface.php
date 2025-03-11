@@ -9,6 +9,7 @@ interface GroupRepositoryInterface
 {
     public function save(Group $entity): bool;
     public function getById(int $id): ?Group;
+    public function getByCompanyId(int $id): array;
     public function list(ListGroupRequestDTO $input): array;
     public function update(Group $entity): bool;
     public function delete(Group $entity): bool;
