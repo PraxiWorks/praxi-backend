@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Login\LoginController;
+use App\Http\Controllers\Payments\Stripe\Customer\CustomerController;
+use App\Http\Controllers\Payments\Stripe\Refund\RefundController;
+use App\Http\Controllers\Payments\Stripe\Subscription\SubscriptionController;
 use App\Http\Controllers\Proxy\HolidaysController;
 use App\Http\Controllers\Register\Client\ClientController;
 use App\Http\Controllers\Register\ClientAddress\ClientAddressController;
@@ -32,18 +35,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('proxy')->group(function () {
-    Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
-});
 
 Route::prefix('auth')->group(function () {
     Route::post('signup', [SignupController::class, 'store']);
     Route::post('login', [LoginController::class, 'login']);
 });
 
+Route::prefix('proxy')->group(function () {
+    Route::get('/feriados/{month}/{year}', [HolidaysController::class, 'index']);
+});
+
+
 Route::middleware('auth')->group(function () {
 
-    Route::prefix('{companyId}')->group(function () {
+    Route::prefix('{companyId}')->middleware('validateCompany')->group(function () {
 
         // Agendamento
         Route::prefix('scheduling')->group(function () {
@@ -167,5 +172,25 @@ Route::middleware('auth')->group(function () {
                 Route::delete('{groupId}/permissions', [GroupPermissionController::class, 'delete'])->middleware('permission:system.group.delete');
             });
         });
-    })->middleware('validateCompany');
+
+        // Pagamentos
+        Route::prefix('payments')->group(function () {
+            // Endpoints para o Customer
+            Route::prefix('customer')->group(function () {
+                Route::post('/', [CustomerController::class, 'store']);
+                Route::get('/{customerId}', [CustomerController::class, 'show']);
+            });
+
+            // // Endpoints para a Assinatura (Subscription)
+            Route::prefix('subscription')->group(function () {
+                Route::post('/', [SubscriptionController::class, 'store']);
+                Route::get('/{subscriptionId}', [SubscriptionController::class, 'show']);
+            });
+
+            // // Endpoint para Refund 
+            Route::prefix('refund')->group(function () {
+                Route::post('{id}', [RefundController::class, 'store']);
+            });
+        });
+    });
 });

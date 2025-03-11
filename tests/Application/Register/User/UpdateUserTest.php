@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\User;
+namespace Tests\Application\Register\User;
 
 use App\Application\Register\User\DTO\UpdateUserRequestDTO;
 use App\Application\Register\User\UpdateUser;

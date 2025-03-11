@@ -31,4 +31,9 @@ class CompanyPlanRepository implements CompanyPlanRepositoryInterface
     {
         return CompanyPlan::where('company_id', $id)->first();
     }
+
+    public function deleteByCompanyId(int $id): bool
+    {
+        return CompanyPlan::where('company_id', $id)->delete() > 0;
+    }
 }

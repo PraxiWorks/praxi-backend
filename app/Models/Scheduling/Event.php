@@ -2,7 +2,6 @@
 
 namespace App\Models\Scheduling;
 
-use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

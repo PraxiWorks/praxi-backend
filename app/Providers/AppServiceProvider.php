@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Factories\Http\HttpFactory;
 use App\Domain\Interfaces\Core\Company\CompanyModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyPlanRepositoryInterface;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
@@ -10,6 +11,12 @@ use App\Domain\Interfaces\Core\Permission\ModulePermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Permission\PermissionRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanModuleRepositoryInterface;
 use App\Domain\Interfaces\Core\Plan\PlanRepositoryInterface;
+use App\Domain\Interfaces\Http\HttpRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Customer\StripeCustomerRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Method\Card\StripeCustomerCardRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Refund\StripeRefundRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Subscription\StripeSubscriptionRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Transaction\StripeTransactionRepositoryInterface;
 use App\Domain\Interfaces\Register\Client\ClientRepositoryInterface;
 use App\Domain\Interfaces\Register\ClientAddress\ClientAddressRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
@@ -27,6 +34,10 @@ use App\Domain\Interfaces\Stock\Product\ProductRepositoryInterface;
 use App\Domain\Interfaces\Stock\ProductCategory\ProductCategoryRepositoryInterface;
 use App\Domain\Interfaces\Stock\Supplier\SupplierRepositoryInterface;
 use App\Domain\Interfaces\Storage\LocalStorageRepositoryInterface;
+use App\Domain\Service\Payments\Customer\CustomerGatewayInterface;
+use App\Domain\Service\Payments\PaymentMethod\Card\CardGatewayInterface;
+use App\Domain\Service\Payments\Refund\RefundGatewayInterface;
+use App\Domain\Service\Payments\Subscription\SubscriptionGatewayInterface;
 use App\Domain\Service\Proxy\HolidaysServiceInterface;
 use App\Infrastructure\Eloquent\Core\Company\CompanyModuleRepository;
 use App\Infrastructure\Eloquent\Core\Company\CompanyPlanRepository;
@@ -36,6 +47,11 @@ use App\Infrastructure\Eloquent\Core\Permission\ModulePermissionRepository;
 use App\Infrastructure\Eloquent\Core\Permission\PermissionRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanModuleRepository;
 use App\Infrastructure\Eloquent\Core\Plan\PlanRepository;
+use App\Infrastructure\Eloquent\Payments\Stripe\Customer\StripeCustomerRepository;
+use App\Infrastructure\Eloquent\Payments\Stripe\Method\Card\StripeCustomerCardRepository;
+use App\Infrastructure\Eloquent\Payments\Stripe\Refund\StripeRefundRepository;
+use App\Infrastructure\Eloquent\Payments\Stripe\Subscription\StripeSubscriptionRepository;
+use App\Infrastructure\Eloquent\Payments\Stripe\Transaction\StripeTransactionRepository;
 use App\Infrastructure\Eloquent\Register\Client\ClientRepository;
 use App\Infrastructure\Eloquent\Register\ClientAddress\ClientAddressRepository;
 use App\Infrastructure\Eloquent\Register\User\UserRepository;
@@ -51,6 +67,11 @@ use App\Infrastructure\Eloquent\Settings\GroupPermission\GroupPermissionReposito
 use App\Infrastructure\Eloquent\Stock\Product\ProductRepository;
 use App\Infrastructure\Eloquent\Stock\ProductCategory\ProductCategoryRepository;
 use App\Infrastructure\Eloquent\Stock\Supplier\SupplierRepository;
+use App\Infrastructure\Services\Payments\MercadoPago\Refund\MercadoPagoRefundGateway;
+use App\Infrastructure\Services\Payments\Stripe\Customer\StripeCustomerGateway;
+use App\Infrastructure\Services\Payments\Stripe\Method\Card\StripeCardGateway;
+use App\Infrastructure\Services\Payments\Stripe\Refund\StripeRefundGateway;
+use App\Infrastructure\Services\Payments\Stripe\Subscription\StripeSubscriptionGateway;
 use App\Infrastructure\Services\Proxy\HolidaysService;
 use App\Infrastructure\Storage\LocalStorageRepository;
 use App\Services\Scheduling\Event\EventValidator;
@@ -76,6 +97,9 @@ class AppServiceProvider extends ServiceProvider
         // Proxy
         $this->app->bind(HolidaysServiceInterface::class, HolidaysService::class);
 
+        // Http
+        $this->app->bind(HttpRepositoryInterface::class, HttpFactory::new(env('HTTP_CLIENT')));
+
         // Schedule
         $this->app->bind(ScheduleSettingsRepositoryInterface::class, ScheduleSettingsRepository::class);
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
@@ -95,12 +119,25 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
         $this->app->bind(ClientAddressRepositoryInterface::class, ClientAddressRepository::class);
 
-        //Settings
+        // Settings
         $this->app->bind(GroupPermissionRepositoryInterface::class, GroupPermissionRepository::class);
         $this->app->bind(GroupRepositoryInterface::class, GroupRepository::class);
         $this->app->bind(EventProcedureRepositoryInterface::class, EventProcedureRepository::class);
 
         // Storage
         $this->app->bind(LocalStorageRepositoryInterface::class, LocalStorageRepository::class);
+
+        // Payments - Stripe Integrations
+        $this->app->bind(CustomerGatewayInterface::class, StripeCustomerGateway::class);
+        $this->app->bind(CardGatewayInterface::class, StripeCardGateway::class);
+        $this->app->bind(SubscriptionGatewayInterface::class, StripeSubscriptionGateway::class);
+        $this->app->bind(RefundGatewayInterface::class, StripeRefundGateway::class);
+
+        // Payments - Stripe Repositories
+        $this->app->bind(StripeCustomerRepositoryInterface::class, StripeCustomerRepository::class);
+        $this->app->bind(StripeCustomerCardRepositoryInterface::class, StripeCustomerCardRepository::class);
+        $this->app->bind(StripeSubscriptionRepositoryInterface::class, StripeSubscriptionRepository::class);
+        $this->app->bind(StripeTransactionRepositoryInterface::class, StripeTransactionRepository::class);
+        $this->app->bind(StripeRefundRepositoryInterface::class, StripeRefundRepository::class);
     }
 }

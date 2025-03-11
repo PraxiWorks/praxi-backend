@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+
+    'stripe' => [
+        'secret_key' => env(env('APP_DEBUG') ? 'STRIPE_SECRET_KEY_SANDBOX' : 'STRIPE_SECRET_KEY_PRODUCTION'),
+    ],
+
 ];

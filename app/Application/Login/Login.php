@@ -8,6 +8,7 @@ use App\Domain\Exceptions\Login\LoginException;
 use App\Domain\Exceptions\Register\User\UserException;
 use App\Domain\Exceptions\Register\User\UserNotFoundException;
 use App\Domain\Interfaces\Core\Company\CompanyRepositoryInterface;
+use App\Domain\Interfaces\Payments\Stripe\Subscription\StripeSubscriptionRepositoryInterface;
 use App\Domain\Interfaces\Register\User\UserRepositoryInterface;
 use App\Infrastructure\Services\Jwt\JwtAuth;
 
@@ -16,6 +17,7 @@ class Login
     public function __construct(
         private CompanyRepositoryInterface $companyRepositoryInterface,
         private UserRepositoryInterface $userRepositoryInterface,
+        private StripeSubscriptionRepositoryInterface $stripeSubscriptionRepositoryInterface,
         private JwtAuth $jwtAuth
     ) {}
 
@@ -34,10 +36,14 @@ class Login
             throw new UserException('Senha inválida', 400);
         }
 
+        $subscription = $this->stripeSubscriptionRepositoryInterface->getByCompanyId($user->company_id);
+
         $data = [
             'company_id' => $user->company_id,
             'user_id' => $user->id,
-            'group_id' => $user->group_id
+            'group_id' => $user->group_id,
+            'subscription_id' => $subscription ? $subscription->id : null,
+            'subscription_status' => $subscription ? $subscription->status : null,
         ];
 
         if (!empty($company->end_trial)) {

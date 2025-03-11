@@ -11,4 +11,5 @@ interface CompanyModuleRepositoryInterface
     public function list(): array;
     public function update(CompanyModule $entity): bool;
     public function getByCompanyId(int $id): array;
+    public function deleteByCompanyId(int $id): bool;
 }

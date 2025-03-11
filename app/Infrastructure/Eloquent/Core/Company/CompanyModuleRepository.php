@@ -31,4 +31,11 @@ class CompanyModuleRepository implements CompanyModuleRepositoryInterface
     {
         return CompanyModule::select('module_id')->where('company_id', $id)->get()->toArray();
     }
+
+    public function deleteByCompanyId(int $id): bool
+    {
+        return CompanyModule::where('company_id', $id)
+            ->where('module_id', '!=', 1)
+            ->delete() > 0;
+    }
 }

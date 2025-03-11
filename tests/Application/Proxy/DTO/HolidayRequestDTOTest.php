@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Settings\Permission\DTO;
+namespace Tests\Application\Proxy\DTO;
 
 use App\Application\Proxy\DTO\HolidayRequestDTO;
 use Tests\TestCase;

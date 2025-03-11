@@ -18,6 +18,11 @@ class GroupRepository implements GroupRepositoryInterface
         return Group::find($id);
     }
 
+    public function getByCompanyId(int $id): array
+    {
+        return Group::where('company_id', $id)->get()->toArray();
+    }
+
     public function list(ListGroupRequestDTO $input): array
     {
         $query = Group::where('company_id', $input->getCompanyId());
