@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Payments\MercadoPago\Card;
+namespace App\Http\Controllers\Payments\Stripe\Card;
 
 use App\Http\Controllers\Controller;
 use Exception;

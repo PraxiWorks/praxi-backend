@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Payments\MercadoPago\Method\Card;
+namespace App\Application\Payments\Stripe\Method\Card;
 
 use App\Application\Payments\Stripe\Method\Card\DTO\CreateCardRequestDTO;
 use App\Domain\Service\Payments\PaymentMethod\Card\CardGatewayInterface;
