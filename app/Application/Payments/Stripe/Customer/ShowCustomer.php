@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\Payments\MercadoPago\Customer;
+namespace App\Application\Payments\Stripe\Customer;
 
-use App\Application\Payments\MercadoPago\Customer\DTO\ShowCustomerRequestDTO;
+use App\Application\Payments\Stripe\Customer\DTO\ShowCustomerRequestDTO;
 use App\Domain\Service\Payments\Customer\CustomerGatewayInterface;
 
 class ShowCustomer

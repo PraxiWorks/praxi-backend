@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Payments\MercadoPago\Customer\DTO;
+namespace App\Application\Payments\Stripe\Customer\DTO;
 
 class UpdateCustomerRequestDTO
 {
